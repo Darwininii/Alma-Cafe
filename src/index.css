@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-family: "Montserrat", sans-serif;
+  }
+
+  body {
+    /* Utilidades de Tailwind */
+    @apply text-white min-h-screen;
+
+    /* Propiedades CSS nativas */
+    background-image: radial-gradient(
+      125% 125% at 50% 10%,
+      #c69c6d 20%,
+      #ab7061 50%,
+      #3c1053 100%
+    );
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .container {
+    @apply mx-auto px-6 max-w-7xl;
+  }
+}
+
+@keyframes linear-x {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.hover\:animate-gradient-x:hover {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
+}
+
+.shadow-input {
+  box-shadow: 0px 2px 3px -1px rgba(0, 0, 0, 0.664),
+    0px 1px 0px 0px rgb(238, 202, 0), 0px 0px 0px 1px rgba(0, 0, 0, 0.656);
+}
+
+/* Animación para elementos que aparecen al hacer scroll */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay {
+  transition-delay: 300ms;
+}
+
+/* Efecto de hover para las cards */
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
