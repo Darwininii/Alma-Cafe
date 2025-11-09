@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { FeatureGrid, ProductGrid, Brands } from "../Components/home";
-import { popularCelulares, recentCelulares } from "../data/initialData";
 import { prepareProducts } from "../helpers";
 import { useScrollReveal } from "../Components/shared/Scroll";
 import { CardFeature } from "@/Components/shared/CardFeature";
+import { useHomeProducts } from "@/hooks";
+import { ProductGridSkeleton } from "@/Components/skeletons/ProductGridSkeleton";
 
 export const HomePage: React.FC = () => {
+  const { recentProducts, popularProducts, isLoading } = useHomeProducts();
+
   const [isVisible, setIsVisible] = useState(false);
-  const preparedRecentProducts = prepareProducts(recentCelulares ?? []);
-  const preparedPopular = prepareProducts(popularCelulares ?? []);
+  const preparedRecentProducts = prepareProducts(recentProducts ?? []);
+  const preparedPopular = prepareProducts(popularProducts ?? []);
 
   useEffect(() => {
     setIsVisible(true);
@@ -37,6 +40,27 @@ export const HomePage: React.FC = () => {
 
       {/* Features con animación de scroll */}
       <FeatureGrid />
+      {isLoading ? (
+        <ProductGridSkeleton numberOfProducts={4} />
+      ) : (
+        <section className="py-16 px-4">
+          <div className="container mx-auto space-y-24">
+            <div className="scroll-reveal">
+              <ProductGrid
+                title="Nuestros Productos"
+                products={preparedRecentProducts}
+              />
+            </div>
+
+            <div className="scroll-reveal delay">
+              <ProductGrid
+                title="Productos Destacados"
+                products={preparedPopular}
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Productos con efecto de aparición */}
       <section className="py-16 px-4">

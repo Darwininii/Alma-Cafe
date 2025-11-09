@@ -70,30 +70,32 @@ export const Brands = () => {
           descriptionClassName="text-lg text-black/70"
         />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-center max-w-6xl mx-auto">
-          {brands.map((brand, index) => (
-            <FlipCard
-              key={index}
-              containerClassName="shadow-lg hover:shadow-xl"
-              frontClassName="bg-transparent backdrop-blur-sm border-none"
-              backClassName="bg-transparent border-0 backdrop-blur-sm border-none p-0"
-              front={
-                <div className="flex flex-col items-center justify-center h-full w-full">
-                  {brand.icon}
-                  <span className="font-semibold mt-2 text-sm text-zinc-800">
-                    {brand.name}
-                  </span>
-                </div>
-              }
-              back={
-                <img
-                  src={brand.image}
-                  alt={brand.alt}
-                  className="h-full w-full object-cover mx-auto filter contrast-125"
-                />
-              }
-            />
-          ))}
+        <div className="flex justify-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-8 sm:gap-6 lg:gap-50 place-items-center justify-items-center max-w-5xl w-full">
+            {brands.map((brand, index) => (
+              <FlipCard
+                key={index}
+                containerClassName="shadow-lg hover:shadow-xl w-42 h-full sm:w-42 sm:h-full md:w-full md:h-full transition-all"
+                frontClassName="bg-transparent backdrop-blur-sm border-none flex items-center justify-center"
+                backClassName="bg-transparent border-0 backdrop-blur-sm border-none p-0"
+                front={
+                  <div className="flex flex-col items-center justify-center h-full w-full">
+                    {brand.icon}
+                    <span className="font-semibold mt-2 text-sm text-zinc-800">
+                      {brand.name}
+                    </span>
+                  </div>
+                }
+                back={
+                  <img
+                    src={brand.image}
+                    alt={brand.alt}
+                    className="h-full w-full object-cover mx-auto filter contrast-125"
+                  />
+                }
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
