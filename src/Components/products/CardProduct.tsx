@@ -4,6 +4,7 @@ import type { VariantProduct } from "@/interfaces";
 import { formatPrice } from "@/helpers";
 import { Button } from "@/Components/shared/Button";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
+import { Tag } from "../shared/Tag";
 
 interface Props {
   img: string;
@@ -94,11 +95,9 @@ export const CardProduct = ({ img, name, price, slug, variants }: Props) => {
       </div>
 
       {/* Stock */}
-      {stock === 0 && (
-        <span className="absolute top-2 left-2 text-white text-xs px-2 py-1 rounded-md">
-          Agotado
-        </span>
-      )}
+      <div className="absolute top-2 left-2">
+        {stock === 0 && <Tag contentTag="Agotado" />}
+      </div>
     </div>
   );
 };

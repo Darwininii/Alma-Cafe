@@ -4,7 +4,6 @@ export interface VariantProduct {
   id: string;
   stock: number;
   price: number;
-  storage: string;
 }
 
 export interface Product {

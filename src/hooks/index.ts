@@ -2,4 +2,4 @@
 
 export * from "./products/useProducts";
 export * from "./products/useFilteredProducts";
-export * from "./useHomeProducts";
+export * from "./products/useHomeProducts";
