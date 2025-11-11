@@ -5,6 +5,8 @@ import { formatPrice } from "@/helpers";
 import { Button } from "@/Components/shared/Button";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { Tag } from "../shared/Tag";
+import { useCartStore } from "@/store";
+import toast from "react-hot-toast";
 
 interface Props {
   img: string;
@@ -15,7 +17,31 @@ interface Props {
 }
 
 export const CardProduct = ({ img, name, price, slug, variants }: Props) => {
-  const stock = variants[0]?.stock || 0;
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleAddClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (selectedVariant && selectedVariant.stock > 0) {
+      addItem({
+        variantId: selectedVariant.id,
+        productId: slug,
+        name,
+        image: img,
+        price: selectedVariant.price,
+        quantity: 1,
+      });
+      toast.success("Producto añadido al carrito", {
+        position: "bottom-right",
+      });
+    } else {
+      toast.error("Producto agotado", {
+        position: "bottom-right",
+      });
+    }
+  };
+
+  const stock = selectedVariant?.stock || 0;
 
   const [lensPos, setLensPos] = React.useState({ x: 0, y: 0 });
   const [showLens, setShowLens] = React.useState(false);

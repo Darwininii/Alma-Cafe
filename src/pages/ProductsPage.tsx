@@ -6,20 +6,74 @@ import { Tag } from "@/Components/shared/Tag";
 import { formatPrice } from "@/helpers";
 import { useProduct } from "@/hooks/products/useProduct";
 import { type VariantProduct } from "@/interfaces";
+import { useCartStore } from "@/store";
+import { useCounterStore } from "@/store/counter.store";
 import { LucideMinus, MessagesSquare } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { TbTruckDelivery } from "react-icons/tb";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export const ProductsPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [currentSlug, setCurrentSlug] = useState(slug);
 
-  const { product, isLoading, isError } = useProduct(slug || "");
+  const { product, isLoading, isError } = useProduct(currentSlug || "");
 
-  const [selectedVariant] = useState<VariantProduct | null>(null);
+  const [selectedVariant, setSelectedVariant] = useState<VariantProduct | null>(
+    null
+  );
+
+  const count = useCounterStore((state) => state.count);
+  const increment = useCounterStore((state) => state.increment);
+  const decrement = useCounterStore((state) => state.decrement);
+
+  const addItem = useCartStore((state) => state.addItem);
+  const navigate = useNavigate();
 
   //Obtener el Stock
   const isOutOfStock = selectedVariant?.stock === 0;
+
+  // Función para añadir al carrito
+  const addToCart = () => {
+    if (selectedVariant) {
+      addItem({
+        variantId: selectedVariant.id,
+        productId: product?.id || "",
+        name: product?.name || "",
+        image: product?.images[0] || "",
+        price: selectedVariant.price,
+        quantity: count,
+      });
+      toast.success("Producto añadido al carrito", {
+        position: "bottom-right",
+      });
+    }
+  };
+  // Comprar Ahora
+  const buyNow = () => {
+    if (selectedVariant) {
+      addItem({
+        variantId: selectedVariant.id,
+        productId: product?.id || "",
+        name: product?.name || "",
+        image: product?.images[0] || "",
+        price: selectedVariant.price,
+        quantity: count,
+      });
+
+      navigate("/checkout");
+    }
+  };
+
+  // Resetear el slug actual cuando cambia en la URL
+  useEffect(() => {
+    setCurrentSlug(slug);
+
+    // Reiniciar variante seleccionada
+    setSelectedVariant(null);
+  }, [slug]);
+
   if (isLoading) return <Loader />;
 
   if (!product || isError)
@@ -75,11 +129,11 @@ export const ProductsPage = () => {
               <div className="space-y-3">
                 <p className="text-sm font-medium">Cantidad</p>
                 <div className="flex gap-8 px-5 border border-slate-200 w-fit rounded-full">
-                  <button>
+                  <button onClick={decrement} disabled={count === 1}>
                     <LucideMinus size={15} />
                   </button>
-                  <span className="text-slate-500 text-sm">1</span>
-                  <button>
+                  <span className="text-slate-500 text-sm">{count}</span>
+                  <button onClick={increment}>
                     <LucideMinus size={15} />
                   </button>
                 </div>
@@ -87,10 +141,16 @@ export const ProductsPage = () => {
 
               {/* Botones de Acción */}
               <div className="flex flex-col gap-3">
-                <button className="bg-slate-400 uppercase font-semibold tracking-widest text-xs py-4 rounded-full transition-all duration-300 hover:bg-slate-600">
+                <button
+                  className="bg-slate-400 uppercase font-semibold tracking-widest text-xs py-4 rounded-full transition-all duration-300 hover:bg-slate-600"
+                  onClick={addToCart}
+                >
                   Agregar al Carrito
                 </button>
-                <button className="bg-black text-white uppercase font-semibold tracking-widest text-xs py-4 rounded-full">
+                <button
+                  className="bg-black text-white uppercase font-semibold tracking-widest text-xs py-4 rounded-full"
+                  onClick={buyNow}
+                >
                   Comprar Ahora
                 </button>
               </div>
