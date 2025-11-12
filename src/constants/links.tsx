@@ -1,4 +1,4 @@
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaBoxOpen, FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 
 export const navarLinks = [
   { id: 1, title: "Inicio", href: "/" },
@@ -24,5 +24,20 @@ export const socialLinks = [
     title: "Twitter",
     href: "https://twitter.com",
     icon: <FaTwitter />,
+  },
+];
+
+export const dashboardLinks = [
+  {
+    id: 1,
+    title: "/Produtos",
+    href: "/dashboard/productos",
+    icon: <FaBoxOpen size={25} />,
+  },
+  {
+    id: 2,
+    title: "/Ordenes",
+    href: "/dashboard/ordenes",
+    icon: <FaBoxOpen size={25} />,
   },
 ];

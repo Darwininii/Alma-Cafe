@@ -84,6 +84,14 @@
   }
 }
 
+.btn-primary {
+  @apply bg-black text-white py-2 px-3 text-sm font-medium rounded-md;
+}
+
+.btn-secondary-outlinee {
+  @apply border border-slate-400 text-slate-600 py-2 px-3 text-sm font-medium rounded-md;
+}
+
 .hover\:animate-gradient-x:hover {
   background-size: 200% 200%;
   animation: gradient-x 3s ease infinite;

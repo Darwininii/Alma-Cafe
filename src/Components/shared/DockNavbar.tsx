@@ -2,31 +2,30 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Home, Store, User, Search, ShoppingBag } from "lucide-react";
 import { GrGroup } from "react-icons/gr";
+import { motion, AnimatePresence } from "framer-motion";
 import { useGlobalStore } from "@/store/global.store";
 import { useCartStore } from "@/store";
-import { motion, AnimatePresence } from "framer-motion";
+import { useUser, useCustomer } from "@/hooks";
+import { LuLoaderPinwheel } from "react-icons/lu";
 
 export const DockNavbar = () => {
   const [hovered, setHovered] = useState<number | null>(null);
   const [showNavbar, setShowNavbar] = useState(true);
+
   const openSheet = useGlobalStore((state) => state.openSheet);
   const totalItemsInCart = useCartStore((state) => state.totalItemsInCart);
 
   // 🔹 Detectar dirección del scroll
   useEffect(() => {
     let lastScrollY = window.scrollY;
-
     const handleScroll = () => {
       if (window.scrollY > lastScrollY && window.scrollY > 100) {
-        // Scroll hacia abajo → ocultar navbar
         setShowNavbar(false);
       } else {
-        // Scroll hacia arriba → mostrar navbar
         setShowNavbar(true);
       }
       lastScrollY = window.scrollY;
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -43,11 +42,9 @@ export const DockNavbar = () => {
     { label: "Sobre Nosotros", icon: GrGroup, href: "/nosotros" },
   ];
 
-  const actions = [
-    { label: "Buscar", icon: Search, action: () => openSheet("search") },
-    { label: "Carrito", icon: ShoppingBag, action: () => openSheet("cart") },
-    { label: "Usuario", icon: User, href: "/" },
-  ];
+  const { session, isLoading } = useUser();
+  const userId = session?.user?.id;
+  const { data: customer } = useCustomer(userId!);
 
   return (
     <AnimatePresence>
@@ -96,73 +93,96 @@ export const DockNavbar = () => {
           <div className="hidden sm:block ring ring-slate-800 w-px h-8 bg-slate-800 mx-2"></div>
 
           {/* 🔹 Acciones */}
-          {actions.map((item, index) => {
-            const Icon = item.icon;
-            const offset = navLinks.length;
-            const isCart = item.label === "Carrito";
 
-            return (
-              <div
-                key={item.label}
-                onMouseEnter={() => setHovered(index + offset)}
-                onMouseLeave={() => setHovered(null)}
-                className="relative group"
-              >
-                {item.action ? (
-                  <button
-                    onClick={item.action}
-                    className={`${baseItemClass} relative cursor-pointer`}
+          {/* Buscar */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setHovered(10)}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <button
+              onClick={() => openSheet("search")}
+              className={`${baseItemClass} relative cursor-pointer`}
+            >
+              <Search
+                size={20}
+                className={`${baseIconClass} ${
+                  hovered === 10
+                    ? "scale-125 text-yellow-800"
+                    : "text-slate-800"
+                }`}
+              />
+            </button>
+            <span className={tooltipClass}>Buscar</span>
+          </div>
+
+          {/* Carrito */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setHovered(11)}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <button
+              onClick={() => openSheet("cart")}
+              className={`${baseItemClass} relative cursor-pointer`}
+            >
+              <ShoppingBag
+                size={20}
+                className={`${baseIconClass} ${
+                  hovered === 11
+                    ? "scale-125 text-yellow-800"
+                    : "text-slate-800"
+                }`}
+              />
+
+              {/* 🔹 Contador animado */}
+              {totalItemsInCart > 0 && (
+                <AnimatePresence>
+                  <motion.span
+                    key={totalItemsInCart}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 15,
+                    }}
+                    className="absolute -top-1 -right-1 bg-yellow-800 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-md"
                   >
-                    <Icon
-                      size={20}
-                      className={`${baseIconClass} ${
-                        hovered === index + offset
-                          ? "scale-125 text-yellow-800"
-                          : "text-slate-800"
-                      }`}
-                    />
-
-                    {/* 🔹 Contador animado del carrito */}
-                    {isCart && totalItemsInCart > 0 && (
-                      <AnimatePresence>
-                        <motion.span
-                          key={totalItemsInCart}
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ scale: 0.5, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
-                          transition={{
-                            type: "spring",
-                            stiffness: 500,
-                            damping: 15,
-                          }}
-                          className="
-                            absolute -top-1 -right-1
-                            bg-yellow-800 text-white text-[10px] font-bold
-                            rounded-full w-4 h-4 flex items-center justify-center
-                            shadow-md
-                          "
-                        >
-                          {totalItemsInCart}
-                        </motion.span>
-                      </AnimatePresence>
-                    )}
-                  </button>
-                ) : (
-                  <Link to={item.href || "/"} className={baseItemClass}>
-                    <Icon
-                      size={20}
-                      className={`${baseIconClass} ${
-                        hovered === index + offset
-                          ? "scale-125 text-yellow-800"
-                          : "text-slate-800"
-                      }`}
-                    />
-                  </Link>
-                )}
-                <span className={tooltipClass}>{item.label}</span>
-              </div>
-            );
-          })}
+                    {totalItemsInCart}
+                  </motion.span>
+                </AnimatePresence>
+              )}
+            </button>
+            <span className={tooltipClass}>Carrito</span>
+          </div>
+          {/* Usuario */}
+          <div className="relative group">
+            {isLoading ? (
+              <LuLoaderPinwheel
+                className="animate-spin text-slate-800"
+                size={22}
+              />
+            ) : session ? (
+              <Link
+                to="/account"
+                className="border-2 border-slate-700 w-9 h-9 rounded-full grid place-items-center text-sm font-bold bg-white/20 hover:bg-white/30 transition"
+              >
+                {customer && customer.full_name
+                  ? customer.full_name[0].toUpperCase()
+                  : "U"}
+              </Link>
+            ) : (
+              <Link to="/login" className={baseItemClass}>
+                <User
+                  size={20}
+                  className={`${baseIconClass} text-slate-800 group-hover:scale-125 group-hover:text-yellow-800`}
+                />
+              </Link>
+            )}
+            <span className={tooltipClass}>Usuario</span>
+          </div>
         </motion.nav>
       )}
     </AnimatePresence>

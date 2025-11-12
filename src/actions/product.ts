@@ -1,17 +1,26 @@
-import { supabase } from "@/supabase/client";
+import { supabase } from "../supabase/client";
 
-export const getsProducts = async () => {
-  const { data: products, error } = await supabase
+export const getProducts = async (page: number) => {
+  const itemsPerPage = 10;
+  const from = (page - 1) * itemsPerPage;
+  const to = from + itemsPerPage - 1;
+
+  const {
+    data: products,
+    error,
+    count,
+  } = await supabase
     .from("products")
-    .select("*, variants(*)")
-    .order("created_at", { ascending: false });
+    .select("*, variants(*)", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (error) {
     console.log(error.message);
     throw new Error(error.message);
   }
 
-  return products;
+  return { products, count };
 };
 
 export const getFilteredProducts = async ({
@@ -27,7 +36,7 @@ export const getFilteredProducts = async ({
 
   let query = supabase
     .from("products")
-    .select("*,variants(*)", { count: "exact" })
+    .select("*, variants(*)", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -64,14 +73,14 @@ export const getRandomProducts = async () => {
   const { data: products, error } = await supabase
     .from("products")
     .select("*, variants(*)")
-    .limit(24);
+    .limit(20);
 
   if (error) {
     console.log(error.message);
     throw new Error(error.message);
   }
 
-  // Seleccionar 4 productos al Azar
+  // Seleccionar 4 productos al azar
   const randomProducts = products.sort(() => 0.5 - Math.random()).slice(0, 4);
 
   return randomProducts;
@@ -80,7 +89,7 @@ export const getRandomProducts = async () => {
 export const getProductBySlug = async (slug: string) => {
   const { data, error } = await supabase
     .from("products")
-    .select("*,variants(*)")
+    .select("*, variants(*)")
     .eq("slug", slug)
     .single();
 
@@ -88,6 +97,7 @@ export const getProductBySlug = async (slug: string) => {
     console.log(error.message);
     throw new Error(error.message);
   }
+
   return data;
 };
 
@@ -95,11 +105,12 @@ export const searchProducts = async (searchTerm: string) => {
   const { data, error } = await supabase
     .from("products")
     .select("*, variants(*)")
-    .ilike("name", `%${searchTerm}%`); //Buscar Productos cuyo Nombre Contenga el Término de Búsqueda => "searchTerm"
+    .ilike("name", `%${searchTerm}%`); //Buscar productos cuyo nombre contenga el término de búsqueda
 
   if (error) {
     console.log(error.message);
     throw new Error(error.message);
   }
+
   return data;
 };

@@ -1,6 +1,4 @@
-// ...existing code...
 import React, { useRef, useState, type InputHTMLAttributes } from "react";
-import { cn } from "@/lib/utils";
 
 type InputVariant = "default" | "glass" | "outline" | "solid";
 
@@ -56,33 +54,31 @@ export const Input: React.FC<InputProps> = ({
   };
 
   // 🧩 Estilos variantes
-  const variants = {
-    default: cn(
+  const variants: Record<InputVariant, string> = {
+    default: [
       "rounded-lg p-0.5 transition duration-300",
-      "bg-transparent hover:shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-    ),
-    glass: cn(
+      "bg-transparent hover:shadow-[0_0_8px_rgba(255,255,255,0.2)]",
+    ].join(" "),
+    glass: [
       "rounded-lg p-[1px] backdrop-blur-lg",
-      "bg-white/10 border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]"
-    ),
-    outline: cn(
+      "bg-white/10 border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]",
+    ].join(" "),
+    outline: [
       "rounded-lg p-0.5 border border-gray-300 dark:border-gray-700",
-      "hover:border-[var(--accent)] transition duration-300"
-    ),
-    solid: cn(
+      "hover:border-[var(--accent)] transition duration-300",
+    ].join(" "),
+    solid: [
       "rounded-lg p-0.5",
-      "bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 transition duration-300"
-    ),
+      "bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 transition duration-300",
+    ].join(" "),
   };
 
   return (
     <div
       ref={containerRef}
-      className={cn(
-        "group/input relative",
-        variants[variant],
-        containerClassName
-      )}
+      className={["group/input relative", variants[variant], containerClassName]
+        .filter(Boolean)
+        .join(" ")}
       style={style}
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
@@ -90,16 +86,17 @@ export const Input: React.FC<InputProps> = ({
     >
       <input
         {...props}
-        className={cn(
+        className={[
           `flex h-10 w-full border-none bg-transparent text-sm
           text-black dark:text-white placeholder:text-neutral-400
           dark:placeholder:text-neutral-500 rounded-md px-3 py-2
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]
           disabled:cursor-not-allowed disabled:opacity-50 transition duration-300`,
-          className
-        )}
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
       />
     </div>
   );
 };
-// ...existing code...

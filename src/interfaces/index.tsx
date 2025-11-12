@@ -3,3 +3,5 @@ export type {
   VariantProduct,
   PreparedProduct,
 } from "./product.interface";
+
+export type { OrderInput, OrderItemSingle } from "./order.interface";
