@@ -39,41 +39,41 @@ export type Database = {
   }
   public: {
     Tables: {
-      addresses: {
+      address: {
         Row: {
-          address_line1: string
+          address_line: string
           city: string
           country: string
           created_at: string
-          customers_id: string | null
+          customer_id: string | null
           id: string
           postal_code: string | null
           state: string
         }
         Insert: {
-          address_line1: string
+          address_line: string
           city: string
           country?: string
           created_at?: string
-          customers_id?: string | null
+          customer_id?: string | null
           id?: string
           postal_code?: string | null
           state: string
         }
         Update: {
-          address_line1?: string
+          address_line?: string
           city?: string
           country?: string
           created_at?: string
-          customers_id?: string | null
+          customer_id?: string | null
           id?: string
           postal_code?: string | null
           state?: string
         }
         Relationships: [
           {
-            foreignKeyName: "addresses_customers_id_fkey"
-            columns: ["customers_id"]
+            foreignKeyName: "address_customer_id_fkey"
+            columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
             referencedColumns: ["id"]
@@ -86,7 +86,7 @@ export type Database = {
           email: string
           full_name: string
           id: string
-          phone: string | null
+          phone: string
           user_id: string
         }
         Insert: {
@@ -94,7 +94,7 @@ export type Database = {
           email: string
           full_name: string
           id?: string
-          phone?: string | null
+          phone: string
           user_id: string
         }
         Update: {
@@ -102,52 +102,10 @@ export type Database = {
           email?: string
           full_name?: string
           id?: string
-          phone?: string | null
+          phone?: string
           user_id?: string
         }
         Relationships: []
-      }
-      order_items: {
-        Row: {
-          created_at: string
-          id: string
-          order_id: number
-          price: number
-          quantity: number
-          variant_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          order_id: number
-          price: number
-          quantity: number
-          variant_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          order_id?: number
-          price?: number
-          quantity?: number
-          variant_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "order_items_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "order_items_variant_id_fkey"
-            columns: ["variant_id"]
-            isOneToOne: false
-            referencedRelation: "variants"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       orders: {
         Row: {
@@ -179,7 +137,7 @@ export type Database = {
             foreignKeyName: "orders_address_id_fkey"
             columns: ["address_id"]
             isOneToOne: false
-            referencedRelation: "addresses"
+            referencedRelation: "address"
             referencedColumns: ["id"]
           },
           {
@@ -191,7 +149,49 @@ export type Database = {
           },
         ]
       }
-      products: {
+      orders_item: {
+        Row: {
+          cantidad: number
+          created_at: string
+          id: string
+          order_id: number
+          price: number
+          products_id: string
+        }
+        Insert: {
+          cantidad: number
+          created_at?: string
+          id?: string
+          order_id: number
+          price: number
+          products_id: string
+        }
+        Update: {
+          cantidad?: number
+          created_at?: string
+          id?: string
+          order_id?: number
+          price?: number
+          products_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_item_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_item_products_id_fkey"
+            columns: ["products_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      productos: {
         Row: {
           brand: string
           created_at: string
@@ -200,7 +200,9 @@ export type Database = {
           id: string
           images: string[]
           name: string
+          price: number
           slug: string
+          stock: string
         }
         Insert: {
           brand: string
@@ -210,7 +212,9 @@ export type Database = {
           id?: string
           images: string[]
           name: string
+          price: number
           slug: string
+          stock?: string
         }
         Update: {
           brand?: string
@@ -220,7 +224,9 @@ export type Database = {
           id?: string
           images?: string[]
           name?: string
+          price?: number
           slug?: string
+          stock?: string
         }
         Relationships: []
       }
@@ -228,48 +234,19 @@ export type Database = {
         Row: {
           id: number
           role: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           id?: number
           role: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           id?: number
           role?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
-      }
-      variants: {
-        Row: {
-          id: string
-          price: number
-          product_id: string
-          stock: number
-        }
-        Insert: {
-          id?: string
-          price: number
-          product_id: string
-          stock: number
-        }
-        Update: {
-          id?: string
-          price?: number
-          product_id?: string
-          stock?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "variants_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {

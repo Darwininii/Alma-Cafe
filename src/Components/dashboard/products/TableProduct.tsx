@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaEllipsis } from "react-icons/fa6";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import { useProducts } from "../../../hooks";
+import { useDeleteProduct, useProducts } from "../../../hooks";
 import { Loader } from "../../shared/Loader";
 import { formatDate, formatPrice } from "../../../helpers";
 import { Pagination } from "../../shared/Pagination";
@@ -20,10 +20,7 @@ const tableHeaders = [
 
 export const TableProduct = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
-  {
-    /*setSelectedVariants*/
-  }
-  const [selectedVariants] = useState<{
+  const [selectedVariants, setSelectedVariants] = useState<{
     [key: string]: number;
   }>({});
   const [page, setPage] = useState(1);
@@ -31,6 +28,7 @@ export const TableProduct = () => {
   const { products, isLoading, totalProducts } = useProducts({
     page,
   });
+  const { mutate, isPending } = useDeleteProduct();
 
   const handleMenuToggle = (index: number) => {
     if (openMenuIndex === index) {
@@ -40,18 +38,19 @@ export const TableProduct = () => {
     }
   };
 
-  //   const handleVariantChange = (productId: string, variantIndex: number) => {
-  //     setSelectedVariants({
-  //       ...selectedVariants,
-  //       [productId]: variantIndex,
-  //     });
-  //   };
-
-  const handleDeleteProduct = (id: string) => {
-    console.log(id);
+  const handleVariantChange = (productId: string, variantIndex: number) => {
+    setSelectedVariants({
+      ...selectedVariants,
+      [productId]: variantIndex,
+    });
   };
 
-  if (!products || isLoading || !totalProducts) return <Loader />;
+  const handleDeleteProduct = (id: string) => {
+    mutate(id);
+    setOpenMenuIndex(null);
+  };
+
+  if (!products || isLoading || !totalProducts || isPending) return <Loader />;
 
   return (
     <div className="flex flex-col flex-1 border border-gray-200 rounded-lg p-5 bg-white">
@@ -76,7 +75,8 @@ export const TableProduct = () => {
           <tbody>
             {products.map((product, index) => {
               const selectedVariantIndex = selectedVariants[product.id] ?? 0;
-              const selectedVariant = product.variants[selectedVariantIndex];
+              const selectedVariant =
+                product.variants[selectedVariantIndex] || {};
 
               return (
                 <tr key={index}>
@@ -93,7 +93,7 @@ export const TableProduct = () => {
                     />
                   </td>
                   <ProduTableProduct content={product.name} />
-                  {/* <td className="p-4 font-medium tracking-tighter">
+                  <td className="p-4 font-medium tracking-tighter">
                     <select
                       className="border border-gray-300 rounded-md p-1 w-full"
                       onChange={(e) =>
@@ -103,16 +103,16 @@ export const TableProduct = () => {
                     >
                       {product.variants.map((variant, variantIndex) => (
                         <option key={variant.id} value={variantIndex}>
-                          {variant.color_name} - {variant.storage}
+                          {/* {variant.color_name} - {variant.storage} */}
                         </option>
                       ))}
                     </select>
-                  </td> */}
+                  </td>
                   <ProduTableProduct
-                    content={formatPrice(selectedVariant.price)}
+                    content={formatPrice(selectedVariant?.price)}
                   />
                   <ProduTableProduct
-                    content={selectedVariant.stock.toString()}
+                    content={(selectedVariant.stock || 0).toString()}
                   />
                   <ProduTableProduct content={formatDate(product.created_at)} />
                   <td className="relative">

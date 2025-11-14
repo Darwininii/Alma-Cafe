@@ -1,32 +1,38 @@
-import type { Json } from "@/supabase/supabase";
+import type { JSONContent } from "@tiptap/react";
 
-export interface VariantProduct {
-  id: string;
-  stock: number;
-  price: number;
-}
-
+/**
+ * Coincide 100% con la tabla `productos` en Supabase
+ */
 export interface Product {
   id: string;
-  name: string;
-  brand: string; // Agregamos brand aquí
-  slug: string;
-  features: string[];
-  description: Json;
-  images: string[];
   created_at: string;
-  variants: VariantProduct[];
+  name: string;
+  brand: string;
+  slug: string;
+  description: JSONContent | string | null;
+  features: string[];
+  images: string[];
+  price: number;
+  stock: string | null; // <-- en tu BD ES TEXTO, no number
 }
 
-export interface PreparedProduct {
-  id: string;
+/**
+ * Versión para la UI
+ */
+export interface PreparedProduct extends Product {
+  formatPrice?: string;
+}
+
+/**
+ * Para crear/actualizar productos desde el dashboard
+ */
+export interface ProductInput {
   name: string;
-  brand: string; // Agregamos brand aquí
+  brand: string;
   slug: string;
+  description: string | JSONContent;
   features: string[];
-  description: Json;
-  images: string[];
-  created_at: string;
   price: number;
-  variants: VariantProduct[];
+  stock: string; // <-- debe ser string para que coincida con Supabase
+  images: (File | string)[]; // <-- images, NO "image"
 }

@@ -9,3 +9,6 @@ export * from "./products/FeaturesInput";
 export * from "./products/VariantsInput";
 export * from "./products/UploaderImages";
 export * from "./products/Editor";
+
+// Ordenes
+export * from "./orders/TableOrdersAdmin";

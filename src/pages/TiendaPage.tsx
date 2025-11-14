@@ -49,7 +49,6 @@ export const TiendaPage = () => {
                   name={product.name}
                   price={product.price}
                   slug={product.slug}
-                  variants={product.variants}
                 />
               ))}
             </div>

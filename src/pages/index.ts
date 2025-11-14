@@ -12,3 +12,6 @@ export * from "./OrderUserPage";
 // DASHBOARD PAGES
 export * from "./dashboard/DashProductsPage";
 export * from "./dashboard/DashNewProductPage";
+export * from "./dashboard/DashProductSlugPage";
+export * from "./dashboard/DashOrderPage";
+export * from "./dashboard/DashOrdersPage";

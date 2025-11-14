@@ -22,13 +22,13 @@ export const CardProduct = ({ img, name, price, slug, variants }: Props) => {
   const handleAddClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (selectedVariant && selectedVariant.stock > 0) {
+    if (selectedProduct && selectedProduct.stock > 0) {
       addItem({
-        variantId: selectedVariant.id,
+        variantId: selectedProduct.id,
         productId: slug,
         name,
         image: img,
-        price: selectedVariant.price,
+        price: selectedProduct.price,
         quantity: 1,
       });
       toast.success("Producto añadido al carrito", {
@@ -41,7 +41,7 @@ export const CardProduct = ({ img, name, price, slug, variants }: Props) => {
     }
   };
 
-  const stock = selectedVariant?.stock || 0;
+  const stock = selectedProduct?.stock || 0;
 
   const [lensPos, setLensPos] = React.useState({ x: 0, y: 0 });
   const [showLens, setShowLens] = React.useState(false);

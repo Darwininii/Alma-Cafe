@@ -13,6 +13,8 @@ import {
   OrderUserPage,
   DashProductsPage,
   DashNewProductPage,
+  DashProductSlugPage,
+  DashOrdersPage,
 } from "../pages";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 
@@ -88,6 +90,18 @@ export const router = createBrowserRouter([
       {
         path: "productos/new",
         element: <DashNewProductPage />,
+      },
+      {
+        path: "productos/editar:slug",
+        element: <DashProductSlugPage />,
+      },
+      {
+        path: "ordenes",
+        element: <DashOrdersPage />,
+      },
+      {
+        path: "ordenes/:id",
+        element: <DashOrdersPage />,
       },
     ],
   },
