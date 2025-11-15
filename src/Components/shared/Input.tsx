@@ -90,7 +90,7 @@ export const Input: React.FC<InputProps> = ({
           `flex h-10 w-full border-none bg-transparent text-sm
           text-black dark:text-white placeholder:text-neutral-400
           dark:placeholder:text-neutral-500 rounded-md px-3 py-2
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-var(--accent)
           disabled:cursor-not-allowed disabled:opacity-50 transition duration-300`,
           className,
         ]

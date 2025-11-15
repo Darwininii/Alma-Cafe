@@ -8,12 +8,13 @@ import { InputForm } from "./InputForm";
 import { FeaturesInput } from "./FeaturesInput";
 import { useEffect } from "react";
 import { generateSlug } from "../../../helpers";
-import { VariantsInput } from "./VariantsInput";
+import { ProductsInput } from "./ProductsInput";
 import { UploaderImages } from "./UploaderImages";
 import { Editor } from "./Editor";
 import { useCreateProduct, useProduct, useUpdateProduct } from "../../../hooks";
-import { Loader } from "../../shared/Loader";
+
 import type { JSONContent } from "@tiptap/react";
+import { Loader } from "@/Components/shared/Loader";
 
 interface Props {
   titleForm: string;
@@ -22,7 +23,7 @@ interface Props {
 export const FormProduct = ({ titleForm }: Props) => {
   const {
     register,
-    // handleSubmit,
+    handleSubmit,
     formState: { errors },
     setValue,
     watch,
@@ -34,9 +35,9 @@ export const FormProduct = ({ titleForm }: Props) => {
   const { slug } = useParams<{ slug: string }>();
 
   const { product, isLoading } = useProduct(slug || "");
-  // const { mutate: createProduct, isPending } = useCreateProduct();
-  // const { mutate: updateProduct, isPending: isUpdatePending } =
-  //   useUpdateProduct(product?.id || "");
+  const { mutate: createProduct, isPending } = useCreateProduct();
+  const { mutate: updateProduct, isPending: isUpdatePending } =
+    useUpdateProduct(product?.id || "");
 
   const navigate = useNavigate();
 
@@ -52,41 +53,45 @@ export const FormProduct = ({ titleForm }: Props) => {
       setValue("description", product.description as JSONContent);
       setValue("images", product.images);
       setValue(
-        "variants",
-        product.variants.map((v) => ({
-          id: v.id,
-          stock: v.stock,
-          price: v.price,
-        }))
+        "products",
+        product.products.map(
+          (v: { id: string; stock: string; price: number }) => ({
+            id: v.id,
+            stock: v.stock,
+            price: v.price,
+          })
+        )
       );
     }
   }, [product, isLoading, setValue]);
 
-  // const onSubmit = handleSubmit((data) => {
-  //   const features = data.features.map((feature) => feature.value);
+  const onSubmit = handleSubmit((data) => {
+    const features = data.features.map((feature) => feature.value);
 
-  //   if (slug) {
-  //     updateProduct({
-  //       name: data.name,
-  //       brand: data.brand,
-  //       slug: data.slug,
-  //       variants: data.variants,
-  //       images: data.images,
-  //       description: data.description,
-  //       features,
-  //     });
-  //   } else {
-  //     createProduct({
-  //       name: data.name,
-  //       brand: data.brand,
-  //       slug: data.slug,
-  //       variants: data.variants,
-  //       images: data.images,
-  //       description: data.description,
-  //       features,
-  //     });
-  //   }
-  // });
+    if (slug) {
+      updateProduct({
+        id: product?.id,
+        name: data.name,
+        brand: data.brand,
+        slug: data.slug,
+        productos: data.products,
+        images: data.images,
+        description: data.description,
+        features,
+      });
+    } else {
+      createProduct({
+        id: product?.id,
+        name: data.name,
+        brand: data.brand,
+        slug: data.slug,
+        productos: data.products,
+        images: data.images,
+        description: data.description,
+        features,
+      });
+    }
+  });
 
   const watchName = watch("name");
 
@@ -97,7 +102,7 @@ export const FormProduct = ({ titleForm }: Props) => {
     setValue("slug", generatedSlug, { shouldValidate: true });
   }, [watchName, setValue]);
 
-  // if (isPending || isUpdatePending || isLoading) return <Loader />;
+  if (isPending || isUpdatePending || isLoading) return <Loader />;
 
   return (
     <div className="flex flex-col gap-6 relative">
@@ -120,7 +125,7 @@ export const FormProduct = ({ titleForm }: Props) => {
 
       <form
         className="grid grid-cols-1 lg:grid-cols-3 gap-8 auto-rows-max flex-1"
-        // onSubmit={onSubmit}
+        onSubmit={onSubmit}
       >
         <SectionFormProduct
           titleSection="Detalles del Producto"
@@ -163,7 +168,7 @@ export const FormProduct = ({ titleForm }: Props) => {
           titleSection="Variantes del Producto"
           className="lg:col-span-2 h-fit"
         >
-          <VariantsInput
+          <ProductsInput
             control={control}
             errors={errors}
             register={register}

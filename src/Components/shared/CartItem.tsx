@@ -3,7 +3,6 @@ import { useCartStore } from "@/store";
 import { LucideMinus } from "lucide-react";
 
 export interface ICartItem {
-  variantId: string;
   productId: string;
   name: string;
   price: number;
@@ -20,12 +19,12 @@ export const CartItem = ({ item }: Props) => {
   const updateQuantity = useCartStore((state) => state.updateQuantity);
 
   const increment = () => {
-    updateQuantity(item.variantId, item.quantity + 1);
+    updateQuantity(item.productId, item.quantity + 1);
   };
 
   const decrement = () => {
     if (item.quantity > 1) {
-      updateQuantity(item.variantId, item.quantity - 1);
+      updateQuantity(item.productId, item.quantity - 1);
     }
   };
 
@@ -60,7 +59,7 @@ export const CartItem = ({ item }: Props) => {
 
           <button
             className="underline font-medium text-[10px]"
-            onClick={() => removeItem(item.variantId)}
+            onClick={() => removeItem(item.productId)}
           >
             Eliminar
           </button>

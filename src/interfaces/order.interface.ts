@@ -1,9 +1,7 @@
-// Entrada de una nueva orden
 export interface OrderInput {
   customerId: number; // FK hacia customers
   address: {
-    addressLine1: string;
-    addressLine2?: string;
+    addressLine: string;
     city: string;
     state: string;
     postalCode?: string;
@@ -19,12 +17,10 @@ export interface OrderInput {
 
 // Representa una orden individual básica (por ejemplo en un historial)
 export interface OrderItemSingle {
+  created_at: string;
   id: number;
-  customer_id: number;
-  address_id: number;
   status: string;
   total_amount: number;
-  created_at: string;
 }
 
 // Orden con información del cliente (JOIN customers)
@@ -33,7 +29,7 @@ export interface OrderWithCustomer {
   status: string;
   total_amount: number;
   created_at: string;
-  customer: {
+  customers: {
     full_name: string;
     email: string;
   } | null;

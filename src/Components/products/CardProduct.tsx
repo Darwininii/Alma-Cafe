@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import type { VariantProduct } from "@/interfaces";
 import { formatPrice } from "@/helpers";
 import { Button } from "@/Components/shared/Button";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
@@ -13,48 +12,58 @@ interface Props {
   name: string;
   price: number;
   slug: string;
-  variants: VariantProduct[];
+  stock: string | null; // <-- ahora se usa directo
 }
 
-export const CardProduct = ({ img, name, price, slug, variants }: Props) => {
+export const CardProduct = ({ img, name, price, slug, stock }: Props) => {
   const addItem = useCartStore((state) => state.addItem);
+
+  const isOutOfStock = stock === "Agotado";
 
   const handleAddClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (selectedProduct && selectedProduct.stock > 0) {
-      addItem({
-        variantId: selectedProduct.id,
-        productId: slug,
-        name,
-        image: img,
-        price: selectedProduct.price,
-        quantity: 1,
-      });
-      toast.success("Producto añadido al carrito", {
-        position: "bottom-right",
-      });
-    } else {
+    if (isOutOfStock) {
       toast.error("Producto agotado", {
         position: "bottom-right",
       });
+      return;
     }
+
+    addItem({
+      productId: slug,
+      name,
+      image: img,
+      price,
+      quantity: 1,
+    });
+
+    toast.success("Producto añadido al carrito", {
+      position: "bottom-right",
+    });
   };
 
-  const stock = selectedProduct?.stock || 0;
-
+  // Lens effect
   const [lensPos, setLensPos] = React.useState({ x: 0, y: 0 });
   const [showLens, setShowLens] = React.useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setLensPos({ x, y });
+    setLensPos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
   };
 
   return (
     <div className="relative max-w-sm bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+      {/* Etiqueta de Stock */}
+      {isOutOfStock && (
+        <div className="absolute top-2 left-2 z-20">
+          <Tag contentTag="Agotado" />
+        </div>
+      )}
+
       {/* Imagen con efecto Lens */}
       <Link to={`/productos/${slug}`}>
         <div
@@ -68,6 +77,7 @@ export const CardProduct = ({ img, name, price, slug, variants }: Props) => {
             alt={name}
             className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
           />
+
           {showLens && (
             <div
               className="absolute w-32 h-32 rounded-full border-2 border-white shadow-lg pointer-events-none"
@@ -86,43 +96,34 @@ export const CardProduct = ({ img, name, price, slug, variants }: Props) => {
       {/* Contenido */}
       <div className="p-4 flex flex-col items-center text-center">
         <h3 className="text-lg font-semibold">{name}</h3>
+
         <p className="text-gray-600">{formatPrice(price)}</p>
 
         {/* Botones */}
-        <div className="flex gap-3 mt-5 ">
-          <Link to={`/productos/${slug}`}>
-            <div className="p-0.5 rounded-full bg-linear-to-r from-white via-black to-white hover:animate-gradient-x">
-              <Button
-                variant="default"
-                size="md"
-                effect="none"
-                className="flex items-center justify-center bg-primary text-black rounded-full transition-all duration-300 ease-out hover:scale-105 hover:ring-2 ring-black bg-white active:scale-95 cursor-pointer"
-              >
-                <MdOutlineAddShoppingCart
-                  className="
-                text-xl text-black transition-transform duration-300
-                group-hover:rotate-12
-                hover:scale-125 hover:text-black"
-                />
-              </Button>
-            </div>
-          </Link>
+        <div className="flex gap-3 mt-5">
           <Button
-            variant="ghost"
-            size="md"
-            effect="expandIcon"
-            className="text-black border border-primary rounded-full ring-1 hover:ring-[1.5px]
-            hover:shadow-md transition-all duration-300 ease-out
-            hover:scale-105 active:scale-95"
+            className={`flex items-center justify-center rounded-full transition-all duration-300 ease-out 
+            px-4 py-2 cursor-pointer 
+            ${
+              isOutOfStock
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-primary text-black hover:scale-105 hover:ring-2 ring-black active:scale-95"
+            }`}
+            disabled={isOutOfStock}
+            onClick={handleAddClick}
           >
-            Ver más
+            <MdOutlineAddShoppingCart className="text-xl text-black" />
           </Button>
-        </div>
-      </div>
 
-      {/* Stock */}
-      <div className="absolute top-2 left-2">
-        {stock === 0 && <Tag contentTag="Agotado" />}
+          <Link to={`/productos/${slug}`}>
+            <Button
+              className="text-black border border-primary rounded-full ring-1 hover:ring-[1.5px] px-4 py-2
+              hover:shadow-md transition-all duration-300 ease-out hover:scale-105 active:scale-95"
+            >
+              Ver más
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

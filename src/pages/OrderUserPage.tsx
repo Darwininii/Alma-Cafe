@@ -99,7 +99,7 @@ export const OrderUserPage = () => {
 
             <div className="flex flex-col gap-1 text-sm">
               <h3 className="font-medium text-base">Envío:</h3>
-              <p>{order.address.addressLine1}</p>
+              <p>{order.address.addressLine}</p>
               <p>{order.address.city}</p>
               <p>{order.address.state}</p>
               <p>{order.address.postalCode}</p>

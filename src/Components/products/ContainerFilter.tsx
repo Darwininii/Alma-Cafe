@@ -1,9 +1,9 @@
 import { Separator } from "../shared/Separator";
 
 const availableBrands = [
-  "Samsung",
-  "Apple",
-  "Huawei",
+  "Café",
+  "Mecatos",
+  "Galletas",
   "Xiaomi",
   "Realme",
   "Honor",
@@ -13,19 +13,6 @@ interface Props {
   selectedBrands: string[];
   setSelectedBrands: (brands: string[]) => void;
 }
-
-// export const ContainerFilter = ({
-//   selectedBrands,
-//   setSelectedBrands,
-// }: Props) => {
-//   const handleBrandChange = (brand: string) => {
-//     if (selectedBrands.incluides(brands)) {
-//       setSelectedBrands(selectedBrands.filter((b) => b !== brand));
-//     } else {
-//       setSelectedBrands([...selectedBrands, brand]);
-//     }
-//   };
-// };
 
 export const ContainerFilter = ({
   selectedBrands,

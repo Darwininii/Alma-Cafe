@@ -21,7 +21,7 @@ export const ProductGrid = ({ title, products }: Props) => {
             name={product.name}
             price={product.price}
             slug={product.slug}
-            variants={product.variants}
+            productos={product.productos}
           />
         ))}
       </div>

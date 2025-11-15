@@ -66,7 +66,7 @@ export const Search = () => {
                     </p>
 
                     <p className="text-sm font-medium text-gray-600">
-                      {formatPrice(product.variants[0].price)}
+                      {formatPrice(product.price)}
                     </p>
                   </div>
                 </button>

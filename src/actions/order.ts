@@ -1,9 +1,8 @@
 import type { OrderInput } from "@/interfaces";
 import { supabase } from "../supabase/client";
 
-/* ============================= */
 /*   CREAR ORDEN DE COMPRA       */
-/* ============================= */
+
 export const createOrder = async (order: OrderInput) => {
   // 1. Obtener el usuario autenticado y su cliente
   const { data, error: errorUser } = await supabase.auth.getUser();
@@ -21,10 +20,10 @@ export const createOrder = async (order: OrderInput) => {
   if (errorCustomer) throw new Error(errorCustomer.message);
   const customerId = customer.id;
 
-  // 2. Verificar disponibilidad del producto (stock = "si")
+  // 2. Verificar disponibilidad del producto (stock = "disponible")
   for (const item of order.cartItems) {
     const { data: product, error: productError } = await supabase
-      .from("products")
+      .from("productos")
       .select("stock, name")
       .eq("id", item.productId)
       .single();
@@ -32,7 +31,7 @@ export const createOrder = async (order: OrderInput) => {
     if (productError) throw new Error(productError.message);
     if (!product) throw new Error("Producto no encontrado");
 
-    if (product.stock.toLowerCase() !== "si") {
+    if (product.stock.toLowerCase() !== "Disponible") {
       throw new Error(
         `El producto "${product.name}" no está disponible actualmente.`
       );
@@ -41,10 +40,9 @@ export const createOrder = async (order: OrderInput) => {
 
   // 3. Guardar dirección del envío
   const { data: addressData, error: addressError } = await supabase
-    .from("addresses")
+    .from("address")
     .insert({
-      address_line1: order.address.addressLine1,
-      address_line2: order.address.addressLine2 ?? null,
+      address_line: order.address.addressLine,
       city: order.address.city,
       state: order.address.state,
       postal_code: order.address.postalCode ?? null,
@@ -70,7 +68,7 @@ export const createOrder = async (order: OrderInput) => {
 
   if (orderError) throw new Error(orderError.message);
 
-  // 5. Insertar los items del pedido
+  // 5. Insertar los detalles del pedido
   const orderItems = order.cartItems.map((item) => ({
     order_id: orderData.id,
     product_id: item.productId,
@@ -79,7 +77,7 @@ export const createOrder = async (order: OrderInput) => {
   }));
 
   const { error: orderItemsError } = await supabase
-    .from("order_items")
+    .from("order_item")
     .insert(orderItems);
 
   if (orderItemsError) throw new Error(orderItemsError.message);
@@ -88,9 +86,8 @@ export const createOrder = async (order: OrderInput) => {
   return orderData;
 };
 
-/* ============================= */
 /*   OBTENER ORDENES CLIENTE     */
-/* ============================= */
+
 export const getOrdersByCustomerId = async () => {
   const { data, error } = await supabase.auth.getUser();
   if (error) throw new Error(error.message);
@@ -114,9 +111,8 @@ export const getOrdersByCustomerId = async () => {
   return orders;
 };
 
-/* ============================= */
 /*   OBTENER ORDEN POR ID        */
-/* ============================= */
+
 export const getOrderById = async (orderId: number) => {
   const { data: user, error: errorUser } = await supabase.auth.getUser();
   if (errorUser) throw new Error(errorUser.message);
@@ -133,12 +129,7 @@ export const getOrderById = async (orderId: number) => {
   const { data: order, error } = await supabase
     .from("orders")
     .select(
-      `
-      *,
-      addresses(*),
-      customers(full_name, email),
-      order_items(quantity, price, products(name, image))
-    `
+      `*,  addresses(*), customers(full_name, email), order_item(quantity, price, products(name, image))`
     )
     .eq("customer_id", customer.id)
     .eq("id", orderId)
@@ -155,24 +146,23 @@ export const getOrderById = async (orderId: number) => {
     status: order.status,
     created_at: order.created_at,
     address: {
-      addressLine1: order.addresses?.address_line1,
+      addressLine: order.addresses?.address_line1,
       city: order.addresses?.city,
       state: order.addresses?.state,
       postalCode: order.addresses?.postal_code,
       country: order.addresses?.country,
     },
-    orderItems: order.order_items.map((item) => ({
+    orderItems: order.order_item.map((item) => ({
       quantity: item.quantity,
       price: item.price,
-      // productName: item.products?.name,
-      // productImage: item.products?.image,
+      productName: item.products?.name,
+      productImage: item.products?.image,
     })),
   };
 };
 
-/* ============================= */
 /*      ADMINISTRADOR            */
-/* ============================= */
+
 export const getAllOrders = async () => {
   const { data, error } = await supabase
     .from("orders")
@@ -204,9 +194,9 @@ export const getOrderByIdAdmin = async (id: number) => {
     .select(
       `
       *,
-      addresses(*),
+      address(*),
       customers(full_name, email),
-      order_items(quantity, price, products(name, image))
+      order_item(quantity, price, productos(name, image))
     `
     )
     .eq("id", id)
@@ -223,17 +213,17 @@ export const getOrderByIdAdmin = async (id: number) => {
     status: order.status,
     created_at: order.created_at,
     address: {
-      addressLine1: order.addresses?.address_line1,
+      addressLine: order.addresses?.address_line1,
       city: order.addresses?.city,
       state: order.addresses?.state,
       postalCode: order.addresses?.postal_code,
       country: order.addresses?.country,
     },
-    orderItems: order.order_items.map((item) => ({
+    orderItems: order.order_item.map((item) => ({
       quantity: item.quantity,
       price: item.price,
-      // productName: item.products?.name,
-      // productImage: item.products?.image,
+      productName: item.products?.name,
+      productImage: item.products?.image,
     })),
   };
 };

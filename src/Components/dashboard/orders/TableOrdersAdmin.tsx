@@ -1,6 +1,6 @@
 import { formatDate, formatPrice } from "@/helpers";
 import { useChangeStatusOrder } from "@/hooks";
-import type { OrderWhithCustomer } from "@/interfaces/order.interface";
+import type { OrderWithCustomer } from "@/interfaces/order.interface";
 import { useNavigate } from "react-router-dom";
 
 const tableHeaders = ["Cliente", "Fecha", "Estado", "Total"];
@@ -13,7 +13,7 @@ const statusOptions = [
 ];
 
 interface Props {
-  orders: OrderWhithCustomer[];
+  orders: OrderWithCustomer[];
 }
 
 export const TableOrdersAdmin = ({ orders }: Props) => {

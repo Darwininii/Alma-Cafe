@@ -26,7 +26,7 @@ export const FormCheckout = () => {
     const orderInput = {
       address: data,
       cartItems: cartItems.map((item) => ({
-        variantId: item.variantId,
+        productId: item.productId,
         quantity: item.quantity,
         price: item.price,
       })),
@@ -59,7 +59,7 @@ export const FormCheckout = () => {
           <InputAddress
             register={register}
             errors={errors}
-            name="addressLine1"
+            name="addressLine"
             placeholder="Dirección principal"
           />
 

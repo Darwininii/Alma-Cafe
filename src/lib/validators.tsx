@@ -9,14 +9,10 @@ export const userRegisterSchema = z.object({
 });
 
 export const addressSchema = z.object({
-  addressLine1: z
+  addressLine: z
     .string()
     .min(1, "La dirección es requerida")
     .max(100, "La dirección no debe exceder los 100 carácteres"),
-  addressLine2: z
-    .string()
-    .max(100, "La dirección no debe exceder los 100 carácteres")
-    .optional(),
   city: z
     .string()
     .min(1, "La ciudad es requerida")
@@ -72,15 +68,15 @@ export const productSchema = z.object({
       message: "La descripción no puede estar vacía",
     }
   ),
-  variants: z
+  products: z
     .array(
       z.object({
         id: z.string().optional(),
-        stock: z.number(),
-        price: z.number().min(0.01, "El precio debe ser mayor a 0"),
+        stock: z.string(),
+        price: z.number().min(1000, "El precio debe ser mayor a 0"),
       })
     )
-    .min(1, "Debe haber al menos una variante"),
+    .min(1, "Debe haber al menos un producto"),
   images: z.array(z.any()).min(1, "Debe haber al menos una imagen"),
 });
 

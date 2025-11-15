@@ -121,7 +121,7 @@ export const GraciasPage = () => {
 
             <div className="flex flex-col text-sm">
               <p className="font-semibold">Dirección de envío</p>
-              <p>{data.address.addressLine1}</p>
+              <p>{data.address.addressLine}</p>
               <p>{data.address.city}</p>
               <p>{data.address.state}</p>
               <p>{data.address.postalCode}</p>

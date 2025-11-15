@@ -10,7 +10,7 @@ export const ItemsCheckout = () => {
       <ul className="space-y-5">
         {cartItems.map((item) => (
           <li
-            key={item.variantId}
+            key={item.productId}
             className="flex justify-between items-center gap-5"
           >
             <div className="flex relative border border-stone-300 bg-stone-200 rounded-md">

@@ -8,8 +8,8 @@ export interface CartState {
   totalAmount: number;
 
   addItem: (item: ICartItem) => void;
-  removeItem: (variantId: string) => void;
-  updateQuantity: (variantId: string, quantity: number) => void;
+  removeItem: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
   cleanCart: () => void;
 }
 
@@ -22,22 +22,20 @@ const storeApi: StateCreator<CartState> = (set) => ({
   addItem: (item) => {
     set((state) => {
       const existingItemIndex = state.items.findIndex(
-        (i) => i.variantId === item.variantId
+        (i) => i.productId === item.productId
       );
+
       let updatedItems;
 
       if (existingItemIndex >= 0) {
-        // Si el item ya existe en el carrito, actualizamos la cantidad
+        // Si ya existe, sumar cantidad
         updatedItems = state.items.map((i, index) =>
           index === existingItemIndex
-            ? {
-                ...i,
-                quantity: i.quantity + item.quantity,
-              }
+            ? { ...i, quantity: i.quantity + item.quantity }
             : i
         );
       } else {
-        // Si el item no existe en el carrito, lo añadimos
+        // Si no existe, añadirlo
         updatedItems = [...state.items, item];
       }
 
@@ -59,9 +57,9 @@ const storeApi: StateCreator<CartState> = (set) => ({
     });
   },
 
-  removeItem: (variantId) => {
+  removeItem: (productId) => {
     set((state) => {
-      const updatedItems = state.items.filter((i) => i.variantId !== variantId);
+      const updatedItems = state.items.filter((i) => i.productId !== productId);
 
       const newTotalItems = updatedItems.reduce(
         (acc, i) => acc + i.quantity,
@@ -81,10 +79,10 @@ const storeApi: StateCreator<CartState> = (set) => ({
     });
   },
 
-  updateQuantity: (variantId, quantity) => {
+  updateQuantity: (productId, quantity) => {
     set((state) => {
       const updatedItems = state.items.map((i) =>
-        i.variantId === variantId ? { ...i, quantity } : i
+        i.productId === productId ? { ...i, quantity } : i
       );
 
       const newTotalItems = updatedItems.reduce(

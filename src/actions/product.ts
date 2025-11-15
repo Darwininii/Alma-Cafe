@@ -1,5 +1,5 @@
-import type { ProductInput } from "@/interfaces/product.interface";
-import { extractFilePath } from "../helpers";
+import type { Product, ProductInput } from "@/interfaces/product.interface";
+// import { extractFilePath } from "../helpers";
 
 import { supabase } from "../supabase/client";
 
@@ -104,32 +104,32 @@ export const searchProducts = async (searchTerm: string) => {
 };
 
 // Crear Producto con Imagenes
-export const createProduct = async (productInput: ProductInput) => {
+export const createProduct = async (produ: Product) => {
   try {
-    const { data: product, error: productError } = await supabase
+    const { data: products, error: productError } = await supabase
       .from("productos")
       .insert({
-        name: productInput.name,
-        brand: productInput.brand,
-        slug: productInput.slug,
-        features: productInput.features,
-        description: productInput.description,
+        name: produ.name,
+        brand: produ.brand,
+        slug: produ.slug,
+        features: produ.features,
+        description: produ.description,
         images: [],
-        price: productInput.price,
-        stock: productInput.stock,
+        price: produ.price,
+        stock: produ.stock,
       })
       .select()
       .single();
 
     if (productError) throw new Error(productError.message);
 
-    const folderName = product.id;
+    const folderName = products.id;
 
     const uploadedImages = await Promise.all(
-      productInput.images.map(async (image) => {
+      produ.images.map(async (image) => {
         const { data, error } = await supabase.storage
           .from("product-images")
-          .upload(`${folderName}/${product.id}-${image.name}`, image);
+          .upload(`${folderName}/${produ.id}-${image as string}`, image);
 
         if (error) throw new Error(error.message);
 
@@ -141,13 +141,13 @@ export const createProduct = async (productInput: ProductInput) => {
     const { error: updatedError } = await supabase
       .from("productos")
       .update({ images: uploadedImages })
-      .eq("id", product.id);
+      .eq("id", products.id);
 
     if (updatedError) throw new Error(updatedError.message);
 
-    return product;
-  } catch (error) {
-    throw new Error("Error inesperado. Vuelva a intentarlo.");
+    return products;
+  } catch {
+    throw new Error("Se produjo un Error");
   }
 };
 
@@ -171,7 +171,7 @@ export const deleteProduct = async (productId: string) => {
   if (product.images.length > 0) {
     const folderName = productId;
 
-    const paths = product.images.map((image) => {
+    const paths = product.images.map((image: string) => {
       const fileName = image.split("/").pop();
       return `${folderName}/${fileName}`;
     });
@@ -183,10 +183,7 @@ export const deleteProduct = async (productId: string) => {
 };
 
 // Actualizar Productos
-export const updateProduct = async (
-  productId: string,
-  productInput: ProductInput
-) => {
+export const updateProduct = async (productId: string, produ: Product) => {
   const { data: current, error: currentError } = await supabase
     .from("productos")
     .select("images")
@@ -200,13 +197,13 @@ export const updateProduct = async (
   const { data: updated, error: updateError } = await supabase
     .from("productos")
     .update({
-      name: productInput.name,
-      brand: productInput.brand,
-      slug: productInput.slug,
-      features: productInput.features,
-      description: productInput.description,
-      price: productInput.price,
-      stock: productInput.stock,
+      name: produ.name,
+      brand: produ.brand,
+      slug: produ.slug,
+      features: produ.features,
+      description: produ.description,
+      price: produ.price,
+      stock: produ.stock,
     })
     .eq("id", productId)
     .select()
@@ -217,11 +214,13 @@ export const updateProduct = async (
   // Manejo de imágenes
   const folderName = productId;
 
-  const validImages = productInput.images;
+  const validImages = produ.images;
 
-  const toDelete = existingImages.filter((img) => !validImages.includes(img));
+  const toDelete = existingImages.filter(
+    (img: string) => !validImages.includes(img)
+  );
 
-  const deletePaths = toDelete.map((url) => {
+  const deletePaths = toDelete.map((url: string) => {
     const fileName = url.split("/").pop();
     return `${folderName}/${fileName}`;
   });
@@ -233,17 +232,23 @@ export const updateProduct = async (
   const uploadedImages = await Promise.all(
     validImages.map(async (image) => {
       if (image instanceof File) {
+        // Si la imagen no es una URL (es un archivo), entonces subela al bucket
         const { data, error } = await supabase.storage
           .from("product-images")
           .upload(`${folderName}/${productId}-${image.name}`, image);
 
         if (error) throw new Error(error.message);
 
-        return supabase.storage.from("product-images").getPublicUrl(data.path)
-          .data.publicUrl;
-      }
+        const imageUrl = supabase.storage
+          .from("product-images")
+          .getPublicUrl(data.path).data.publicUrl;
 
-      return image;
+        return imageUrl;
+      } else if (typeof image === "string") {
+        return image;
+      } else {
+        throw new Error("Tipo de imagen no soportado");
+      }
     })
   );
 

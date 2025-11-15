@@ -4,11 +4,6 @@ import type { LucideIcon } from "lucide-react";
 import { motion, type MotionProps } from "framer-motion";
 import { TbArrowBigRightLines, TbArrowBigRightFilled } from "react-icons/tb";
 
-/**
- * Tomamos las props que espera motion.button (incluye props DOM + MotionProps)
- * y las usamos como base para nuestro ButtonProps, así evitamos incompatibilidades
- * entre onDrag, onPointerDown, etc.
- */
 type MotionButtonBaseProps = Omit<
   React.ComponentPropsWithoutRef<typeof motion.button>,
   "children"

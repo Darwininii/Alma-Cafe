@@ -1,6 +1,5 @@
 import { IoChevronBack } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
-
 import { Loader } from "../../Components/shared/Loader";
 import { formatPrice } from "../../helpers";
 import { useOrderAdmin } from "@/hooks";
@@ -52,18 +51,10 @@ export const DashboardOrderPage = () => {
               <tr key={index} className="border-b border-gray-200">
                 <td className="p-4 font-medium tracking-tighter flex gap-3 items-center">
                   <img
-                    // src={item.productImage}
-                    // alt={item.productName}
+                    src={item.productImage}
+                    alt={item.productName}
                     className="h-20 w-20 object-contain rounded-lg"
                   />
-
-                  <div className="space-y-2">
-                    {/* <h3>{item.productName}</h3>
-                    <p className="text-xs">
-                      {item.color_name} / {item.storage}
-                    </p> */}
-                    <p className="text-sm">{formatPrice(item.price)}</p>
-                  </div>
                 </td>
                 <td className="p-4 font-medium tracking-tighter text-center">
                   {item.quantity}
@@ -102,7 +93,7 @@ export const DashboardOrderPage = () => {
 
             <div className="flex flex-col gap-1 text-sm">
               <h3 className="font-medium text-base">Envío:</h3>
-              <p>{order.address.addressLine1}</p>
+              <p>{order.address.addressLine}</p>
               <p>{order.address.city}</p>
               <p>{order.address.state}</p>
               <p>{order.address.postalCode}</p>

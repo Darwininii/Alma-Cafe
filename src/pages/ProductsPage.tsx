@@ -4,10 +4,8 @@ import { Loader } from "@/Components/shared/Loader";
 import { Separator } from "@/Components/shared/Separator";
 import { Tag } from "@/Components/shared/Tag";
 import { formatPrice } from "@/helpers";
-import { useProduct } from "@/hooks/products/useProduct";
-import { type VariantProduct } from "@/interfaces";
-import { useCartStore } from "@/store";
-import { useCounterStore } from "@/store/counter.store";
+import { useProduct } from "@/hooks";
+import { useCartStore, useCounterStore } from "@/store";
 import { LucideMinus, MessagesSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -20,10 +18,6 @@ export const ProductsPage = () => {
 
   const { product, isLoading, isError } = useProduct(currentSlug || "");
 
-  const [selectedVariant, setSelectedVariant] = useState<VariantProduct | null>(
-    null
-  );
-
   const count = useCounterStore((state) => state.count);
   const increment = useCounterStore((state) => state.increment);
   const decrement = useCounterStore((state) => state.decrement);
@@ -31,47 +25,45 @@ export const ProductsPage = () => {
   const addItem = useCartStore((state) => state.addItem);
   const navigate = useNavigate();
 
-  //Obtener el Stock
-  const isOutOfStock = selectedVariant?.stock === 0;
+  // Stock: convertir string → number
+  const stockNumber = Number(product?.stock || 0);
+  const isOutOfStock = stockNumber <= 0;
 
-  // Función para añadir al carrito
+  // Añadir al carrito
   const addToCart = () => {
-    if (selectedVariant) {
-      addItem({
-        variantId: selectedVariant.id,
-        productId: product?.id || "",
-        name: product?.name || "",
-        image: product?.images[0] || "",
-        price: selectedVariant.price,
-        quantity: count,
-      });
-      toast.success("Producto añadido al carrito", {
-        position: "bottom-right",
-      });
-    }
+    if (!product) return;
+
+    addItem({
+      productId: product.id,
+      name: product.name,
+      image: product.images[0],
+      price: product.price,
+      quantity: count,
+    });
+
+    toast.success("Producto añadido al carrito", {
+      position: "bottom-right",
+    });
   };
-  // Comprar Ahora
+
+  // Comprar ahora
   const buyNow = () => {
-    if (selectedVariant) {
-      addItem({
-        variantId: selectedVariant.id,
-        productId: product?.id || "",
-        name: product?.name || "",
-        image: product?.images[0] || "",
-        price: selectedVariant.price,
-        quantity: count,
-      });
+    if (!product) return;
 
-      navigate("/checkout");
-    }
+    addItem({
+      productId: product.id,
+      name: product.name,
+      image: product.images[0],
+      price: product.price,
+      quantity: count,
+    });
+
+    navigate("/checkout");
   };
 
-  // Resetear el slug actual cuando cambia en la URL
+  // Reset slug cuando cambia
   useEffect(() => {
     setCurrentSlug(slug);
-
-    // Reiniciar variante seleccionada
-    setSelectedVariant(null);
   }, [slug]);
 
   if (isLoading) return <Loader />;
@@ -86,7 +78,7 @@ export const ProductsPage = () => {
   return (
     <>
       <div className="h-fit flex flex-col md:flex-row gap-16 mt-8">
-        {/* Galería de Imagenes */}
+        {/* Galería de Imágenes */}
         <GridImages images={product.images} />
 
         <div className="flex-1 spacey-5">
@@ -94,25 +86,25 @@ export const ProductsPage = () => {
 
           <div className="flex gap-5 items-center">
             <span className="tracking-wide text-lg font-semibold">
-              {formatPrice(selectedVariant?.price || product.variants[0].price)}
+              {formatPrice(product.price)}
             </span>
 
             {/* Stock */}
             <div className="relative">
-              {/* Agotado */}
               {isOutOfStock && <Tag contentTag="Agotado" />}
             </div>
           </div>
 
           <Separator />
-          {/* Caracteristicas */}
+
+          {/* Características */}
           <ul className="space-y-2 ml-7 my-10">
-            {product.features.map((feature) => (
+            {product.features.map((feature: string) => (
               <li
                 key={feature}
                 className="text-sm flex items-center gap-2 tracking-tight font-medium"
               >
-                <span className="gb-black w-[5px] h-[5px] rounded-full " />
+                <span className="gb-black w-[5px] h-[5px] rounded-full" />
                 {feature}
               </li>
             ))}
@@ -139,7 +131,7 @@ export const ProductsPage = () => {
                 </div>
               </div>
 
-              {/* Botones de Acción */}
+              {/* Botones */}
               <div className="flex flex-col gap-3">
                 <button
                   className="bg-slate-400 uppercase font-semibold tracking-widest text-xs py-4 rounded-full transition-all duration-300 hover:bg-slate-600"
@@ -147,6 +139,7 @@ export const ProductsPage = () => {
                 >
                   Agregar al Carrito
                 </button>
+
                 <button
                   className="bg-black text-white uppercase font-semibold tracking-widest text-xs py-4 rounded-full"
                   onClick={buyNow}
@@ -177,7 +170,6 @@ export const ProductsPage = () => {
         </div>
       </div>
 
-      {/* Descripción */}
       <ProductDescription content={product.description} />
     </>
   );
