@@ -8,11 +8,9 @@ import { InputForm } from "./InputForm";
 import { FeaturesInput } from "./FeaturesInput";
 import { useEffect } from "react";
 import { generateSlug } from "../../../helpers";
-import { ProductsInput } from "./ProductsInput";
 import { UploaderImages } from "./UploaderImages";
 import { Editor } from "./Editor";
 import { useCreateProduct, useProduct, useUpdateProduct } from "../../../hooks";
-
 import type { JSONContent } from "@tiptap/react";
 import { Loader } from "@/Components/shared/Loader";
 
@@ -164,7 +162,7 @@ export const FormProduct = ({ titleForm }: Props) => {
           />
         </SectionFormProduct>
 
-        <SectionFormProduct
+        {/* <SectionFormProduct
           titleSection="Variantes del Producto"
           className="lg:col-span-2 h-fit"
         >
@@ -173,7 +171,7 @@ export const FormProduct = ({ titleForm }: Props) => {
             errors={errors}
             register={register}
           />
-        </SectionFormProduct>
+        </SectionFormProduct> */}
 
         <SectionFormProduct titleSection="Imágenes del producto">
           <UploaderImages errors={errors} setValue={setValue} watch={watch} />

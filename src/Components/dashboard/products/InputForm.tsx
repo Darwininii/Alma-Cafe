@@ -3,7 +3,6 @@ import type { ProductFormValues } from "../../../lib/validators";
 
 interface Props {
   className?: string;
-
   label: string;
   placeholder?: string;
   type: string;
@@ -56,6 +55,9 @@ export const InputForm = ({
           className={`py-1.5 text-sm px-3 font-medium tracking-tighter w-full text-slate-600 outline-none focus:outline-none ${className}`}
           autoComplete="off"
           {...register(name)}
+          {...register(name, {
+            valueAsNumber: type === "number",
+          })}
         />
       </div>
     </div>

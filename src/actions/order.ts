@@ -4,10 +4,13 @@ import { supabase } from "../supabase/client";
 /*   CREAR ORDEN DE COMPRA       */
 
 export const createOrder = async (order: OrderInput) => {
-  // 1. Obtener el usuario autenticado y su cliente
+  // 1. Obtener el usuario autenticado + Cliente de tabla customer
   const { data, error: errorUser } = await supabase.auth.getUser();
-  if (errorUser) throw new Error(errorUser.message);
-  if (!data?.user) throw new Error("No se encontró usuario autenticado.");
+
+  if (errorUser) {
+    console.log(errorUser);
+    throw new Error(errorUser.message);
+  }
 
   const userId = data.user.id;
 
@@ -17,42 +20,30 @@ export const createOrder = async (order: OrderInput) => {
     .eq("user_id", userId)
     .single();
 
-  if (errorCustomer) throw new Error(errorCustomer.message);
-  const customerId = customer.id;
-
-  // 2. Verificar disponibilidad del producto (stock = "disponible")
-  for (const item of order.cartItems) {
-    const { data: product, error: productError } = await supabase
-      .from("productos")
-      .select("stock, name")
-      .eq("id", item.productId)
-      .single();
-
-    if (productError) throw new Error(productError.message);
-    if (!product) throw new Error("Producto no encontrado");
-
-    if (product.stock.toLowerCase() !== "Disponible") {
-      throw new Error(
-        `El producto "${product.name}" no está disponible actualmente.`
-      );
-    }
+  if (errorCustomer) {
+    console.log(errorCustomer);
+    throw new Error(errorCustomer.message);
   }
 
-  // 3. Guardar dirección del envío
+  const customerId = customer.id;
+
+  // 3. Guardar la dirección del envío
   const { data: addressData, error: addressError } = await supabase
     .from("address")
     .insert({
-      address_line: order.address.addressLine,
       city: order.address.city,
       state: order.address.state,
-      postal_code: order.address.postalCode ?? null,
+      postal_code: order.address.postalCode,
       country: order.address.country,
       customer_id: customerId,
     })
     .select()
     .single();
 
-  if (addressError) throw new Error(addressError.message);
+  if (addressError) {
+    console.log(addressError);
+    throw new Error(addressError.message);
+  }
 
   // 4. Crear la orden
   const { data: orderData, error: orderError } = await supabase
@@ -66,24 +57,27 @@ export const createOrder = async (order: OrderInput) => {
     .select()
     .single();
 
-  if (orderError) throw new Error(orderError.message);
+  if (orderError) {
+    console.log(orderError);
+    throw new Error(orderError.message);
+  }
 
-  // 5. Insertar los detalles del pedido
+  // 5. Guardar los detalles de la orden
   const orderItems = order.cartItems.map((item) => ({
     order_id: orderData.id,
-    product_id: item.productId,
+    variant_id: item.productId,
     quantity: item.quantity,
     price: item.price,
   }));
 
   const { error: orderItemsError } = await supabase
-    .from("order_item")
+    .from("orders_item")
     .insert(orderItems);
 
-  if (orderItemsError) throw new Error(orderItemsError.message);
-
-  // 🔹 6. Ya no se modifica el stock (solo se valida disponibilidad)
-  return orderData;
+  if (orderItemsError) {
+    console.log(orderItemsError);
+    throw new Error(orderItemsError.message);
+  }
 };
 
 /*   OBTENER ORDENES CLIENTE     */
@@ -129,7 +123,7 @@ export const getOrderById = async (orderId: number) => {
   const { data: order, error } = await supabase
     .from("orders")
     .select(
-      `*,  addresses(*), customers(full_name, email), order_item(quantity, price, products(name, image))`
+      `*,  address(*), customers(full_name, email), order_item(quantity, price, products(name, image))`
     )
     .eq("customer_id", customer.id)
     .eq("id", orderId)
@@ -146,11 +140,11 @@ export const getOrderById = async (orderId: number) => {
     status: order.status,
     created_at: order.created_at,
     address: {
-      addressLine: order.addresses?.address_line1,
-      city: order.addresses?.city,
-      state: order.addresses?.state,
-      postalCode: order.addresses?.postal_code,
-      country: order.addresses?.country,
+      addressLine: order.address?.address_line1,
+      city: order.address?.city,
+      state: order.address?.state,
+      postalCode: order.address?.postal_code,
+      country: order.address?.country,
     },
     orderItems: order.order_item.map((item) => ({
       quantity: item.quantity,
@@ -213,11 +207,11 @@ export const getOrderByIdAdmin = async (id: number) => {
     status: order.status,
     created_at: order.created_at,
     address: {
-      addressLine: order.addresses?.address_line1,
-      city: order.addresses?.city,
-      state: order.addresses?.state,
-      postalCode: order.addresses?.postal_code,
-      country: order.addresses?.country,
+      addressLine: order.address?.address_line1,
+      city: order.address?.city,
+      state: order.address?.state,
+      postalCode: order.address?.postal_code,
+      country: order.address?.country,
     },
     orderItems: order.order_item.map((item) => ({
       quantity: item.quantity,

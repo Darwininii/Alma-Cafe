@@ -132,9 +132,11 @@ export const getUserRole = async (userId: string) => {
     .select("role")
     .eq("user_id", userId)
     .single();
+
   if (error) {
     console.log(error);
-    throw new Error("Error al obtener los datos del Usuario");
+    throw new Error("Error al obtener el rol del usuario");
   }
+
   return data.role;
 };
