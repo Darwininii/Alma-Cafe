@@ -43,3 +43,37 @@ export interface ProductInput {
   features: string[];
   productos: ProductInterface[];
 }
+
+// export interface ProductInterface {
+//   id?: string;
+//   stock: string;
+//   price: number;
+// }
+// export interface Product {
+//   id: string;
+//   created_at: string;
+//   name: string;
+//   brand: string;
+//   slug: string;
+//   description: Json | string | null;
+//   features: string[];
+//   images: string[];
+//   price: number;
+//   stock: string | null;
+// }
+
+// export interface PreparedProduct extends Product {
+//   formatPrice: string;
+// }
+
+// export interface inputForm {
+//   id?: string;
+//   name: string;
+//   brand: string;
+//   slug: string;
+//   description: JSONContent;
+//   images: (File | string)[]; // Puede ser File[] o string[] o una mezcla
+//   features: string[];
+//   stock: string; // Añadido para el stock del producto principal
+//   productos: ProductInterface[];
+// }

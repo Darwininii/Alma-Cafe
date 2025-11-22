@@ -1,5 +1,6 @@
+import type { inputForm } from "@/interfaces/product.interface";
 import { extractFilePath } from "../helpers";
-import { inputForm } from "../interfaces";
+
 import { supabase } from "../supabase/client";
 
 export const getProducts = async (page: number) => {
@@ -8,7 +9,7 @@ export const getProducts = async (page: number) => {
   const to = from + itemsPerPage - 1;
 
   const {
-    data: productos,
+    data: product,
     error,
     count,
   } = await supabase
@@ -22,7 +23,7 @@ export const getProducts = async (page: number) => {
     throw new Error(error.message);
   }
 
-  return { productos, count };
+  return { product, count };
 };
 
 export const getFilteredProducts = async ({
