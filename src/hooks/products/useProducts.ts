@@ -9,7 +9,7 @@ export const useProducts = ({ page = 1 }: { page?: number }) => {
   });
 
   return {
-    products: data?.products,
+    products: data?.product,
     isLoading,
     totalProducts: data?.count ?? 0,
   };

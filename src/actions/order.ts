@@ -13,16 +13,39 @@ export const createOrder = async (order: OrderInput) => {
   }
 
   const userId = data.user.id;
+  const userEmail = data.user.email;
 
-  const { data: customer, error: errorCustomer } = await supabase
+  // 2. Buscar o crear el customer
+  let { data: customer, error: errorCustomer } = await supabase
     .from("customers")
     .select("id")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
   if (errorCustomer) {
     console.log(errorCustomer);
     throw new Error(errorCustomer.message);
+  }
+
+  // Si no existe el customer, crearlo
+  if (!customer) {
+    const { data: newCustomer, error: createCustomerError } = await supabase
+      .from("customers")
+      .insert({
+        user_id: userId,
+        email: userEmail || "",
+        full_name: userEmail?.split("@")[0] || "Usuario",
+        phone: "",
+      })
+      .select("id")
+      .single();
+
+    if (createCustomerError) {
+      console.log(createCustomerError);
+      throw new Error("Error al crear el perfil de cliente");
+    }
+
+    customer = newCustomer;
   }
 
   const customerId = customer.id;
@@ -31,6 +54,7 @@ export const createOrder = async (order: OrderInput) => {
   const { data: addressData, error: addressError } = await supabase
     .from("address")
     .insert({
+      address_line: order.address.addressLine || `${order.address.city}, ${order.address.state}`,
       city: order.address.city,
       state: order.address.state,
       postal_code: order.address.postalCode,
@@ -65,8 +89,8 @@ export const createOrder = async (order: OrderInput) => {
   // 5. Guardar los detalles de la orden
   const orderItems = order.cartItems.map((item) => ({
     order_id: orderData.id,
-    variant_id: item.productId,
-    quantity: item.quantity,
+    products_id: item.productId,  // Corregido: products_id en lugar de variant_id
+    cantidad: item.quantity,       // Corregido: cantidad en lugar de quantity
     price: item.price,
   }));
 
@@ -78,6 +102,9 @@ export const createOrder = async (order: OrderInput) => {
     console.log(orderItemsError);
     throw new Error(orderItemsError.message);
   }
+
+  // Retornar la orden creada
+  return orderData;
 };
 
 /*   OBTENER ORDENES CLIENTE     */
@@ -140,7 +167,7 @@ export const getOrderById = async (orderId: number) => {
     status: order.status,
     created_at: order.created_at,
     address: {
-      addressLine: order.address?.address_line1,
+      addressLine: order.address?.address_line,
       city: order.address?.city,
       state: order.address?.state,
       postalCode: order.address?.postal_code,
@@ -149,8 +176,8 @@ export const getOrderById = async (orderId: number) => {
     orderItems: order.order_item.map((item) => ({
       quantity: item.quantity,
       price: item.price,
-      productName: item.products?.name,
-      productImage: item.products?.image,
+      productName: item.productos?.name,
+      productImage: item.productos?.image,
     })),
   };
 };
@@ -207,7 +234,7 @@ export const getOrderByIdAdmin = async (id: number) => {
     status: order.status,
     created_at: order.created_at,
     address: {
-      addressLine: order.address?.address_line1,
+      addressLine: order.address?.address_line,
       city: order.address?.city,
       state: order.address?.state,
       postalCode: order.address?.postal_code,

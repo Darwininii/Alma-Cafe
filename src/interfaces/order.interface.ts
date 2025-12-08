@@ -8,9 +8,9 @@ export interface OrderInput {
     country: string;
   };
   cartItems: {
-    productId: number; // relación con products
+    productId: string; // Corregido: products_id es string en Supabase
     quantity: number;
-    price: number; // precio unitario o total (según tu lógica)
+    price: number;
   }[];
   totalAmount: number;
 }

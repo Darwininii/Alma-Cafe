@@ -67,6 +67,21 @@ export const extractFilePath = (url: string) => {
   return parts[1];
 };
 
+// Función para sanitizar nombres de archivo
+export const sanitizeFileName = (fileName: string): string => {
+  const parts = fileName.split('.');
+  const extension = parts.pop(); // Obtener extensión
+  const name = parts.join('.'); // Resto del nombre
+
+  const sanitized = name
+    .replace(/[^a-zA-Z0-9-_]/g, '-') // Reemplazar caracteres especiales
+    .replace(/-+/g, '-') // Reemplazar múltiples guiones
+    .replace(/^-|-$/g, '') // Remover guiones al inicio/final
+    .toLowerCase();
+
+  return `${sanitized}.${extension}`;
+};
+
 // TODO: Codigo Original...
 
 // import { Color, Product, VariantProduct } from "../interfaces";

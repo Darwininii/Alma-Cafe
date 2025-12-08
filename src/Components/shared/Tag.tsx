@@ -5,11 +5,9 @@ interface Props {
 }
 
 const getTagColor = (content: TagType) => {
-  const lowerContent = content.toLowerCase();
-  if (lowerContent === "Nuevo") return "bg-yellow-500";
-  if (lowerContent === "Agotado") return "bg-red-500";
-  if (lowerContent === "Promoción") return "bg-Amber-600";
-
+  if (content === "Nuevo") return "bg-yellow-500";
+  if (content === "Agotado") return "bg-red-500";
+  if (content === "Promoción") return "bg-amber-600";
   return "bg-gray-500";
 };
 

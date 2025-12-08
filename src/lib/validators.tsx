@@ -50,6 +50,7 @@ const isContentEmpty = (value: JSONContent): boolean => {
   );
 };
 
+// Schema actualizado para coincidir con la estructura de la base de datos
 export const productSchema = z.object({
   name: z.string().min(1, "El nombre del producto es obligatorio"),
   brand: z.string().min(1, "La marca del producto es obligatoria"),
@@ -68,15 +69,9 @@ export const productSchema = z.object({
       message: "La descripción no puede estar vacía",
     }
   ),
-  products: z
-    .array(
-      z.object({
-        id: z.string().optional(),
-        stock: z.string(),
-        price: z.number().min(1000, "El precio debe ser mayor a 0"),
-      })
-    )
-    .min(1, "Debe haber al menos un producto"),
+  price: z.number().min(1, "El precio debe ser mayor a 0"),
+  stock: z.string().min(1, "El stock es obligatorio"),
+  tag: z.string().optional(),
   images: z.array(z.any()).min(1, "Debe haber al menos una imagen"),
 });
 

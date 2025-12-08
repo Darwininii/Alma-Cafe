@@ -1,11 +1,10 @@
 import type { Json } from "@/supabase/supabase";
 import type { JSONContent } from "@tiptap/react";
 
-export interface ProductInterface {
-  id?: string;
-  stock: string;
-  price: number;
-}
+// Tipos de tags para productos
+export type ProductTag = "Nuevo" | "Promoción" | null;
+
+// Interfaz que coincide exactamente con la tabla 'productos' de Supabase
 export interface Product {
   id: string;
   created_at: string;
@@ -16,64 +15,25 @@ export interface Product {
   features: string[];
   images: string[];
   price: number;
-  stock: string | null;
+  stock: string | null; // "Disponible" | "Agotado"
+  tag?: ProductTag; // Nuevo campo para tags
 }
 
+// Producto preparado para mostrar en la UI
 export interface PreparedProduct extends Product {
   formatPrice?: string;
-  id: string;
-  name: string;
-  brand: string;
-  slug: string;
-  features: string[];
-  description: Json;
-  images: string[];
-  created_at: string;
-  price: number;
-  productos: ProductInterface[];
 }
 
+// Input para crear/editar productos
 export interface ProductInput {
   id?: string;
   name: string;
   brand: string;
   slug: string;
   description: JSONContent;
-  images: File[];
+  images: File[] | string[]; // Puede ser archivos nuevos o URLs existentes
   features: string[];
-  productos: ProductInterface[];
+  price: number;
+  stock: string;
+  tag?: ProductTag; // Nuevo campo para tags
 }
-
-// export interface ProductInterface {
-//   id?: string;
-//   stock: string;
-//   price: number;
-// }
-// export interface Product {
-//   id: string;
-//   created_at: string;
-//   name: string;
-//   brand: string;
-//   slug: string;
-//   description: Json | string | null;
-//   features: string[];
-//   images: string[];
-//   price: number;
-//   stock: string | null;
-// }
-
-// export interface PreparedProduct extends Product {
-//   formatPrice: string;
-// }
-
-// export interface inputForm {
-//   id?: string;
-//   name: string;
-//   brand: string;
-//   slug: string;
-//   description: JSONContent;
-//   images: (File | string)[]; // Puede ser File[] o string[] o una mezcla
-//   features: string[];
-//   stock: string; // Añadido para el stock del producto principal
-//   productos: ProductInterface[];
-// }

@@ -11,7 +11,6 @@ import { ProduTableProduct } from "./ProduTableProduct";
 const tableHeaders = [
   "",
   "Nombre",
-  "Variante",
   "Precio",
   "Stock",
   "Fecha de creación",
@@ -20,9 +19,6 @@ const tableHeaders = [
 
 export const TableProduct = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
-  const [selectedVariants, setSelectedVariants] = useState<{
-    [key: string]: number;
-  }>({});
   const [page, setPage] = useState(1);
 
   const { products, isLoading, totalProducts } = useProducts({
@@ -36,13 +32,6 @@ export const TableProduct = () => {
     } else {
       setOpenMenuIndex(index);
     }
-  };
-
-  const handleVariantChange = (productId: string, variantIndex: number) => {
-    setSelectedVariants({
-      ...selectedVariants,
-      [productId]: variantIndex,
-    });
   };
 
   const handleDeleteProduct = (id: string) => {
@@ -74,10 +63,6 @@ export const TableProduct = () => {
           </thead>
           <tbody>
             {products.map((product, index) => {
-              const selectedVariantIndex = selectedVariants[product.id] ?? 0;
-              const selectedVariant =
-                product.variants[selectedVariantIndex] || {};
-
               return (
                 <tr key={index}>
                   <td className="p-4 align-middle sm:table-cell">
@@ -93,26 +78,11 @@ export const TableProduct = () => {
                     />
                   </td>
                   <ProduTableProduct content={product.name} />
-                  <td className="p-4 font-medium tracking-tighter">
-                    <select
-                      className="border border-gray-300 rounded-md p-1 w-full"
-                      onChange={(e) =>
-                        handleVariantChange(product.id, Number(e.target.value))
-                      }
-                      value={selectedVariantIndex}
-                    >
-                      {product.variants.map((variant, variantIndex) => (
-                        <option key={variant.id} value={variantIndex}>
-                          {/* {variant.color_name} - {variant.storage} */}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
                   <ProduTableProduct
-                    content={formatPrice(selectedVariant?.price)}
+                    content={formatPrice(product.price)}
                   />
                   <ProduTableProduct
-                    content={(selectedVariant.stock || 0).toString()}
+                    content={product.stock || "0"}
                   />
                   <ProduTableProduct content={formatDate(product.created_at)} />
                   <td className="relative">

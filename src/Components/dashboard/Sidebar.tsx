@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { dashboardLinks } from "../../constants/links";
 import { IoLogOutOutline } from "react-icons/io5";
 import { signOut } from "../../actions";
-import { Logo } from "../shared/Logo";
+import { Logo } from "../shared/logo";
 
 export const Sidebar = () => {
   const handleLogout = async () => {
@@ -19,10 +19,9 @@ export const Sidebar = () => {
             key={link.id}
             to={link.href}
             className={({ isActive }) =>
-              `flex items-center justify-center gap-3 pl-0 py-3 transition-all duration-300 rounded-md ${
-                isActive
-                  ? "text-white bg-cyan-600"
-                  : "hover:text-white hover:bg-cyan-600"
+              `flex items-center justify-center gap-3 pl-0 py-3 transition-all duration-300 rounded-md ${isActive
+                ? "text-white bg-cyan-600"
+                : "hover:text-white hover:bg-cyan-600"
               } lg:pl-5 lg:justify-start`
             }
           >

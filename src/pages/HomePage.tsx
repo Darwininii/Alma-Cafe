@@ -24,10 +24,9 @@ export const HomePage: React.FC = () => {
       <section
         className={`
           transition-all duration-1000 ease-out
-          ${
-            isVisible
-              ? "opacity-100 transform translate-y-0"
-              : "opacity-0 transform -translate-y-10"
+          ${isVisible
+            ? "opacity-100 transform translate-y-0"
+            : "opacity-0 transform -translate-y-10"
           }
         `}
       >

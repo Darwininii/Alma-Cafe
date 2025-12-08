@@ -25,9 +25,8 @@ export const ProductsPage = () => {
   const addItem = useCartStore((state) => state.addItem);
   const navigate = useNavigate();
 
-  // Stock: convertir string → number
-  const stockNumber = Number(product?.stock || 0);
-  const isOutOfStock = stockNumber <= 0;
+  // Stock: verificar si está agotado
+  const isOutOfStock = product?.stock === "Agotado";
 
   // Añadir al carrito
   const addToCart = () => {
@@ -89,9 +88,10 @@ export const ProductsPage = () => {
               {formatPrice(product.price)}
             </span>
 
-            {/* Stock */}
-            <div className="relative">
+            {/* Tags */}
+            <div className="relative flex gap-2">
               {isOutOfStock && <Tag contentTag="Agotado" />}
+              {!isOutOfStock && product.tag && <Tag contentTag={product.tag as "Nuevo" | "Promoción"} />}
             </div>
           </div>
 

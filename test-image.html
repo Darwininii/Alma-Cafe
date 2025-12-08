@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Imagen de Supabase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        img {
+            max-width: 100%;
+            border: 2px solid #333;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Test de Imagen de Supabase</h1>
+    
+    <div class="test-container">
+        <h2>Paso 1: Pega la URL de tu imagen aquí</h2>
+        <input type="text" id="imageUrl" placeholder="https://phapkavlbwvliwdmfzhi.supabase.co/storage/v1/object/public/product-images/..." style="width: 100%; padding: 10px;">
+        <button onclick="testImage()" style="margin-top: 10px; padding: 10px 20px;">Probar Imagen</button>
+    </div>
+
+    <div class="test-container">
+        <h2>Resultado:</h2>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function testImage() {
+            const url = document.getElementById('imageUrl').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!url) {
+                resultDiv.innerHTML = '<p class="error">Por favor ingresa una URL</p>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<p>Probando imagen...</p>';
+
+            // Crear elemento de imagen
+            const img = new Image();
+            
+            img.onload = function() {
+                resultDiv.innerHTML = `
+                    <p class="success">✅ ¡Imagen cargó correctamente!</p>
+                    <p><strong>Dimensiones:</strong> ${img.naturalWidth} x ${img.naturalHeight}</p>
+                    <p><strong>URL:</strong> ${url}</p>
+                    <img src="${url}" alt="Test">
+                `;
+            };
+
+            img.onerror = function() {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Error al cargar la imagen</p>
+                    <p><strong>URL intentada:</strong> ${url}</p>
+                    <p><strong>Posibles causas:</strong></p>
+                    <ul>
+                        <li>La URL no es correcta</li>
+                        <li>El archivo no existe en Supabase</li>
+                        <li>El bucket no es público</li>
+                        <li>Hay un problema de CORS</li>
+                    </ul>
+                    <p><strong>Prueba abriendo la URL directamente:</strong></p>
+                    <a href="${url}" target="_blank">Abrir en nueva pestaña</a>
+                `;
+            };
+
+            img.src = url;
+        }
+    </script>
+</body>
+</html>

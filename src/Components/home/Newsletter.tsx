@@ -65,7 +65,6 @@ export const Newsletter = () => {
             <form className="flex flex-col gap-3 sm:flex-row">
               <Input
                 containerClassName="max-w-sm"
-                variant="glass"
                 type="email"
                 required
                 placeholder="Tu correo electrónico"
@@ -73,7 +72,6 @@ export const Newsletter = () => {
               />
               <Button
                 type="submit"
-                variant="ghost"
                 size="md"
                 effect="expandIcon"
                 filledIcon

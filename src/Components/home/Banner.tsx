@@ -15,9 +15,15 @@ export const Banner = () => {
 
   // 🔁 Lógica de animación controlada manualmente
   useEffect(() => {
+    let isMounted = true;
+
     const startAnimation = async () => {
+      if (!isMounted) return;
+
       // ⏱ Espera 5 segundos antes de la primera animación
       await new Promise((res) => setTimeout(res, 5000));
+
+      if (!isMounted) return;
 
       // 🎬 Animación inicial
       await controls.start((i) => ({
@@ -31,8 +37,11 @@ export const Banner = () => {
         },
       }));
 
+      if (!isMounted) return;
+
       // 🔁 Repetir cada 8 segundos
       intervalRef.current = setInterval(() => {
+        if (!isMounted) return;
         controls.start((i) => ({
           scale: [1, 1.25, 1],
           opacity: [1, 0.8, 1],
@@ -55,6 +64,7 @@ export const Banner = () => {
 
     // 🧹 Limpieza al desmontar o cambiar el estado de visibilidad
     return () => {
+      isMounted = false;
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [inView, controls]);
@@ -127,7 +137,6 @@ export const Banner = () => {
         >
           <Button
             type="submit"
-            variant="ghost"
             size="md"
             effect="expandIcon"
             filledIcon

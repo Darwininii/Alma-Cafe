@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ImageZoom } from "../shared/ImageZoom";
 
 interface Props {
   images: string[];
@@ -12,9 +13,9 @@ export const GridImages = ({ images }: Props) => {
 
   return (
     <div className="flex-1 flex flex-col gap-3 relative">
-      <div className="bg-yellow-500 h-[500px] p-4">
-        <img
-          src={activeImage}
+      <div className="bg-transparent h-[500px] p-4">
+        <ImageZoom
+          img={activeImage}
           alt="Imagen del Producto"
           className="h-full w-full object-contain"
         />
@@ -26,9 +27,8 @@ export const GridImages = ({ images }: Props) => {
           <button
             key={index}
             onClick={() => handleImagesClick(image)}
-            className={`w-16 h-16 p-1 border ${
-              activeImage === image ? "border-black" : "border-transparent"
-            } rounded-lg hover:border-black focus:outline-none`}
+            className={`w-16 h-16 p-1 border ${activeImage === image ? "border-black" : "border-transparent"
+              } rounded-lg hover:border-black focus:outline-none`}
           >
             <img
               src={image}

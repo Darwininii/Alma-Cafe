@@ -6,16 +6,18 @@ import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { Tag } from "../shared/Tag";
 import { useCartStore } from "@/store";
 import toast from "react-hot-toast";
+import { ImageZoom } from "../shared/ImageZoom";
 
 interface Props {
   img: string;
   name: string;
   price: number;
   slug: string;
-  stock: string | null; // <-- ahora se usa directo
+  stock: string | null;
+  tag?: "Nuevo" | "Promoción" | null;
 }
 
-export const CardProduct = ({ img, name, price, slug, stock }: Props) => {
+export const CardProduct = ({ img, name, price, slug, stock, tag }: Props) => {
   const addItem = useCartStore((state) => state.addItem);
 
   const isOutOfStock = stock === "Agotado";
@@ -43,53 +45,30 @@ export const CardProduct = ({ img, name, price, slug, stock }: Props) => {
     });
   };
 
-  // Lens effect
-  const [lensPos, setLensPos] = React.useState({ x: 0, y: 0 });
-  const [showLens, setShowLens] = React.useState(false);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setLensPos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
 
   return (
     <div className="relative max-w-sm bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
-      {/* Etiqueta de Stock */}
+      {/* Etiquetas */}
       {isOutOfStock && (
         <div className="absolute top-2 left-2 z-20">
           <Tag contentTag="Agotado" />
         </div>
       )}
+      {!isOutOfStock && tag && (
+        <div className="absolute top-2 left-2 z-20">
+          <Tag contentTag={tag} />
+        </div>
+      )}
 
       {/* Imagen con efecto Lens */}
       <Link to={`/productos/${slug}`}>
-        <div
-          className="relative h-64 w-full overflow-hidden cursor-crosshair group"
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setShowLens(true)}
-          onMouseLeave={() => setShowLens(false)}
-        >
-          <img
-            src={img}
+        <div className="relative h-64 w-full overflow-hidden bg-gray-50">
+          <ImageZoom
+            img={img}
             alt={name}
-            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-contain"
           />
-
-          {showLens && (
-            <div
-              className="absolute w-32 h-32 rounded-full border-2 border-white shadow-lg pointer-events-none"
-              style={{
-                top: `${lensPos.y - 64}px`,
-                left: `${lensPos.x - 64}px`,
-                backgroundImage: `url(${img})`,
-                backgroundSize: "200% 200%",
-                backgroundPosition: `${lensPos.x / 2}px ${lensPos.y / 2}px`,
-              }}
-            />
-          )}
         </div>
       </Link>
 
@@ -104,11 +83,10 @@ export const CardProduct = ({ img, name, price, slug, stock }: Props) => {
           <Button
             className={`flex items-center justify-center rounded-full transition-all duration-300 ease-out 
             px-4 py-2 cursor-pointer 
-            ${
-              isOutOfStock
+            ${isOutOfStock
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-primary text-black hover:scale-105 hover:ring-2 ring-black active:scale-95"
-            }`}
+              }`}
             disabled={isOutOfStock}
             onClick={handleAddClick}
           >

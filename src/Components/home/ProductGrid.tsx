@@ -17,11 +17,13 @@ export const ProductGrid = ({ title, products }: Props) => {
         {products.map((product) => (
           <CardProduct
             key={product.id}
+            id={product.id}
             img={product.images[0]}
             name={product.name}
             price={product.price}
             slug={product.slug}
-            productos={product.productos}
+            stock={product.stock}
+            tag={product.tag}
           />
         ))}
       </div>

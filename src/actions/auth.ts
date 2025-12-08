@@ -116,11 +116,16 @@ export const getUserData = async (userId: string) => {
     .from("customers")
     .select("*")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.log(error);
     throw new Error("Error al obtener los datos del usuario");
+  }
+
+  // Si no existe customer, retornar null
+  if (!data) {
+    return null;
   }
 
   return data;
@@ -131,11 +136,16 @@ export const getUserRole = async (userId: string) => {
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.log(error);
     throw new Error("Error al obtener el rol del usuario");
+  }
+
+  // Si no existe rol, retornar rol por defecto
+  if (!data) {
+    return "customer";
   }
 
   return data.role;

@@ -1,5 +1,5 @@
-import type { inputForm } from "@/interfaces/product.interface";
-import { extractFilePath } from "../helpers";
+import type { ProductInput } from "@/interfaces/product.interface";
+import { extractFilePath, sanitizeFileName } from "../helpers";
 
 import { supabase } from "../supabase/client";
 
@@ -90,6 +90,12 @@ export const getRandomProducts = async () => {
 };
 
 export const getProductBySlug = async (slug: string) => {
+  // Validar que el slug no esté vacío
+  if (!slug || slug.trim() === "") {
+    console.error("Slug vacío o inválido:", slug);
+    throw new Error("Slug no válido");
+  }
+
   const { data, error } = await supabase
     .from("productos")
     .select("*")
@@ -108,7 +114,7 @@ export const searchProducts = async (searchTerm: string) => {
   const { data, error } = await supabase
     .from("productos")
     .select("*")
-    .ilike("name", `%${searchTerm}%`); //Buscar productos cuyo nombre contenga el término de búsqueda
+    .ilike("name", `%${searchTerm}%`);
 
   if (error) {
     console.log(error.message);
@@ -121,7 +127,7 @@ export const searchProducts = async (searchTerm: string) => {
 /* ********************************** */
 /*            ADMINISTRADOR           */
 /* ********************************** */
-export const createProduct = async (productInput: inputForm) => {
+export const createProduct = async (productInput: ProductInput) => {
   try {
     // 1. Crear el producto para obtener el ID
     const { data: product, error: productError } = await supabase
@@ -132,6 +138,9 @@ export const createProduct = async (productInput: inputForm) => {
         slug: productInput.slug,
         features: productInput.features,
         description: productInput.description,
+        price: productInput.price,
+        stock: productInput.stock,
+        tag: productInput.tag || null,
         images: [],
       })
       .select()
@@ -139,23 +148,46 @@ export const createProduct = async (productInput: inputForm) => {
 
     if (productError) throw new Error(productError.message);
 
-    // 2. Subir las imágenes al bucket dentro de una carpeta que se creará a partir del producto
+    // 2. Subir las imágenes al bucket
     const folderName = product.id;
 
     const uploadedImages = await Promise.all(
       productInput.images.map(async (image) => {
+        // Sanitizar nombre del archivo
+        const cleanFileName = sanitizeFileName(image.name);
+        const fileName = `${product.id}-${Date.now()}-${cleanFileName}`;
+        const filePath = `${folderName}/${fileName}`;
+
+        // Determinar contentType desde la extensión del archivo
+        const ext = cleanFileName.split('.').pop()?.toLowerCase() || '';
+        const contentType = ext === 'png' ? 'image/png'
+          : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg'
+            : ext === 'webp' ? 'image/webp'
+              : ext === 'gif' ? 'image/gif'
+                : 'image/png'; // default
+
+        console.log(`📤 Uploading: ${cleanFileName}, Type: ${contentType}`);
+
         const { data, error } = await supabase.storage
           .from("product-images")
-          .upload(`${folderName}/${product.id}-${image.name}`, image);
+          .upload(filePath, image, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: contentType
+          });
 
-        if (error) throw new Error(error.message);
+        if (error) {
+          console.error("❌ Error uploading image:", error);
+          throw new Error(error.message);
+        }
 
-        const imageUrl = `${
-          supabase.storage.from("product-images").getPublicUrl(data.path).data
-            .publicUrl
-        }`;
+        // Construir URL pública
+        const imageUrl = supabase.storage
+          .from("product-images")
+          .getPublicUrl(data.path).data.publicUrl;
 
         return imageUrl;
+
       })
     );
 
@@ -215,7 +247,7 @@ export const deleteProduct = async (productId: string) => {
 
 export const updateProduct = async (
   productId: string,
-  productForm: inputForm
+  productForm: ProductInput
 ) => {
   // 1. Obtener las imágenes actuales del producto
   const { data: currentProduct, error: currentProductError } = await supabase
@@ -237,6 +269,9 @@ export const updateProduct = async (
       slug: productForm.slug,
       features: productForm.features,
       description: productForm.description,
+      price: productForm.price,
+      stock: productForm.stock,
+      tag: productForm.tag || null,
     })
     .eq("id", productId)
     .select()
@@ -277,10 +312,26 @@ export const updateProduct = async (
   const uploadedImages = await Promise.all(
     validImages.map(async (image) => {
       if (image instanceof File) {
-        // Si la imagen no es una URL (es un archivo), entonces subela al bucket
+        // Sanitizar nombre del archivo
+        const cleanFileName = sanitizeFileName(image.name);
+        const fileName = `${productId}-${Date.now()}-${cleanFileName}`;
+        const filePath = `${folderName}/${fileName}`;
+
+        // Determinar contentType desde la extensión
+        const ext = cleanFileName.split('.').pop()?.toLowerCase() || '';
+        const contentType = ext === 'png' ? 'image/png'
+          : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg'
+            : ext === 'webp' ? 'image/webp'
+              : ext === 'gif' ? 'image/gif'
+                : 'image/png';
+
         const { data, error } = await supabase.storage
           .from("product-images")
-          .upload(`${folderName}/${productId}-${image.name}`, image);
+          .upload(filePath, image, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: contentType
+          });
 
         if (error) throw new Error(error.message);
 

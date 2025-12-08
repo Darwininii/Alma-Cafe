@@ -4,4 +4,11 @@ import type { Database } from "./supabase";
 const supabaseKey = import.meta.env.VITE_SUPABASE_API_KEY;
 const supabaseUrl = import.meta.env.VITE_PROJECT_URL_SUPABASE;
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
+    global: {
+        headers: {
+            'Accept': 'application/json',
+            // 'Content-Type': 'application/json', // Eliminado para permitir subida de imágenes correcta
+        },
+    },
+});

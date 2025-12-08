@@ -203,6 +203,7 @@ export type Database = {
           price: number
           slug: string
           stock: string
+          tag: string | null
         }
         Insert: {
           brand: string
@@ -215,6 +216,7 @@ export type Database = {
           price: number
           slug: string
           stock?: string
+          tag?: string | null
         }
         Update: {
           brand?: string
@@ -227,6 +229,7 @@ export type Database = {
           price?: number
           slug?: string
           stock?: string
+          tag?: string | null
         }
         Relationships: []
       }

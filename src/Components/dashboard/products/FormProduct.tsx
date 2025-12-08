@@ -50,44 +50,32 @@ export const FormProduct = ({ titleForm }: Props) => {
       );
       setValue("description", product.description as JSONContent);
       setValue("images", product.images);
-      setValue(
-        "products",
-        product.products.map(
-          (v: { id: string; stock: string; price: number }) => ({
-            id: v.id,
-            stock: v.stock,
-            price: v.price,
-          })
-        )
-      );
+      setValue("price", product.price);
+      setValue("stock", product.stock || "Disponible");
+      setValue("tag", product.tag || null);
     }
   }, [product, isLoading, setValue]);
 
   const onSubmit = handleSubmit((data) => {
     const features = data.features.map((feature) => feature.value);
 
+    const productData = {
+      id: product?.id,
+      name: data.name,
+      brand: data.brand,
+      slug: data.slug,
+      price: data.price,
+      stock: data.stock,
+      tag: data.tag || null,
+      images: data.images,
+      description: data.description,
+      features,
+    };
+
     if (slug) {
-      updateProduct({
-        id: product?.id,
-        name: data.name,
-        brand: data.brand,
-        slug: data.slug,
-        productos: data.products,
-        images: data.images,
-        description: data.description,
-        features,
-      });
+      updateProduct(productData);
     } else {
-      createProduct({
-        id: product?.id,
-        name: data.name,
-        brand: data.brand,
-        slug: data.slug,
-        productos: data.products,
-        images: data.images,
-        description: data.description,
-        features,
-      });
+      createProduct(productData);
     }
   });
 
@@ -131,7 +119,7 @@ export const FormProduct = ({ titleForm }: Props) => {
         >
           <InputForm
             type="text"
-            placeholder="Ejemplo: iPhone 13 Pro Max"
+            placeholder="Ejemplo: Café Colombiano Premium"
             label="nombre"
             name="name"
             register={register}
@@ -146,7 +134,7 @@ export const FormProduct = ({ titleForm }: Props) => {
             type="text"
             label="Slug"
             name="slug"
-            placeholder="iphone-13-pro-max"
+            placeholder="cafe-colombiano-premium"
             register={register}
             errors={errors}
           />
@@ -155,23 +143,56 @@ export const FormProduct = ({ titleForm }: Props) => {
             type="text"
             label="Marca"
             name="brand"
-            placeholder="Apple"
+            placeholder="Alma Café"
             register={register}
             errors={errors}
             required
           />
         </SectionFormProduct>
 
-        {/* <SectionFormProduct
-          titleSection="Variantes del Producto"
-          className="lg:col-span-2 h-fit"
+        <SectionFormProduct
+          titleSection="Precio y Stock"
+          className="lg:col-span-2"
         >
-          <ProductsInput
-            control={control}
-            errors={errors}
+          <InputForm
+            type="number"
+            label="Precio"
+            name="price"
+            placeholder="5000"
             register={register}
+            errors={errors}
+            required
           />
-        </SectionFormProduct> */}
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium">Stock</label>
+            <select
+              className="border border-slate-200 rounded-md p-3"
+              {...register("stock")}
+            >
+              <option value="Disponible">Disponible</option>
+              <option value="Agotado">Agotado</option>
+            </select>
+            {errors.stock && (
+              <p className="text-red-500 text-xs">{errors.stock.message}</p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium">Tag (Opcional)</label>
+            <select
+              className="border border-slate-200 rounded-md p-3"
+              {...register("tag")}
+            >
+              <option value="">Ninguno</option>
+              <option value="Nuevo">Nuevo</option>
+              <option value="Promoción">Promoción</option>
+            </select>
+            {errors.tag && (
+              <p className="text-red-500 text-xs">{errors.tag.message}</p>
+            )}
+          </div>
+        </SectionFormProduct>
 
         <SectionFormProduct titleSection="Imágenes del producto">
           <UploaderImages errors={errors} setValue={setValue} watch={watch} />

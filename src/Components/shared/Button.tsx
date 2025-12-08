@@ -9,19 +9,16 @@ type MotionButtonBaseProps = Omit<
   "children"
 >;
 
-export type ButtonVariant = "default" | "outline" | "ghost" | "destructive";
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
 export type IconPlacement = "left" | "right";
 
 /** Extendemos las props base de motion.button con nuestras props personalizadas */
 export interface ButtonProps extends MotionButtonBaseProps {
-  variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: LucideIcon;
   iconPlacement?: IconPlacement;
   effect?: "expandIcon" | "none";
   filledIcon?: boolean;
-  IconTB?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   children?: React.ReactNode;
 }
 
@@ -29,10 +26,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       effect = "none",
-      variant = "default",
       size = "md",
       icon: Icon,
-      IconTB,
       filledIcon = false,
       iconPlacement = "left",
       className,
@@ -45,13 +40,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles =
       "inline-flex items-center justify-center font-medium transition-all rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none";
 
-    const variants: Record<ButtonVariant, string> = {
-      default: "bg-primary text-white hover:bg-primary/90",
-      outline:
-        "border border-input hover:bg-accent hover:text-accent-foreground",
-      ghost: "hover:bg-accent hover:text-accent-foreground",
-      destructive: "bg-destructive text-white hover:bg-destructive/90",
-    };
+    // Estilo único por defecto
+    const defaultStyle = "bg-primary text-white hover:bg-primary/90";
 
     const sizes: Record<ButtonSize, string> = {
       sm: "h-8 px-3 text-sm",
@@ -71,7 +61,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...(restProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
           className={cn(
             "group relative w-auto cursor-pointer overflow-hidden rounded-full border bg-background p-2 px-6 text-center font-semibold transition-all duration-300",
-            variants[variant],
+            defaultStyle,
             sizes[size],
             className
           )}
@@ -98,11 +88,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       restProps.whileHover !== undefined
         ? {}
         : // solo aplicamos whileHover si no fue sobrescrito via props
-          { whileHover: { x: iconPlacement === "right" ? 5 : -5 } };
+        { whileHover: { x: iconPlacement === "right" ? 5 : -5 } };
 
     const buttonClass = cn(
       baseStyles,
-      variants[variant],
+      defaultStyle,
       sizes[size],
       className
     );

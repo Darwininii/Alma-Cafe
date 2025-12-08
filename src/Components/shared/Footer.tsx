@@ -32,14 +32,12 @@ export const Footer = () => {
 
           <div className="flex flex-col-2 items-center gap-2 border border-white/10 px-3 py-2 backdrop-blur-md">
             <Input
-              variant="outline"
               type="email"
               placeholder="Ingresa tu correo electrónico"
               className="flex-1 bg-transparent text-slate-100 placeholder:text-slate-400 focus:outline-none"
             />
             <Button
               type="submit"
-              variant="ghost"
               size="md"
               effect="expandIcon"
               filledIcon
