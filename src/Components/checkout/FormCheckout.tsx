@@ -30,6 +30,7 @@ export const FormCheckout = () => {
         quantity: item.quantity,
         price: item.price,
       })),
+      customerId: 0,
       totalAmount,
     };
 

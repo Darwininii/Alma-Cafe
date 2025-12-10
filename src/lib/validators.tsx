@@ -73,6 +73,14 @@ export const productSchema = z.object({
   stock: z.string().min(1, "El stock es obligatorio"),
   tag: z.string().optional(),
   images: z.array(z.any()).min(1, "Debe haber al menos una imagen"),
+  products: z
+    .array(
+      z.object({
+        stock: z.union([z.number(), z.string()]),
+        price: z.number(),
+      })
+    )
+    .optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;

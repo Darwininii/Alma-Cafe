@@ -17,7 +17,7 @@ export const HomePage: React.FC = () => {
     setIsVisible(true);
   }, []);
 
-  useScrollReveal();
+  useScrollReveal([isLoading]);
   return (
     <div className="min-h-screen">
       {/* Hero Section con animación de fade in */}
@@ -60,25 +60,6 @@ export const HomePage: React.FC = () => {
           </div>
         </section>
       )}
-
-      {/* Productos con efecto de aparición */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto space-y-24">
-          <div className="scroll-reveal">
-            <ProductGrid
-              title="Nuestros Productos"
-              products={preparedRecentProducts}
-            />
-          </div>
-
-          <div className="scroll-reveal delay">
-            <ProductGrid
-              title="Productos Destacados"
-              products={preparedPopular}
-            />
-          </div>
-        </div>
-      </section>
 
       <Brands />
     </div>

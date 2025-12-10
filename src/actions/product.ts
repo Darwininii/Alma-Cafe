@@ -1,4 +1,4 @@
-import type { ProductInput } from "@/interfaces/product.interface";
+import type { ProductInput, Product } from "@/interfaces/product.interface";
 import { extractFilePath, sanitizeFileName } from "../helpers";
 
 import { supabase } from "../supabase/client";
@@ -69,7 +69,7 @@ export const getRecentProducts = async () => {
     throw new Error(error.message);
   }
 
-  return productos;
+  return productos as Product[];
 };
 
 export const getRandomProducts = async () => {
@@ -86,7 +86,7 @@ export const getRandomProducts = async () => {
   // Seleccionar 4 productos al azar
   const randomProducts = productos.sort(() => 0.5 - Math.random()).slice(0, 4);
 
-  return randomProducts;
+  return randomProducts as Product[];
 };
 
 export const getProductBySlug = async (slug: string) => {
@@ -121,7 +121,7 @@ export const searchProducts = async (searchTerm: string) => {
     throw new Error(error.message);
   }
 
-  return data;
+  return data as Product[];
 };
 
 /* ********************************** */
@@ -153,41 +153,42 @@ export const createProduct = async (productInput: ProductInput) => {
 
     const uploadedImages = await Promise.all(
       productInput.images.map(async (image) => {
-        // Sanitizar nombre del archivo
-        const cleanFileName = sanitizeFileName(image.name);
-        const fileName = `${product.id}-${Date.now()}-${cleanFileName}`;
-        const filePath = `${folderName}/${fileName}`;
+        if (image instanceof File) {
+          // Sanitizar nombre del archivo
+          const cleanFileName = sanitizeFileName(image.name);
+          const fileName = `${product.id}-${Date.now()}-${cleanFileName}`;
+          const filePath = `${folderName}/${fileName}`;
 
-        // Determinar contentType desde la extensión del archivo
-        const ext = cleanFileName.split('.').pop()?.toLowerCase() || '';
-        const contentType = ext === 'png' ? 'image/png'
-          : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg'
-            : ext === 'webp' ? 'image/webp'
-              : ext === 'gif' ? 'image/gif'
-                : 'image/png'; // default
+          // Determinar contentType desde la extensión del archivo
+          const ext = cleanFileName.split('.').pop()?.toLowerCase() || '';
+          const contentType = ext === 'png' ? 'image/png'
+            : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg'
+              : ext === 'webp' ? 'image/webp'
+                : ext === 'gif' ? 'image/gif'
+                  : 'image/png'; // default
 
-        console.log(`📤 Uploading: ${cleanFileName}, Type: ${contentType}`);
+          const { data, error } = await supabase.storage
+            .from("product-images")
+            .upload(filePath, image, {
+              cacheControl: '3600',
+              upsert: false,
+              contentType: contentType
+            });
 
-        const { data, error } = await supabase.storage
-          .from("product-images")
-          .upload(filePath, image, {
-            cacheControl: '3600',
-            upsert: false,
-            contentType: contentType
-          });
+          if (error) {
+            console.error("❌ Error uploading image:", error);
+            throw new Error(error.message);
+          }
 
-        if (error) {
-          console.error("❌ Error uploading image:", error);
-          throw new Error(error.message);
+          // Construir URL pública
+          const imageUrl = supabase.storage
+            .from("product-images")
+            .getPublicUrl(data.path).data.publicUrl;
+
+          return imageUrl;
         }
 
-        // Construir URL pública
-        const imageUrl = supabase.storage
-          .from("product-images")
-          .getPublicUrl(data.path).data.publicUrl;
-
-        return imageUrl;
-
+        return image as string;
       })
     );
 

@@ -52,13 +52,14 @@ export const FormProduct = ({ titleForm }: Props) => {
       setValue("images", product.images);
       setValue("price", product.price);
       setValue("stock", product.stock || "Disponible");
-      setValue("tag", product.tag || null);
+      setValue("tag", product.tag || undefined);
     }
   }, [product, isLoading, setValue]);
 
   const onSubmit = handleSubmit((data) => {
     const features = data.features.map((feature) => feature.value);
 
+    // Casting explícito para asegurar compatibilidad de tipos
     const productData = {
       id: product?.id,
       name: data.name,
@@ -66,7 +67,7 @@ export const FormProduct = ({ titleForm }: Props) => {
       slug: data.slug,
       price: data.price,
       stock: data.stock,
-      tag: data.tag || null,
+      tag: (data.tag === "" ? null : data.tag) as "Nuevo" | "Promoción" | null,
       images: data.images,
       description: data.description,
       features,

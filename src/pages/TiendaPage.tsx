@@ -6,6 +6,7 @@ import { useFilteredProducts } from "@/hooks";
 import { Pagination } from "@/Components/shared/Pagination";
 import type { Product } from "@/interfaces";
 import { useState } from "react";
+import { Loader } from "lucide-react";
 
 export const TiendaPage = () => {
   const [page, setPage] = useState(1);
@@ -19,12 +20,6 @@ export const TiendaPage = () => {
     page,
     brands: selectedBrands,
   });
-
-  if (isLoading || !products)
-    return <p className="text-center text-slate-900 mt-20">Cargando...</p>;
-
-  // ❌ ELIMINADO: prepareProducts
-  const productsToRender = products as Product[];
 
   // ✔ Función para obtener 1 sola imagen
   const getFirstImage = (p: Product) => {
@@ -54,19 +49,28 @@ export const TiendaPage = () => {
 
         <div className="col-span-2 lg:col-span-2 xl:col-span-4 flex flex-col gap-12">
           {/* LISTA DE PRODUCTOS */}
-          <div className="grid grid-cols-2 gap-3 gap-y-10 xl:grid-cols-4">
-            {productsToRender.map((product, index) => (
-              <CardProduct
-                key={product.id || index}
-                name={product.name}
-                slug={product.slug}
-                img={getFirstImage(product)}
-                price={product.price}
-                stock={product.stock} // <--- ✔ STOCK DIRECTO
-                // ❌ ELIMINADO colors, variants, products[]
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-96">
+              <Loader />
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 gap-y-10 xl:grid-cols-4">
+              {(products || []).map((product, index) => (
+                <CardProduct
+                  key={product.id || index}
+                  name={product.name}
+                  slug={product.slug}
+                  img={getFirstImage(product as Product)}
+                  price={product.price}
+                  stock={product.stock}
+                  tag={product.tag as "Nuevo" | "Promoción" | null}
+                />
+              ))}
+              {!isLoading && (products || []).length === 0 && (
+                <p className="text-center col-span-full py-10">No se encontraron productos.</p>
+              )}
+            </div>
+          )}
 
           {/* PAGINACIÓN */}
           <Pagination

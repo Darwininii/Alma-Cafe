@@ -33,7 +33,7 @@ export const ProductsInput = ({ control, errors, register }: Props) => {
   };
 
   const getFirstError = (
-    variantErros: FieldErrors<ProductFormValues["products"][number]>
+    variantErros: FieldErrors<NonNullable<ProductFormValues["products"]>[number]>
   ) => {
     if (variantErros) {
       const keys = Object.keys(variantErros) as (keyof typeof variantErros)[];

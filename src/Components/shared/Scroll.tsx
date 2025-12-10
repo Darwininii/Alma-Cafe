@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const useScrollReveal = () => {
+export const useScrollReveal = (dependencies: any[] = []) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -21,5 +21,6 @@ export const useScrollReveal = () => {
     return () => {
       elements.forEach((element) => observer.unobserve(element));
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, dependencies);
 };

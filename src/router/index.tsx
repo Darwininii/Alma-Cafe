@@ -15,7 +15,6 @@ import {
   DashNewProductPage,
   DashProductSlugPage,
   DashOrdersPage,
-  DebugImages,
 } from "../pages";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 
@@ -105,9 +104,5 @@ export const router = createBrowserRouter([
         element: <DashOrdersPage />,
       },
     ],
-  },
-  {
-    path: "/debug-images",
-    element: <DebugImages />,
   },
 ]);

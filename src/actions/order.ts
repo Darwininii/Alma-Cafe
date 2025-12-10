@@ -150,7 +150,7 @@ export const getOrderById = async (orderId: number) => {
   const { data: order, error } = await supabase
     .from("orders")
     .select(
-      `*,  address(*), customers(full_name, email), order_item(quantity, price, products(name, image))`
+      `*,  address(*), customers(full_name, email), orders_item(cantidad, price, productos!left(name, images))`
     )
     .eq("customer_id", customer.id)
     .eq("id", orderId)
@@ -173,11 +173,11 @@ export const getOrderById = async (orderId: number) => {
       postalCode: order.address?.postal_code,
       country: order.address?.country,
     },
-    orderItems: order.order_item.map((item) => ({
-      quantity: item.quantity,
+    orderItems: order.orders_item.map((item) => ({
+      quantity: item.cantidad,
       price: item.price,
-      productName: item.productos?.name,
-      productImage: item.productos?.image,
+      productName: item.productos?.name || "Producto Eliminado",
+      productImage: item.productos?.images || null,
     })),
   };
 };
@@ -217,7 +217,7 @@ export const getOrderByIdAdmin = async (id: number) => {
       *,
       address(*),
       customers(full_name, email),
-      order_item(quantity, price, productos(name, image))
+      orders_item(cantidad, price, productos!left(name, images))
     `
     )
     .eq("id", id)
@@ -240,11 +240,11 @@ export const getOrderByIdAdmin = async (id: number) => {
       postalCode: order.address?.postal_code,
       country: order.address?.country,
     },
-    orderItems: order.order_item.map((item) => ({
-      quantity: item.quantity,
+    orderItems: order.orders_item.map((item) => ({
+      quantity: item.cantidad,
       price: item.price,
-      productName: item.products?.name,
-      productImage: item.products?.image,
+      productName: item.productos?.name || "Producto Eliminado",
+      productImage: item.productos?.images || null,
     })),
   };
 };

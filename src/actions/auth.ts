@@ -61,7 +61,7 @@ export const signUp = async ({
     const { error: customerError } = await supabase.from("customers").insert({
       user_id: userId,
       full_name: fullName,
-      phone,
+      phone: phone || "",
       email,
     });
 

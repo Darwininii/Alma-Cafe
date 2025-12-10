@@ -51,7 +51,7 @@ export const DashboardOrderPage = () => {
               <tr key={index} className="border-b border-gray-200">
                 <td className="p-4 font-medium tracking-tighter flex gap-3 items-center">
                   <img
-                    src={item.productImage}
+                    src={item.productImage ? item.productImage[0] : ""}
                     alt={item.productName}
                     className="h-20 w-20 object-contain rounded-lg"
                   />

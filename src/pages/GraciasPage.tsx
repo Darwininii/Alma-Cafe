@@ -82,7 +82,7 @@ export const GraciasPage = () => {
                 >
                   <div className="flex">
                     <img
-                      src={item.productImage}
+                      src={item.productImage ? item.productImage[0] : ""}
                       alt={item.productName}
                       className="w-16 h-16 object-contain"
                     />

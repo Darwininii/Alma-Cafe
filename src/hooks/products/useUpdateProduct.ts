@@ -2,14 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProduct } from "../../actions";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import type { Product } from "@/interfaces/product.interface";
+
 
 export const useUpdateProduct = (productId: string) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: Product) => updateProduct(productId, data),
+    mutationFn: async (data: any) => updateProduct(productId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["products"],
