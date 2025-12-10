@@ -28,11 +28,11 @@ export const ProductDescription = ({ content }: Props) => {
       transition={{ duration: 0.6 }}
       className="mt-16 bg-black/20 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-white/10 shadow-2xl relative overflow-hidden"
     >
-      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-400 to-rose-600" />
+      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-black/80 to-rose-600" />
 
       <div className="flex items-center gap-4 mb-8">
         <div className="p-3 bg-white/10 rounded-xl">
-          <NotebookPen size={32} className="text-orange-300" />
+          <NotebookPen size={32} className="text-white/80" />
         </div>
         <h2 className="text-3xl font-bold text-white tracking-tight">
           Descripción del Producto

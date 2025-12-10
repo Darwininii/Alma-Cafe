@@ -13,8 +13,8 @@ const getTagColor = (content: TagType) => {
 
 export const Tag = ({ contentTag }: Props) => {
   return (
-    <div className={`text-white w-fit px-2 ${getTagColor(contentTag)}`}>
-      <p className="uppercase text-xs font-medium">{contentTag}</p>
+    <div className={`text-black/80 w-fit px-3 py-1 rounded border border-black/80 border-2 ${getTagColor(contentTag)}`}>
+      <p className="uppercase text-sm font-bold">{contentTag}</p>
     </div>
   );
 };

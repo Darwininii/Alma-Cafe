@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Home, Store, User, Search, ShoppingBag } from "lucide-react";
+import { Home, Store, User, Search } from "lucide-react";
 import { GrGroup } from "react-icons/gr";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGlobalStore } from "@/store/global.store";
 import { useCartStore } from "@/store";
 import { useUser, useCustomer } from "@/hooks";
 import { LuLoaderPinwheel } from "react-icons/lu";
+import { RiShoppingBag3Line } from "react-icons/ri";
 
 export const DockNavbar = () => {
   const [hovered, setHovered] = useState<number | null>(null);
@@ -77,11 +78,10 @@ export const DockNavbar = () => {
                 <Link to={link.href} className={baseItemClass}>
                   <Icon
                     size={22}
-                    className={`${baseIconClass} ${
-                      hovered === index
-                        ? "scale-125 text-yellow-800"
-                        : "text-slate-800"
-                    }`}
+                    className={`${baseIconClass} ${hovered === index
+                      ? "scale-125 text-yellow-800"
+                      : "text-slate-800"
+                      }`}
                   />
                 </Link>
                 <span className={tooltipClass}>{link.label}</span>
@@ -106,11 +106,10 @@ export const DockNavbar = () => {
             >
               <Search
                 size={20}
-                className={`${baseIconClass} ${
-                  hovered === 10
-                    ? "scale-125 text-yellow-800"
-                    : "text-slate-800"
-                }`}
+                className={`${baseIconClass} ${hovered === 10
+                  ? "scale-125 text-yellow-800"
+                  : "text-slate-800"
+                  }`}
               />
             </button>
             <span className={tooltipClass}>Buscar</span>
@@ -126,13 +125,12 @@ export const DockNavbar = () => {
               onClick={() => openSheet("cart")}
               className={`${baseItemClass} relative cursor-pointer`}
             >
-              <ShoppingBag
+              <RiShoppingBag3Line
                 size={20}
-                className={`${baseIconClass} ${
-                  hovered === 11
-                    ? "scale-125 text-yellow-800"
-                    : "text-slate-800"
-                }`}
+                className={`${baseIconClass} ${hovered === 11
+                  ? "scale-125 text-yellow-800"
+                  : "text-slate-800"
+                  }`}
               />
 
               {/* 🔹 Contador animado */}
@@ -167,7 +165,7 @@ export const DockNavbar = () => {
             ) : session ? (
               <Link
                 to="/account"
-                className="border-2 border-slate-700 w-9 h-9 rounded-full grid place-items-center text-sm font-bold bg-white/20 hover:bg-white/30 transition"
+                className="border-2 text-black border-black/70 w-9 h-9 rounded-full grid place-items-center text-sm font-bold bg-white/20 hover:bg-yellow-300/30 transition"
               >
                 {customer && customer.full_name
                   ? customer.full_name[0].toUpperCase()

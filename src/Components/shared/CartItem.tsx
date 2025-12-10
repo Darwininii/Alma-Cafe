@@ -1,6 +1,7 @@
 import { formatPrice } from "@/helpers";
 import { useCartStore } from "@/store";
-import { LucideMinus } from "lucide-react";
+import { BadgeMinus, BadgePlus } from "lucide-react";
+import { MdDeleteForever } from "react-icons/md";
 
 export interface ICartItem {
   productId: string;
@@ -30,7 +31,7 @@ export const CartItem = ({ item }: Props) => {
 
   return (
     <li className="flex justify-between items-center gap-5">
-      <div className="felx">
+      <div className="flex">
         <img
           src={item.image}
           alt={item.name}
@@ -40,28 +41,36 @@ export const CartItem = ({ item }: Props) => {
 
       <div className="flex-1 space-y-3">
         <div className="flex justify-between">
-          <p className="font-semibold">{item.name}</p>
-          <p className="text-sm font-medium text-gray-600 mt-1">
+          <p className="font-semibold text-black">{item.name}</p>
+          <p className="text-sm font-medium text-black mt-1">
             {formatPrice(item.price)}
           </p>
         </div>
 
-        <div className="flex gap-4">
-          <div className="flex items-center gap-5 px-2 py-1 border-slate-200 w fit rounded-full">
-            <button onClick={decrement} disabled={item.quantity === 1}>
-              <LucideMinus size={15} />
+        <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-3 px-2 py-1 border border-black/20 w-fit rounded-full">
+            <button
+              onClick={decrement}
+              disabled={item.quantity === 1}
+              className="cursor-pointer hover:text-red-600/80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed "
+            >
+              <BadgeMinus size={18} />
             </button>
-            <span className="text-slate-500 text-sm">{item.quantity}</span>
-            <button onClick={increment}>
-              <LucideMinus size={15} />
+            <span className="text-black text-sm font-medium min-w-[20px] text-center">{item.quantity}</span>
+            <button
+              onClick={increment}
+              className="cursor-pointer hover:text-green-200 transition-colors"
+            >
+              <BadgePlus size={18} />
             </button>
           </div>
 
           <button
-            className="underline font-medium text-[10px]"
+            className="cursor-pointer text-black hover:text-red-600/80 transition-colors"
             onClick={() => removeItem(item.productId)}
+            title="Eliminar producto"
           >
-            Eliminar
+            <MdDeleteForever size={22} />
           </button>
         </div>
       </div>

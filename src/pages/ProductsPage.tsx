@@ -7,10 +7,12 @@ import { formatPrice } from "@/helpers";
 import { useProduct } from "@/hooks";
 import { useCartStore, useCounterStore } from "@/store";
 import { motion } from "framer-motion";
-import { CreditCard, LucideMinus, LucidePlus, MessagesSquare, ShoppingCart, Star } from "lucide-react";
+import { BadgeMinus, BadgePlus, MessagesSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { TbTruckDelivery } from "react-icons/tb";
+import { FaShoppingCart } from "react-icons/fa";
+import { MdPayments } from "react-icons/md";
+import { RiMotorbikeFill } from "react-icons/ri";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 export const ProductsPage = () => {
@@ -70,7 +72,7 @@ export const ProductsPage = () => {
 
   if (!product || isError)
     return (
-      <div className="flex justify-center items-center h-[80vh]">
+      <div className="flex font-black justify-center items-center h-[80vh]">
         <p>Producto no Encontrado</p>
       </div>
     );
@@ -102,10 +104,10 @@ export const ProductsPage = () => {
           className="flex-1 space-y-6 bg-white/5 backdrop-blur-sm p-8 rounded-3xl border border-white/20 shadow-xl"
         >
           <div className="space-y-2">
-            <h1 className="text-4xl font-black tracking-tight text-white drop-shadow-md">{product.name}</h1>
+            <h1 className="text-4xl font-black tracking-tight text-black drop-shadow-md">{product.name}</h1>
 
             <div className="flex gap-4 items-center">
-              <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-200 to-amber-100">
+              <span className="text-3xl font-bold bg-clip-text text-black/80 bg-gradient-to-r from-orange-200 to-amber-100">
                 {formatPrice(product.price)}
               </span>
 
@@ -116,11 +118,6 @@ export const ProductsPage = () => {
               </div>
             </div>
 
-            {/* Rating dummy styling for 'impact' */}
-            <div className="flex items-center gap-1 text-amber-400">
-              {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} fill="currentColor" />)}
-              <span className="text-sm text-gray-200 ml-2 font-medium">(4.8/5)</span>
-            </div>
           </div>
 
           <Separator className="border-white/20" />
@@ -148,23 +145,23 @@ export const ProductsPage = () => {
             <div className="space-y-6 pt-4">
               {/* Contador modernizado */}
               <div className="flex items-center justify-between bg-black/20 p-4 rounded-2xl border border-white/10">
-                <span className="font-semibold text-gray-200">Cantidad</span>
+                <span className="font-black text-white/80">Cantidad</span>
                 <div className="flex items-center gap-6 bg-white/90 text-black px-4 py-2 rounded-xl shadow-inner">
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={decrement}
                     disabled={count === 1}
-                    className="p-1 hover:text-orange-600 transition-colors disabled:opacity-40"
+                    className="cursor-pointer p-1 hover:text-orange-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    <LucideMinus size={18} />
+                    <BadgeMinus size={18} />
                   </motion.button>
                   <span className="text-lg font-bold w-4 text-center">{count}</span>
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={increment}
-                    className="p-1 hover:text-orange-600 transition-colors"
+                    className="cursor-pointer p-1 hover:text-orange-600 transition-colors"
                   >
-                    <LucidePlus size={18} />
+                    <BadgePlus size={18} />
                   </motion.button>
                 </div>
               </div>
@@ -177,35 +174,35 @@ export const ProductsPage = () => {
                   className="flex items-center justify-center gap-2 bg-white text-black font-bold py-4 rounded-xl shadow-lg hover:bg-gray-100 transition-all cursor-pointer"
                   onClick={addToCart}
                 >
-                  <ShoppingCart size={20} />
+                  <FaShoppingCart size={20} />
                   Agregar al Carrito
                 </motion.button>
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-rose-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 transition-all cursor-pointer border border-white/10"
+                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-black/80 to-rose-600 text-white font-bold py-4 rounded-xl shadow-lg  hover:shadow-black/40 transition-all cursor-pointer border border-white/10"
                   onClick={buyNow}
                 >
-                  <CreditCard size={20} />
+                  <MdPayments size={20} />
                   Comprar Ahora
                 </motion.button>
               </div>
             </div>
           )}
 
-          <div className="flex gap-4 pt-6 border-t border-white/10">
-            <div className="flex flex-col gap-1 items-center justify-center p-3 flex-1 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors cursor-help">
-              <TbTruckDelivery size={24} className="text-orange-300" />
-              <p className="text-[10px] md:text-xs font-semibold text-gray-300 text-center">Envío Seguro</p>
+          <div className="flex gap-4 pt-6 border-t border-black/50">
+            <div className="flex flex-col gap-1 items-center justify-center p-3 flex-1 bg-white/5 rounded-xl border border-black/50 hover:bg-black/20 transition-colors cursor-help">
+              <RiMotorbikeFill size={24} className="text-black/80" />
+              <p className="text-[10px] md:text-xs font-semibold text-black/80 text-center">Envío Seguro</p>
             </div>
 
             <Link
               to="#"
-              className="flex flex-col gap-1 items-center justify-center p-3 flex-1 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors"
+              className="flex flex-col gap-1 items-center justify-center p-3 flex-1 bg-white/5 rounded-xl border border-black/50 hover:bg-black/20 transition-colors"
             >
-              <MessagesSquare size={24} className="text-orange-300" />
-              <p className="text-[10px] md:text-xs font-semibold text-gray-300 text-center">
+              <MessagesSquare size={24} className="text-black/80" />
+              <p className="text-[10px] md:text-xs font-semibold text-black/80 text-center">
                 Soporte 24/7
               </p>
             </Link>

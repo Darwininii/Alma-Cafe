@@ -52,23 +52,27 @@ export const Sheet = () => {
       <div
         ref={sheetRef}
         className="
-          relative bg-white text-slate-900
+          relative bg-white/10 backdrop-blur-xl text-slate-900
           h-full md:h-[90vh]
           w-[85%] sm:w-[70%] md:w-[450px]
           rounded-t-3xl md:rounded-2xl
-          shadow-2xl border border-slate-200
+          shadow-2xl shadow-black/10 border border-white/20
           animate-slide-in
           overflow-y-auto
         "
       >
+        {/* Inner glow for glass effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none rounded-t-3xl md:rounded-2xl" />
         {/* Header del Sheet */}
-        <div className="sticky top-0 bg-white border-b border-slate-200 flex justify-between items-center px-4 py-3 rounded-t-3xl">
+        <div className="sticky top-0 bg-white/30 backdrop-blur-lg border-b border-white/20 flex justify-between items-center px-4 py-3 rounded-t-3xl z-10">
           <h2 className="text-lg font-semibold capitalize">
             {sheetContent === "cart"
               ? "Tu carrito"
               : sheetContent === "search"
-              ? "Buscar productos"
-              : ""}
+                ? "Buscar productos"
+                : sheetContent === "recent"
+                  ? "Vistos recientemente"
+                  : ""}
           </h2>
           <button onClick={closeSheet}>
             <FaWindowClose
