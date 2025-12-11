@@ -95,6 +95,13 @@ export const FormCheckout = () => {
               placeholder="Barrio"
             />
 
+            <InputAddress
+              register={register}
+              errors={errors}
+              name="country"
+              placeholder="País"
+            />
+
             <div className="grid grid-cols-2 gap-4">
               <InputAddress
                 register={register}
@@ -109,14 +116,8 @@ export const FormCheckout = () => {
                 name="postalCode"
                 placeholder="Código Postal (Opcional)"
               />
-            </div>
 
-            <select
-              className="w-full border-2 border-white/60 bg-white/60 backdrop-blur-sm rounded-xl p-4 font-semibold text-black focus:outline-none focus:border-orange-500 transition-all"
-              {...register("country")}
-            >
-              <option value="Colombia">🇨🇴 Colombia</option>
-            </select>
+            </div>
           </div>
         </motion.div>
 
@@ -174,13 +175,13 @@ export const FormCheckout = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           type="submit"
-          className="group relative bg-gradient-to-r from-black via-gray-900 to-black text-white py-5 font-black text-lg tracking-wide rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 overflow-hidden"
+          className="cursor-pointer group relative bg-gradient-to-r from-black via-gray-900 to-black text-white py-5 font-black text-lg tracking-wide rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 overflow-hidden"
         >
           <span className="relative z-10 flex items-center justify-center gap-3">
             <MdPayments size={24} />
             Finalizar Pedido
           </span>
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-600 via-rose-600 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-rose-500/80 opacity-1 group-hover:opacity-100 transition-opacity duration-300" />
         </motion.button>
       </form>
     </div>

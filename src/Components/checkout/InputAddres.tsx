@@ -20,9 +20,8 @@ export const InputAddress = ({
   return (
     <>
       <div
-        className={`border border-slate-200 rounded-md overflow-hidden py-2 ${
-          errors[name] && "border-red-500"
-        } ${className}`}
+        className={`border border-2 border-black/60 rounded-xl text-black font-bold overflow-hidden py-2 ${errors[name] && "border-red-500 font-bold"
+          } ${className}`}
       >
         <input
           type="text"
@@ -32,7 +31,7 @@ export const InputAddress = ({
         />
       </div>
       {errors[name] && (
-        <p className="text-red-500 text-xs">{errors[name].message}</p>
+        <p className="text-red-500 text-sm">{errors[name].message}</p>
       )}
     </>
   );

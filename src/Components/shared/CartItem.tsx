@@ -41,14 +41,14 @@ export const CartItem = ({ item }: Props) => {
 
       <div className="flex-1 space-y-3">
         <div className="flex justify-between">
-          <p className="font-semibold text-black">{item.name}</p>
-          <p className="text-sm font-medium text-black mt-1">
+          <p className="font-black text-black">{item.name}</p>
+          <p className="text-sm font-black text-black mt-1">
             {formatPrice(item.price)}
           </p>
         </div>
 
         <div className="flex gap-4 items-center">
-          <div className="flex items-center gap-3 px-2 py-1 border border-black/20 w-fit rounded-full">
+          <div className="flex items-center gap-3 px-2 py-1 border border-2 border-black/50 w-fit rounded-full">
             <button
               onClick={decrement}
               disabled={item.quantity === 1}
@@ -56,10 +56,10 @@ export const CartItem = ({ item }: Props) => {
             >
               <BadgeMinus size={18} />
             </button>
-            <span className="text-black text-sm font-medium min-w-[20px] text-center">{item.quantity}</span>
+            <span className="text-black text-sm font-black min-w-[20px] text-center">{item.quantity}</span>
             <button
               onClick={increment}
-              className="cursor-pointer hover:text-green-200 transition-colors"
+              className="cursor-pointer hover:text-green-100 transition-colors"
             >
               <BadgePlus size={18} />
             </button>

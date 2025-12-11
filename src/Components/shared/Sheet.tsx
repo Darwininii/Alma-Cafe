@@ -65,7 +65,7 @@ export const Sheet = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none rounded-t-3xl md:rounded-2xl" />
         {/* Header del Sheet */}
         <div className="sticky top-0 bg-white/30 backdrop-blur-lg border-b border-white/20 flex justify-between items-center px-4 py-3 rounded-t-3xl z-10">
-          <h2 className="text-lg font-semibold capitalize">
+          <h2 className="text-lg font-black capitalize">
             {sheetContent === "cart"
               ? "Tu carrito"
               : sheetContent === "search"
@@ -77,7 +77,8 @@ export const Sheet = () => {
           <button onClick={closeSheet}>
             <FaWindowClose
               size={25}
-              className="text-slate-800 hover:text-slate-500 transition-colors text-xl cursor-pointer"
+              title="Cerrar Ventana"
+              className="text-black hover:text-rose-700 transition-colors text-xl cursor-pointer"
             />
           </button>
         </div>

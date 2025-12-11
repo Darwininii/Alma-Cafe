@@ -13,12 +13,10 @@
     @apply text-white min-h-screen;
 
     /* Propiedades CSS nativas */
-    background-image: radial-gradient(
-      125% 125% at 50% 10%,
-      #c69c6d 20%,
-      #ab7061 50%,
-      #3c1053 100%
-    );
+    background-image: radial-gradient(125% 125% at 50% 10%,
+        #c69c6d 20%,
+        #ab7061 50%,
+        #3c1053 100%);
     background-attachment: fixed;
     background-size: cover;
     background-repeat: no-repeat;
@@ -27,12 +25,33 @@
   .container {
     @apply mx-auto px-6 max-w-7xl;
   }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0000002a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #27001a66;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #63014273;
+    cursor: pointer;
+  }
 }
 
 @keyframes fade-in {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -42,6 +61,7 @@
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(0);
   }
@@ -51,6 +71,7 @@
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(0);
   }
@@ -75,10 +96,12 @@
 }
 
 @keyframes linear-x {
+
   0%,
   100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }

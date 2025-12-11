@@ -14,7 +14,7 @@ export const TableOrders = ({ orders }: Props) => {
   return (
     <div className="relative w-full h-full">
       <table className="text-sm w-full caption-bottom overflow-auto">
-        <thead className="border-b border-gray-200 pb-3">
+        <thead className="border-b border-black/50 pb-3">
           <tr className="text-sm font-bold">
             {tableHeaders.map((header, index) => (
               <th key={index} className="h-12 px-4 text-left">
@@ -24,21 +24,23 @@ export const TableOrders = ({ orders }: Props) => {
           </tr>
         </thead>
 
-        <tbody className="[&_tr:last-child]:border-0">
-          {orders.map((order) => (
+        <tbody className="[&_tr:last-child]:border-0 rounded-xl overflow-hidden">
+          {orders.map((order, index) => (
             <tr
               key={order.id}
-              className="cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+              className={`cursor-pointer bg-black/10 hover:bg-black/20 transition-colors duration-200 ${index === orders.length - 1 ? "" : "border-b border-gray-300"}`}
               onClick={() => navigate(`/account/pedidos/${order.id}`)}
             >
-              <td className="p-4 font-medium tracking-tighter">{order.id}</td>
+              <td className={`p-4 font-medium tracking-tighter ${index === 0 ? "rounded-tl-xl" : ""} ${index === orders.length - 1 ? "rounded-bl-xl" : ""}`}>
+                {order.id}
+              </td>
               <td className="p-4 font-medium tracking-tighter">
                 {formatDate(order.created_at)}
               </td>
               <td className="p-4 font-medium tracking-tighter">
                 {getStatus(order.status)}
               </td>
-              <td className="p-4 font-medium tracking-tighter">
+              <td className={`p-4 font-medium tracking-tighter ${index === 0 ? "rounded-tr-xl" : ""} ${index === orders.length - 1 ? "rounded-br-xl" : ""}`}>
                 {formatPrice(order.total_amount)}
               </td>
             </tr>

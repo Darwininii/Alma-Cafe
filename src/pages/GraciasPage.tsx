@@ -130,7 +130,7 @@ export const GraciasPage = () => {
 
             <div className="flex flex-col text-sm">
               <p className="font-semibold">Método de envío</p>
-              <p>Standard</p>
+              <p>Estandar</p>
             </div>
           </div>
         </div>
@@ -141,7 +141,7 @@ export const GraciasPage = () => {
           </p>
 
           <Link
-            to="/celulares"
+            to="/productos"
             className="text-white bg-black py-4 text-sm rounded-md px-5 tracking-tight font-semibold"
           >
             Seguir comprando

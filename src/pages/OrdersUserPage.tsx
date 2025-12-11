@@ -12,7 +12,7 @@ export const OrdersUserPage = () => {
     <div className="flex flex-col gap-6 items-center">
       <div className="flex gap-2">
         <h1 className="text-3xl font-bold">Pedidos</h1>
-        <span className="w-5 h-5 rounded-full bg-black text-white text-[11px] flex justify-center items-center mt-1">
+        <span className="w-6 h-6 rounded-full bg-black/70 text-white font-black text-[13px] flex justify-center items-center mt-1">
           {orders.length}
         </span>
       </div>

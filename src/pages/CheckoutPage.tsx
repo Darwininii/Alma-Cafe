@@ -7,7 +7,7 @@ import { Loader } from "../Components/shared/Loader";
 import { useEffect } from "react";
 import { supabase } from "../supabase/client";
 import { motion } from "framer-motion";
-import { TbShoppingCartSearch } from "react-icons/tb";
+import { TbArrowBigLeftFilled, TbShoppingCartSearch } from "react-icons/tb";
 
 export const CheckoutPage = () => {
   const totalItems = useCartStore((state) => state.totalItemsInCart);
@@ -37,11 +37,11 @@ export const CheckoutPage = () => {
       <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="h-[100px] backdrop-blur-xl text-black flex items-center justify-center flex-col px-10 border-b-2 border-transparent shadow-lg sticky top-0 z-50"
+        className="h-[100px] backdrop-blur-xl text-black flex items-center justify-between px-10 border-b-2 border-transparent shadow-lg sticky top-0 z-50"
       >
         <Link
           to="/"
-          className="text-4xl font-bold self-center tracking-tighter transition-all md:text-5xl md:self-start hover:scale-105 duration-300"
+          className="text-4xl font-bold tracking-tighter transition-all hover:scale-105 duration-300"
         >
           <p className="bg-gradient-to-r from-black/80 via-black to-black/80 bg-clip-text text-transparent">
             Alma
@@ -49,6 +49,14 @@ export const CheckoutPage = () => {
               Café
             </span>
           </p>
+        </Link>
+
+        <Link
+          to="/productos"
+          className="flex items-center gap-2 font-bold text-lg hover:text-rose-600/70 transition-colors"
+        >
+          <TbArrowBigLeftFilled size={24} />
+          Volver
         </Link>
       </motion.header>
 
@@ -107,7 +115,7 @@ export const CheckoutPage = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br backdrop-blur-xl w-[50%] sticky top-[100px] right-0 p-6 md:p-10 hidden md:block border-l-2 border-white/60 shadow-2xl overflow-y-auto"
+              className="bg-gradient-to-br backdrop-blur-xl w-[50%] sticky top-[100px] right-0 p-6 md:p-10 hidden md:block border-l-2 border-transparent shadow-2xl overflow-y-auto"
               style={{
                 maxHeight: "calc(100vh - 100px)",
               }}
