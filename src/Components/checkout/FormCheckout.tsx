@@ -4,12 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ItemsCheckout } from "./ItemsCheckout";
 import { useCreateOrder } from "../../hooks";
 import { useCartStore } from "../../store/cart.store";
-import { ImSpinner2 } from "react-icons/im";
 import { InputAddress } from "./InputAddres";
 import { motion } from "framer-motion";
 import { MdPayments } from "react-icons/md";
 import { PiMapPinAreaFill } from "react-icons/pi";
 import { ReceiptText } from "lucide-react";
+import { Loader } from "../shared/Loader";
 
 export const FormCheckout = () => {
   const {
@@ -54,7 +54,7 @@ export const FormCheckout = () => {
       >
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-rose-400 blur-2xl opacity-30 animate-pulse" />
-          <ImSpinner2 className="relative animate-spin h-16 w-16 text-black" />
+          <Loader className="relative text-black" />
         </div>
         <p className="text-lg font-bold text-black">Procesando tu pedido...</p>
         <p className="text-sm text-black/60">Por favor espera un momento</p>

@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Home, Store, User, Search } from "lucide-react";
+import { Home, Store, User, Search, LoaderPinwheel } from "lucide-react";
 import { GrGroup } from "react-icons/gr";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGlobalStore } from "@/store/global.store";
 import { useCartStore } from "@/store";
 import { useUser, useCustomer } from "@/hooks";
-import { LuLoaderPinwheel } from "react-icons/lu";
 import { RiShoppingBag3Line } from "react-icons/ri";
 
 export const DockNavbar = () => {
@@ -158,7 +157,7 @@ export const DockNavbar = () => {
           {/* Usuario */}
           <div className="relative group">
             {isLoading ? (
-              <LuLoaderPinwheel
+              <LoaderPinwheel
                 className="animate-spin text-slate-800"
                 size={22}
               />

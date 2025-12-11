@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { LuLoaderPinwheel } from "react-icons/lu";
 import { Link, Navigate } from "react-router-dom";
 import { useLogin, useUser } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
@@ -29,7 +28,7 @@ export const LoginPage = () => {
 
       {isPending ? (
         <div className="w-full h-full flex justify-center mt-20">
-          <LuLoaderPinwheel className="animate-spin" size={60} />
+          <Loader />
         </div>
       ) : (
         <>

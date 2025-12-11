@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, Navigate } from "react-router-dom";
 import { useRegister, useUser } from "../hooks";
-import { LuLoaderPinwheel } from "react-icons/lu";
 import { Loader } from "../Components/shared/Loader";
 import {
   type UserRegisterFormValues,
@@ -47,7 +46,7 @@ export const RegisterPage = () => {
 
       {isPending ? (
         <div className="w-full h-full flex justify-center mt-20">
-          <LuLoaderPinwheel className="animate-spin" size={60} />
+          <Loader />
         </div>
       ) : (
         <>

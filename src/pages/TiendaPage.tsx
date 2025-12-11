@@ -6,7 +6,7 @@ import { useFilteredProducts } from "@/hooks";
 import { Pagination } from "@/Components/shared/Pagination";
 import type { Product } from "@/interfaces";
 import { useState } from "react";
-import { Loader } from "lucide-react";
+import { Loader } from "@/Components/shared/Loader";
 
 export const TiendaPage = () => {
   const [page, setPage] = useState(1);
