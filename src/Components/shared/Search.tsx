@@ -2,10 +2,13 @@ import { searchProducts } from "@/actions";
 import { formatPrice } from "@/helpers";
 import { type Product } from "@/interfaces";
 import { useGlobalStore } from "@/store/global.store";
-import { MdDeleteForever } from "react-icons/md";
+import { CustomDeleteButton } from "./CustomDeleteButton";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaClock, FaSearch } from "react-icons/fa";
+import { Input } from "./Input";
+import { MdDeleteForever } from "react-icons/md";
+import { CustomButton } from "./CustomButton";
 
 interface RecentProduct {
   id: string;
@@ -81,18 +84,19 @@ export const Search = () => {
 
   return (
     <>
-      <div className="py-5 px-7 flex gap-10 items-center border-b border-white/20">
+      <div className="py-5 px-7 flex gap-10 items-center border-b border-white/20 dark:border-white/10">
         <form
-          className="flex gap-3 items-center flex-1"
+          className="flex-1"
           onSubmit={handleSearch}
         >
-          <FaSearch size={22} className="text-black" />
-          <input
+          <Input
             type="text"
             placeholder="¿Qué buscas?"
-            className="outline-none w-full text-sm bg-transparent placeholder:text-black"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            icon={<FaSearch size={18} />}
+            containerClassName="w-full"
+            className="bg-transparent border-none text-black dark:text-white"
           />
         </form>
       </div>
@@ -104,11 +108,12 @@ export const Search = () => {
             <ul className="space-y-2">
               {searchResults.map((product) => (
                 <li className="group" key={product.id}>
-                  <button
-                    className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-white/20 transition-colors"
+                  <CustomButton
+                    className="flex cursor-pointer items-center gap-3 w-full p-2 rounded-lg hover:bg-white/10 dark:hover:bg-white/20 transition-colors bg-black/10 dark:bg-white/10 border-none shadow-none h-auto"
                     onClick={() => handleProductClick(product)}
+                    effect="bounce"
                   >
-                    <div className="h-16 w-16 bg-white/50 rounded-lg p-2 flex-shrink-0">
+                    <div className="h-16 w-16 bg-white/0 dark:bg-white/30 rounded-lg p-2 flex-shrink-0">
                       <img
                         src={product.images[0]}
                         alt={product.name}
@@ -117,19 +122,19 @@ export const Search = () => {
                     </div>
 
                     <div className="flex flex-col gap-1 text-left flex-1">
-                      <p className="text-sm font-semibold text-black group-hover:text-primary transition-colors line-clamp-2">
+                      <p className="text-sm font-semibold text-black dark:text-white/70 group-hover:text-primary transition-colors line-clamp-2">
                         {product.name}
                       </p>
-                      <p className="text-sm font-bold text-black">
+                      <p className="text-sm font-bold text-black dark:text-white/70">
                         {formatPrice(product.price)}
                       </p>
                     </div>
-                  </button>
+                  </CustomButton>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-gray-600 text-center py-8">
+            <p className="text-sm font-black dark:text-white/85 text-center py-8">
               No se encontraron resultados
             </p>
           )
@@ -137,18 +142,18 @@ export const Search = () => {
           // Recent Products
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-black flex items-center gap-2">
-                <FaClock size={18} />
+              <h3 className="text-sm font-semibold text-black dark:text-white/70 flex items-center gap-2">
+                <FaClock size={18} className="text-black dark:text-white/70" />
                 Vistos recientemente
               </h3>
               {recentProducts.length > 0 && (
-                <button
+                <CustomDeleteButton
                   onClick={clearRecentProducts}
-                  className="cursor-pointer text-black hover:text-red-600/80 transition-colors"
                   title="Limpiar historial"
-                >
-                  <MdDeleteForever size={25} />
-                </button>
+                  className="w-8 h-8 p-0"
+                  centerIcon={MdDeleteForever}
+                  iconSize={22}
+                />
               )}
             </div>
 
@@ -156,11 +161,12 @@ export const Search = () => {
               <ul className="space-y-2">
                 {recentProducts.map((product) => (
                   <li className="group" key={product.id}>
-                    <button
-                      className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-white/20 transition-colors cursor-pointer"
+                    <CustomButton
+                      className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-white/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors cursor-pointer bg-transparent border-none shadow-none h-auto"
                       onClick={() => handleProductClick(product)}
+                      effect="bounce"
                     >
-                      <div className="h-16 w-16 bg-white/40 rounded-lg p-2 flex-shrink-0">
+                      <div className="h-16 w-16 bg-white/40 dark:bg-white/30 rounded-lg p-2 flex-shrink-0">
                         <img
                           src={product.image}
                           alt={product.name}
@@ -169,19 +175,19 @@ export const Search = () => {
                       </div>
 
                       <div className="flex flex-col gap-1 text-left flex-1">
-                        <p className="text-sm font-semibold text-black group-hover:text-primary transition-colors line-clamp-2">
+                        <p className="font-semibold text-black dark:text-white/70 group-hover:text-primary transition-colors line-clamp-2">
                           {product.name}
                         </p>
-                        <p className="text-sm font-bold text-black">
+                        <p className="text-sm font-bold text-black dark:text-white">
                           {formatPrice(product.price)}
                         </p>
                       </div>
-                    </button>
+                    </CustomButton>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-black text-center py-8">
+              <p className="text-sm text-black dark:text-white/70 text-center py-8">
                 No has visto ningún producto recientemente
               </p>
             )}

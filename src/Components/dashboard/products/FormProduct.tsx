@@ -13,6 +13,7 @@ import { Editor } from "./Editor";
 import { useCreateProduct, useProduct, useUpdateProduct } from "../../../hooks";
 import type { JSONContent } from "@tiptap/react";
 import { Loader } from "@/Components/shared/Loader";
+import { CustomButton } from "@/Components/shared/CustomButton";
 
 interface Props {
   titleForm: string;
@@ -92,21 +93,45 @@ export const FormProduct = ({ titleForm }: Props) => {
   if (isPending || isUpdatePending || isLoading) return <Loader />;
 
   return (
-    <div className="flex flex-col gap-6 relative">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <button
-            className="bg-white p-1.5 rounded-md shadow-sm border border-slate-200 transition-all group hover:scale-105"
+    <div className="flex flex-col gap-8 relative max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/40 dark:bg-black/40 backdrop-blur-xl p-6 rounded-3xl border border-white/20 shadow-lg">
+        <div className="flex items-center gap-4">
+          <CustomButton
+            size="icon"
+            effect="magnetic"
+            className="bg-white/50 hover:bg-white text-neutral-600 hover:text-black border border-white/20 shadow-sm"
             onClick={() => navigate(-1)}
           >
-            <IoIosArrowBack
-              size={18}
-              className="transition-all group-hover:scale-125"
-            />
-          </button>
-          <h2 className="font-bold tracking-tight text-2xl capitalize">
-            {titleForm}
-          </h2>
+            <IoIosArrowBack size={20} />
+          </CustomButton>
+          <div>
+            <h2 className="font-black tracking-tight text-3xl capitalize text-neutral-900 dark:text-white">
+              {titleForm}
+            </h2>
+            <p className="text-neutral-500 font-medium text-sm">
+              {slug ? "Edita la información del producto" : "Crea un nuevo producto para tu catálogo"}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          <CustomButton
+            effect="shine"
+            effectColor="rgba(239, 68, 68, 0.2)"
+            className="bg-transparent border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+            onClick={() => navigate(-1)}
+            type="button"
+          >
+            Cancelar
+          </CustomButton>
+          <CustomButton
+            effect="shine"
+            effectColor="rgba(255,255,255,0.5)"
+            className="bg-primary text-white shadow-lg shadow-primary/30"
+            onClick={onSubmit}
+          >
+            Guardar Producto
+          </CustomButton>
         </div>
       </div>
 
@@ -115,27 +140,28 @@ export const FormProduct = ({ titleForm }: Props) => {
         onSubmit={onSubmit}
       >
         <SectionFormProduct
-          titleSection="Detalles del Producto"
+          titleSection="Información Principal"
           className="lg:col-span-2 lg:row-span-2"
         >
           <InputForm
             type="text"
-            placeholder="Ejemplo: Café Colombiano Premium"
-            label="nombre"
+            placeholder="Ej: Café Especial - Origen Tolima"
+            label="Nombre del Producto"
             name="name"
             register={register}
             errors={errors}
             required
+            className="font-bold text-lg"
           />
           <FeaturesInput control={control} errors={errors} />
         </SectionFormProduct>
 
-        <SectionFormProduct>
+        <SectionFormProduct titleSection="Identificación">
           <InputForm
             type="text"
-            label="Slug"
+            label="Slug (URL)"
             name="slug"
-            placeholder="cafe-colombiano-premium"
+            placeholder="cafe-especial-origen-tolima"
             register={register}
             errors={errors}
           />
@@ -152,55 +178,62 @@ export const FormProduct = ({ titleForm }: Props) => {
         </SectionFormProduct>
 
         <SectionFormProduct
-          titleSection="Precio y Stock"
+          titleSection="Inventario y Precios"
           className="lg:col-span-2"
         >
-          <InputForm
-            type="number"
-            label="Precio"
-            name="price"
-            placeholder="5000"
-            register={register}
-            errors={errors}
-            required
-          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <InputForm
+              type="number"
+              label="Precio ($)"
+              name="price"
+              placeholder="0.00"
+              register={register}
+              errors={errors}
+              required
+              className="font-mono"
+            />
 
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Stock</label>
-            <select
-              className="border border-slate-200 rounded-md p-3"
-              {...register("stock")}
-            >
-              <option value="Disponible">Disponible</option>
-              <option value="Agotado">Agotado</option>
-            </select>
-            {errors.stock && (
-              <p className="text-red-500 text-xs">{errors.stock.message}</p>
-            )}
-          </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-neutral-600 dark:text-neutral-300 ml-1">Estado del Stock</label>
+              <div className="relative">
+                <select
+                  className="w-full h-10 bg-white dark:bg-black/50 border border-neutral-200 dark:border-white/20 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none cursor-pointer"
+                  {...register("stock")}
+                >
+                  <option value="Disponible">🟢 Disponible</option>
+                  <option value="Agotado">🔴 Agotado</option>
+                </select>
+              </div>
+              {errors.stock && (
+                <p className="text-red-500 text-xs ml-1">{errors.stock.message}</p>
+              )}
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Tag (Opcional)</label>
-            <select
-              className="border border-slate-200 rounded-md p-3"
-              {...register("tag")}
-            >
-              <option value="">Ninguno</option>
-              <option value="Nuevo">Nuevo</option>
-              <option value="Promoción">Promoción</option>
-            </select>
-            {errors.tag && (
-              <p className="text-red-500 text-xs">{errors.tag.message}</p>
-            )}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-neutral-600 dark:text-neutral-300 ml-1">Etiqueta Promocional</label>
+              <div className="relative">
+                <select
+                  className="w-full h-10 bg-white dark:bg-black/50 border border-neutral-200 dark:border-white/20 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none cursor-pointer"
+                  {...register("tag")}
+                >
+                  <option value="">Ninguna</option>
+                  <option value="Nuevo">✨ Nuevo</option>
+                  <option value="Promoción">🔥 Promoción</option>
+                </select>
+              </div>
+              {errors.tag && (
+                <p className="text-red-500 text-xs ml-1">{errors.tag.message}</p>
+              )}
+            </div>
           </div>
         </SectionFormProduct>
 
-        <SectionFormProduct titleSection="Imágenes del producto">
+        <SectionFormProduct titleSection="Galería de Imágenes">
           <UploaderImages errors={errors} setValue={setValue} watch={watch} />
         </SectionFormProduct>
 
         <SectionFormProduct
-          titleSection="Descripción del producto"
+          titleSection="Descripción Detallada"
           className="col-span-full"
         >
           <Editor
@@ -210,17 +243,22 @@ export const FormProduct = ({ titleForm }: Props) => {
           />
         </SectionFormProduct>
 
-        <div className="flex gap-3 absolute top-0 right-0">
-          <button
-            className="btn-secondary-outline"
+        {/* Mobile Action Bar */}
+        <div className="lg:hidden flex gap-3 fixed bottom-4 right-4 left-4 z-40 bg-white/80 backdrop-blur-xl p-4 rounded-2xl border border-white/20 shadow-2xl">
+          <CustomButton
+            className="flex-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-900"
             type="button"
             onClick={() => navigate(-1)}
           >
             Cancelar
-          </button>
-          <button className="btn-primary" type="submit">
-            Guardar Producto
-          </button>
+          </CustomButton>
+          <CustomButton
+            className="flex-1 bg-primary text-white"
+            type="submit"
+            effect="shine"
+          >
+            Guardar
+          </CustomButton>
         </div>
       </form>
     </div>

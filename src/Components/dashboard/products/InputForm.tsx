@@ -12,6 +12,8 @@ interface Props {
   required?: boolean;
 }
 
+import { Input } from "../../shared/Input";
+
 export const InputForm = ({
   className,
   label,
@@ -23,43 +25,16 @@ export const InputForm = ({
   required,
 }: Props) => {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex justify-between items-center">
-        <label
-          htmlFor={name}
-          className="text-xs font-bold tracking-tight capitalize text-slate-900"
-        >
-          {label}:
-        </label>
-
-        {required && (
-          <span
-            className={`${
-              required && "text-red-500 text-sm mr-3"
-            } font-bold self-end`}
-          >
-            *
-          </span>
-        )}
-      </div>
-
-      <div
-        className={`border border-gray-300 rounded-md overflow-hidden gap-5 items-center ${
-          errors[name] ? "border-red-500" : ""
-        }`}
-      >
-        <input
-          type={type}
-          placeholder={placeholder}
-          id={name}
-          className={`py-1.5 text-sm px-3 font-medium tracking-tighter w-full text-slate-600 outline-none focus:outline-none ${className}`}
-          autoComplete="off"
-          {...register(name)}
-          {...register(name, {
-            valueAsNumber: type === "number",
-          })}
-        />
-      </div>
-    </div>
+    <Input
+      type={type}
+      label={required ? `${label} *` : label}
+      placeholder={placeholder}
+      className={className}
+      containerClassName=""
+      {...register(name, {
+        valueAsNumber: type === "number",
+      })}
+      error={errors[name]?.message as string}
+    />
   );
 };

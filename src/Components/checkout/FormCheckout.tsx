@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { type AddressFormValues, addressSchema } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ItemsCheckout } from "./ItemsCheckout";
@@ -25,11 +26,28 @@ export const FormCheckout = () => {
   const cleanCart = useCartStore((state) => state.cleanCart);
   const cartItems = useCartStore((state) => state.items);
   const totalAmount = useCartStore((state) => state.totalAmount);
+  const removeItem = useCartStore((state) => state.removeItem);
 
   const onSubmit = handleSubmit((data) => {
+    // 1. Filtrar items con IDs válidos (UUIDs)
+    const validItems = cartItems.filter((item) => {
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.productId);
+      if (!isUUID) {
+        console.warn(`[FormCheckout] Skipping invalid item: ${item.productId}`);
+        // Opcional: limpiar del store también
+        removeItem(item.productId);
+      }
+      return isUUID;
+    });
+
+    if (validItems.length === 0) {
+      toast.error("Tu carrito contenía items inválidos y ha sido limpiado. Por favor agrega los productos nuevamente.");
+      return;
+    }
+
     const orderInput = {
       address: data,
-      cartItems: cartItems.map((item) => ({
+      cartItems: validItems.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,
         price: item.price,

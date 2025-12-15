@@ -12,7 +12,7 @@ const brands = [
     image: "/img/brands/Apple-Logo.webp",
     alt: "Apple Logo",
     icon: (
-      <GiCoffeeMug className="text-6xl text-zinc-800 hover:text-zinc-600 transition-colors" />
+      <GiCoffeeMug className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
     ),
   },
   {
@@ -20,7 +20,7 @@ const brands = [
     image: "/img/brands/Samsung_Logo.webp",
     alt: "Samsung Logo",
     icon: (
-      <GiPieSlice className="text-6xl text-zinc-800 hover:text-zinc-600 transition-colors" />
+      <GiPieSlice className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
     ),
   },
   {
@@ -28,7 +28,7 @@ const brands = [
     image: "/img/brands/granizado-intenso-de-limon.webp",
     alt: "Frappé",
     icon: (
-      <RiDrinks2Fill className="text-6xl text-zinc-800 hover:text-zinc-600 transition-colors" />
+      <RiDrinks2Fill className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
     ),
   },
   {
@@ -36,7 +36,7 @@ const brands = [
     image: "/img/brands/huawei-logo.png",
     alt: "Huawei Logo",
     icon: (
-      <LiaHotdogSolid className="text-6xl text-zinc-800 hover:text-zinc-600 transition-colors" />
+      <LiaHotdogSolid className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
     ),
   },
   {
@@ -44,7 +44,7 @@ const brands = [
     image: "/img/brands/realme-logo.webp",
     alt: "Realme Logo",
     icon: (
-      <GiChipsBag className="text-6xl text-zinc-800 hover:text-zinc-600 transition-colors" />
+      <GiChipsBag className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
     ),
   },
   {
@@ -52,7 +52,7 @@ const brands = [
     image: "/img/brands/xiaomi-logo.webp",
     alt: "Xiaomi Logo",
     icon: (
-      <MdEmojiFoodBeverage className="text-6xl text-zinc-800 hover:text-zinc-600 transition-colors" />
+      <MdEmojiFoodBeverage className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
     ),
   },
 ];
@@ -63,10 +63,10 @@ export const Brands = () => {
     <div className="scroll-reveal delay">
       <div className="container mx-auto px-4">
         <CardFeature
-          className="bg-transparent border-0 mb-16 text-center justify-center"
+          className="bg-transparent border-0 shadow-black/20 dark:shadow-white/10 shadow-lg mb-16 text-center justify-center"
           title="Nuestras Marcas"
           description="Descubre nuestras marcas de café, seleccionadas cuidadosamente para ofrecerte la mejor calidad y sabor."
-          titleClassName="text-4xl font-bold text-black/70 mb-4"
+          titleClassName="text-4xl text-black/70 mb-4"
           descriptionClassName="text-lg text-black/70"
         />
 
@@ -75,13 +75,13 @@ export const Brands = () => {
             {brands.map((brand, index) => (
               <FlipCard
                 key={index}
-                containerClassName="shadow-lg hover:shadow-xl w-42 h-full sm:w-42 sm:h-full md:w-full md:h-full transition-all"
+                containerClassName="shadow-black/20 dark:shadow-white/10 shadow-lg hover:shadow-2xl w-42 h-full sm:w-42 sm:h-full md:w-full md:h-full transition-all"
                 frontClassName="bg-transparent backdrop-blur-sm border-none flex items-center justify-center"
                 backClassName="bg-transparent border-0 backdrop-blur-sm border-none p-0"
                 front={
                   <div className="flex flex-col items-center justify-center h-full w-full">
                     {brand.icon}
-                    <span className="font-semibold mt-2 text-sm text-zinc-800">
+                    <span className="font-black mt-2 text-sm text-zinc-800 dark:text-white/70">
                       {brand.name}
                     </span>
                   </div>

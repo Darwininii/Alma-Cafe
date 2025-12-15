@@ -1,79 +1,120 @@
-import React, { useRef, useState, type InputHTMLAttributes } from "react";
+import React, {
+  useRef,
+  useState,
+  type InputHTMLAttributes,
+  forwardRef,
+} from "react";
+import { cn } from "../../lib/utils"; // Asegúrate de tener esta utilidad o usa un join simple
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+  icon?: React.ReactNode;
   containerClassName?: string;
-  className?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
-  containerClassName,
-  className,
-  ...props
-}) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [visible, setVisible] = useState(false);
-  const radius = 100;
-  const defaultColor = "#c09074"; // tono café dorado por defecto
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ className, containerClassName, label, error, icon, ...props }, ref) => {
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const [mouse, setMouse] = useState({ x: 0, y: 0 });
+    const [isFocused, setIsFocused] = useState(false);
+    const [hasValue, setHasValue] = useState(!!props.value);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    setMouse({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
+    // Actualizar estado si el value cambia externamente
+    React.useEffect(() => {
+      setHasValue(!!props.value || (props.defaultValue as string)?.length > 0);
+    }, [props.value, props.defaultValue]);
 
-  // 🎨 Fondo interactivo
-  const containerBg = `
-    radial-gradient(
-      ${visible ? radius + "px" : "0px"} circle at ${mouse.x}px ${mouse.y}px,
-      ${defaultColor},
-      transparent 80%
-    )
-  `;
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      setMouse({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    };
 
-  // Tipado para variables CSS custom (--nombre)
-  type CSSVars = React.CSSProperties &
-    Record<`--${string}`, string | number | undefined>;
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setHasValue(e.target.value.length > 0);
+      props.onChange?.(e);
+    };
 
-  // Estilo tipado que incluye las custom properties sin usar 'any'
-  const style: CSSVars = {
-    background: containerBg,
-    ["--accent"]: defaultColor,
-  };
+    return (
+      <div className={cn("flex flex-col gap-1.5", containerClassName)}>
+        <div
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          className="group relative rounded-xl p-[1px] overflow-hidden transition-all duration-300"
+          style={
+            {
+              background: `radial-gradient(120px circle at ${mouse.x}px ${mouse.y}px, rgba(168, 114, 87, 0.4), transparent 40%)`,
+            } as React.CSSProperties
+          }
+        >
+          {/* Fondo y Borde con efecto */}
+          <div className="absolute inset-0 bg-gradient-to-r from-neutral-200 to-neutral-100 dark:from-stone-800 dark:to-stone-900 opacity-90 rounded-xl pointer-events-none" />
 
-  // Estilo único por defecto
-  const defaultStyle = [
-    "rounded-lg p-0.5 transition duration-300",
-    "bg-transparent hover:shadow-[0_0_8px_rgba(255,255,255,0.2)]",
-  ].join(" ");
+          <div
+            className={cn(
+              "relative z-10 flex items-center bg-white dark:bg-stone-950 rounded-[11px] px-3 py-1 transition-all duration-300 border border-transparent",
+              isFocused
+                ? "border-primary/50 shadow-[0_0_15px_rgba(192,144,116,0.15)]"
+                : "border-neutral-200 dark:border-stone-800 hover:border-primary/30"
+            )}
+          >
+            {/* Icono opcional */}
+            {icon && (
+              <div className="text-neutral-400 dark:text-neutral-500 mr-2">
+                {icon}
+              </div>
+            )}
 
-  return (
-    <div
-      ref={containerRef}
-      className={["group/input relative", defaultStyle, containerClassName]
-        .filter(Boolean)
-        .join(" ")}
-      style={style}
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-      onMouseMove={handleMouseMove}
-    >
-      <input
-        {...props}
-        className={[
-          `flex h-10 w-full border-none bg-transparent text-sm
-          text-black dark:text-white placeholder:text-neutral-400
-          dark:placeholder:text-neutral-500 rounded-md px-3 py-2
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-var(--accent)
-          disabled:cursor-not-allowed disabled:opacity-50 transition duration-300`,
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      />
-    </div>
-  );
-};
+            <div className="relative w-full">
+              {/* Etiqueta flotante */}
+              {label && (
+                <label
+                  className={cn(
+                    "absolute left-0 transition-all duration-200 pointer-events-none text-neutral-400 font-medium",
+                    isFocused || hasValue || props.value
+                      ? "-top-1 text-[10px] text-primary"
+                      : "top-2.5 text-sm"
+                  )}
+                >
+                  {label}
+                </label>
+              )}
+
+              <input
+                ref={ref}
+                {...props}
+                onFocus={(e) => {
+                  setIsFocused(true);
+                  props.onFocus?.(e);
+                }}
+                onBlur={(e) => {
+                  setIsFocused(false);
+                  props.onBlur?.(e);
+                }}
+                onChange={handleInput}
+                className={cn(
+                  "w-full bg-transparent border-none outline-none text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-transparent py-2.5 h-10",
+                  className
+                )}
+                placeholder={label ? label : props.placeholder}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Mensaje de error */}
+        {error && (
+          <span className="text-xs text-red-500 font-medium ml-1 animate-in slide-in-from-top-1 fade-in">
+            {error}
+          </span>
+        )}
+      </div>
+    );
+  }
+);
+
+Input.displayName = "Input";

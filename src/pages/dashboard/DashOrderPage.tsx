@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../Components/shared/Loader";
 import { formatPrice } from "../../helpers";
 import { useOrderAdmin } from "@/hooks";
+import { CustomButton } from "../../Components/shared/CustomButton";
 
 const tableHeaders = ["Producto", "Cantidad", "Total"];
 
@@ -18,13 +19,15 @@ export const DashboardOrderPage = () => {
   return (
     <div>
       <div className="flex justify-between items-center">
-        <button
-          className="border rounded-full py-2 border-slate-200 px-5 flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-widest hover:bg-stone-100 transition-all"
+        <CustomButton
+          className="border rounded-full py-2 border-slate-200 px-5 flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-widest hover:bg-stone-100 transition-all bg-transparent shadow-none"
           onClick={() => navigate(-1)}
+          effect="none"
+          size="sm"
         >
           <IoChevronBack size={16} />
           Volver
-        </button>
+        </CustomButton>
 
         <div className="flex flex-col items-center gap-1.5">
           <h1 className="text-3xl font-bold">Pedido #{id}</h1>

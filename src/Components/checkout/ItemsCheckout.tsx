@@ -2,7 +2,9 @@ import { formatPrice } from "../../helpers";
 import { useCartStore } from "../../store/cart.store";
 import { RiMotorbikeFill } from "react-icons/ri";
 import { motion } from "framer-motion";
-import { BadgeDollarSign, BadgeMinus, BadgePlus } from "lucide-react";
+import { BadgeDollarSign } from "lucide-react";
+import { CustomPlusMinus } from "../shared/CustomPlusMinus";
+import { CustomDeleteButton } from "../shared/CustomDeleteButton";
 import { MdDeleteForever } from "react-icons/md";
 
 export const ItemsCheckout = () => {
@@ -86,37 +88,21 @@ export const ItemsCheckout = () => {
 
               {/* Quantity Controls */}
               <div className="flex items-center justify-between pt-2 border-t border-white/40">
-                <div className="flex items-center gap-3 bg-black/10 px-3 py-2 rounded-2xl border border-2 border-black/60">
-                  <button
-                    type="button"
-                    onClick={() => handleDecrement(item.productId, item.quantity)}
-                    disabled={item.quantity === 1}
-                    className="cursor-pointer text-black hover:text-red-600/80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                    title="Disminuir cantidad"
-                  >
-                    <BadgeMinus size={18} />
-                  </button>
-                  <span className="text-black text-sm font-bold min-w-[20px] text-center">
-                    {item.quantity}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleIncrement(item.productId, item.quantity)}
-                    className="cursor-pointer text-black hover:text-green-100 transition-colors"
-                    title="Aumentar cantidad"
-                  >
-                    <BadgePlus size={18} />
-                  </button>
-                </div>
+                <CustomPlusMinus
+                  value={item.quantity}
+                  onDecrease={() => handleDecrement(item.productId, item.quantity)}
+                  onIncrease={() => handleIncrement(item.productId, item.quantity)}
+                  disableDecrease={item.quantity === 1}
+                  className="bg-black/10 border-2 border-black/60 dark:bg-white/10 dark:border-white/20"
+                />
 
-                <button
-                  type="button"
+                <CustomDeleteButton
                   onClick={() => handleRemove(item.productId)}
-                  className="cursor-pointer text-black hover:text-red-600/80 transition-colors p-2"
                   title="Eliminar producto"
-                >
-                  <MdDeleteForever size={24} />
-                </button>
+                  centerIcon={MdDeleteForever}
+                  iconSize={22}
+                  className="w-9 h-9 border border-red-500/20"
+                />
               </div>
             </div>
           </motion.li>

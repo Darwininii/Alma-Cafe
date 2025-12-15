@@ -36,7 +36,7 @@ export const TiendaPage = () => {
 
   return (
     <>
-      <h1 className="text-5xl font-semibold text-center mb-12">
+      <h1 className="text-5xl font-bold text-center mb-12 text-black dark:text-white/80">
         Nuestros Productos
       </h1>
 
@@ -58,6 +58,7 @@ export const TiendaPage = () => {
               {(products || []).map((product, index) => (
                 <CardProduct
                   key={product.id || index}
+                  id={product.id}
                   name={product.name}
                   slug={product.slug}
                   img={getFirstImage(product as Product)}
@@ -67,7 +68,7 @@ export const TiendaPage = () => {
                 />
               ))}
               {!isLoading && (products || []).length === 0 && (
-                <p className="text-center col-span-full py-10">No se encontraron productos.</p>
+                <p className="text-center col-span-full py-10 text-black dark:text-white">No se encontraron productos.</p>
               )}
             </div>
           )}

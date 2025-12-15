@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { CustomCard } from "./CustomCard";
 
 interface CardFeatureProps {
   icon?: React.ReactNode | "none";
@@ -21,30 +22,32 @@ export const CardFeature: React.FC<CardFeatureProps> = ({
   descriptionClassName,
 }) => {
   return (
-    <div
+    <CustomCard
+      variant="glass"
+      hoverEffect="scale"
       className={cn(
-        "justify-center text-center flex items-center gap-6 rounded-2xl p-6 shadow-lg border border-white/20 backdrop-blur-md bg-white/10 transition-transform hover:scale-105 hover:shadow-xl",
+        "flex items-center gap-6 justify-center text-center",
         className
       )}
     >
       {icon && icon !== "none" && (
-        <div className={cn("text-slate-100", iconClassName)}>{icon}</div>
+        <div className={cn("text-black dark:text-white/70", iconClassName)}>{icon}</div>
       )}
       <div className="space-y-1">
         <p
           className={cn(
-            "font-semibold  text-white drop-shadow",
+            "font-bold text-black drop-shadow dark:text-white/70",
             titleClassName
           )}
         >
           {title}
         </p>
         {description && (
-          <p className={cn("text-sm text-gray-200", descriptionClassName)}>
+          <p className={cn("text-lg font-semibold text-black/80 dark:text-white/70", descriptionClassName)}>
             {description}
           </p>
         )}
       </div>
-    </div>
+    </CustomCard>
   );
 };

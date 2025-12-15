@@ -46,6 +46,21 @@ export const getStatus = (status: string): string => {
   }
 };
 
+// Función para obtener el color del estado
+export const getStatusColor = (status: string): string => {
+  switch (status.toLowerCase()) {
+    case "completed":
+    case "paid":
+      return "bg-green-100 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-300 dark:border-green-500/30";
+    case "pending":
+      return "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30";
+    case "cancelled":
+      return "bg-red-100 text-red-700 border-red-200 dark:bg-red-500/20 dark:text-red-300 dark:border-red-500/30";
+    default:
+      return "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700";
+  }
+};
+
 // Función para generar el slug de un producto
 export const generateSlug = (name: string): string => {
   return name

@@ -3,17 +3,20 @@ import { ProductDescription } from "@/Components/one-product/ProductDescription"
 import { Loader } from "@/Components/shared/Loader";
 import { Separator } from "@/Components/shared/Separator";
 import { Tag } from "@/Components/shared/Tag";
+import { CustomButton } from "@/Components/shared/CustomButton";
+import { CustomCard } from "@/Components/shared/CustomCard";
 import { formatPrice } from "@/helpers";
 import { useProduct } from "@/hooks";
 import { useCartStore, useCounterStore } from "@/store";
 import { motion } from "framer-motion";
-import { BadgeMinus, BadgePlus, MessagesSquare } from "lucide-react";
+import { CustomPlusMinus } from "@/Components/shared/CustomPlusMinus";
+import { MessagesSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
 import { RiMotorbikeFill } from "react-icons/ri";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const ProductsPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -83,7 +86,7 @@ export const ProductsPage = () => {
       animate={{ opacity: 1 }}
       className="min-h-screen"
     >
-      <div className="h-fit flex flex-col md:flex-row gap-8 md:gap-16 mt-8">
+      <div className="h-fit flex flex-col lg:flex-row gap-8 lg:gap-16 mt-6 md:mt-8">
         {/* Galería de Imágenes */}
         <motion.div
           initial={{ x: -50, opacity: 0 }}
@@ -101,112 +104,126 @@ export const ProductsPage = () => {
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="flex-1 space-y-6 bg-white/5 backdrop-blur-sm p-8 rounded-3xl border border-white/20 shadow-xl"
+          className="flex-1"
         >
-          <div className="space-y-2">
-            <h1 className="text-4xl font-black tracking-tight text-black drop-shadow-md">{product.name}</h1>
+          <CustomCard
+            variant="glass"
+            padding="lg"
+            rounded="3xl"
+            className="space-y-6 h-full border-white/20 shadow-xl"
+          >
+            <div className="space-y-2">
+              <h1 className="text-3xl md:text-4xl font-black tracking-tight text-black dark:text-white/80 drop-shadow-md">{product.name}</h1>
 
-            <div className="flex gap-4 items-center">
-              <span className="text-3xl font-bold bg-clip-text text-black/80 bg-gradient-to-r from-orange-200 to-amber-100">
-                {formatPrice(product.price)}
-              </span>
+              <div className="flex flex-col md:flex-row md:items-center gap-4">
+                <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+                  {formatPrice(product.price)}
+                </span>
 
-              {/* Tags */}
-              <div className="relative flex gap-2">
-                {isOutOfStock && <Tag contentTag="Agotado" />}
-                {!isOutOfStock && product.tag && <Tag contentTag={product.tag as "Nuevo" | "Promoción"} />}
-              </div>
-            </div>
-
-          </div>
-
-          <Separator className="border-white/20" />
-
-          {/* Características */}
-          <ul className="space-y-3 pl-4">
-            {product.features.map((feature: string) => (
-              <motion.li
-                key={feature}
-                className="text-sm flex items-center gap-3 font-medium text-gray-100"
-                whileHover={{ x: 5 }}
-              >
-                <span className="w-2 h-2 rounded-full bg-orange-400 shadow-[0_0_10px_rgba(251,146,60,0.6)]" />
-                {feature}
-              </motion.li>
-            ))}
-          </ul>
-
-          {/* Opciones de Compra */}
-          {isOutOfStock ? (
-            <button className="w-full bg-gray-600/50 text-gray-300 font-bold py-4 rounded-xl cursor-not-allowed border border-gray-600">
-              Producto Agotado
-            </button>
-          ) : (
-            <div className="space-y-6 pt-4">
-              {/* Contador modernizado */}
-              <div className="flex items-center justify-between bg-black/10 p-4 rounded-2xl border border-2 border-black/20">
-                <span className="font-black text-black/80">Cantidad</span>
-                <div className="flex items-center gap-6 bg-white/70 text-black px-4 py-2 rounded-2xl border border-2 border-black/60 shadow-inner">
-                  <motion.button
-                    whileTap={{ scale: 0.9 }}
-                    onClick={decrement}
-                    disabled={count === 1}
-                    className="cursor-pointer p-1 hover:text-orange-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    <BadgeMinus size={18} />
-                  </motion.button>
-                  <span className="text-lg font-bold w-4 text-center">{count}</span>
-                  <motion.button
-                    whileTap={{ scale: 0.9 }}
-                    onClick={increment}
-                    className="cursor-pointer p-1 hover:text-green-600 transition-colors"
-                  >
-                    <BadgePlus size={18} />
-                  </motion.button>
+                {/* Tags */}
+                <div className="relative flex gap-2">
+                  {isOutOfStock && <Tag contentTag="Agotado" />}
+                  {!isOutOfStock && product.tag && <Tag contentTag={product.tag as "Nuevo" | "Promoción"} />}
                 </div>
               </div>
 
-              {/* Botones de acción */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center justify-center gap-2 bg-white text-black font-bold py-4 rounded-xl shadow-lg hover:bg-gray-100 transition-all cursor-pointer"
-                  onClick={addToCart}
-                >
-                  <FaShoppingCart size={20} />
-                  Agregar al Carrito
-                </motion.button>
+            </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-black/80 to-rose-600 text-white font-bold py-4 rounded-xl shadow-lg  hover:shadow-black/40 transition-all cursor-pointer border border-white/10"
-                  onClick={buyNow}
-                >
-                  <MdPayments size={20} />
-                  Comprar Ahora
-                </motion.button>
+            <Separator className="border-white/20" />
+
+            {/* Características */}
+            <div className="bg-black/5 dark:bg-white/5 rounded-2xl p-4 border border-black/5 dark:border-white/5">
+              <h3 className="text-sm font-bold text-black/60 dark:text-white/60 mb-3 uppercase tracking-wider">Características</h3>
+              <ul className="space-y-3">
+                {product.features.map((feature: string) => (
+                  <motion.li
+                    key={feature}
+                    className="text-sm flex items-start gap-3 font-medium text-black/80 dark:text-gray-200"
+                    whileHover={{ x: 5 }}
+                  >
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 shadow-[0_0_8px_rgba(234,88,12,0.6)]" />
+                    <span className="leading-relaxed">{feature}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Opciones de Compra */}
+            {isOutOfStock ? (
+              <CustomButton
+                disabled
+                className="w-full bg-gray-600/50 text-gray-300 font-bold py-4 rounded-xl cursor-not-allowed border border-gray-600 pointer-events-none"
+                size="lg"
+                effect="none"
+              >
+                Producto Agotado
+              </CustomButton>
+            ) : (
+              <div className="space-y-6 pt-4">
+                {/* Contador modernizado */}
+                <div className="flex items-center justify-between bg-black/5 dark:bg-white/5 p-2 pr-4 pl-6 rounded-full border border-black/10 dark:border-white/10 backdrop-blur-sm">
+                  <span className="font-bold text-black/70 dark:text-white/80 text-sm uppercase tracking-wider">Cantidad</span>
+                  <CustomPlusMinus
+                    value={count}
+                    onDecrease={decrement}
+                    onIncrease={increment}
+                    disableDecrease={count === 1}
+                    className="bg-black/80 dark:bg-white/10 border-none shadow-sm h-10"
+                    iconSize={20}
+                  />
+                </div>
+
+                {/* Botones de acción */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <CustomButton
+                    className="w-full bg-white text-black font-bold py-4 rounded-xl shadow-lg hover:bg-gray-100 border-none"
+                    onClick={addToCart}
+                    leftIcon={FaShoppingCart}
+                    size="lg"
+                    effect="bounce"
+                  >
+                    Agregar al Carrito
+                  </CustomButton>
+
+                  <CustomButton
+                    className="w-full bg-gradient-to-r from-black/80 to-rose-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-black/40 border border-white/10"
+                    onClick={buyNow}
+                    leftIcon={MdPayments}
+                    size="lg"
+                    effect="shine"
+                  >
+                    Comprar Ahora
+                  </CustomButton>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div className="flex gap-4 pt-6 border-t border-black/50">
-            <div className="flex flex-col gap-1 items-center justify-center p-3 flex-1 bg-white/5 rounded-xl border border-2 border-black/50 hover:bg-black/20 transition-colors cursor-help">
-              <RiMotorbikeFill size={24} className="text-black/80" />
-              <p className="text-[10px] md:text-xs font-semibold text-black/80 text-center">Envío Seguro</p>
-            </div>
+            <div className="flex gap-4 pt-6 border-t border-black/10 dark:border-white/10">
+              <CustomButton
+                className="flex-1 flex-col h-auto py-3 gap-1 bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 text-black/80 dark:text-white/80 shadow-none"
+                effect="none"
+                title="Envío Seguro"
+              >
+                <RiMotorbikeFill size={24} className="mb-1" />
+                <span className="text-[10px] md:text-xs font-bold">Envío Seguro</span>
+              </CustomButton>
 
-            <Link
-              to="#"
-              className="flex flex-col gap-1 items-center justify-center p-3 flex-1 bg-white/5 rounded-xl border border-2 border-black/50 hover:bg-black/20 transition-colors"
-            >
-              <MessagesSquare size={24} className="text-black/80" />
-              <p className="text-[10px] md:text-xs font-semibold text-black/80 text-center">
-                Soporte 24/7
-              </p>
-            </Link>
-          </div>
+              <CustomButton
+                href={`https://wa.me/571234567890?text=${encodeURIComponent(
+                  `Hola, quiero saber más a cerca del producto: '${product.name}'.`
+                )}`}
+                target="_blank"
+                className="flex-1 flex-col h-auto py-3 gap-1 bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 text-black/80 dark:text-white/80 shadow-none"
+                effect="none"
+                title="Contactar Soporte"
+              >
+                <MessagesSquare size={24} className="mb-1" />
+                <span className="text-[10px] md:text-xs font-bold">
+                  Soporte 24/7
+                </span>
+              </CustomButton>
+            </div>
+          </CustomCard>
         </motion.div>
       </div>
 

@@ -1,100 +1,147 @@
 import { Link } from "react-router-dom";
+import { CustomSocials } from "./CustomSocials";
 import { socialLinks } from "../../constants/links";
-import { Input } from "@/Components/shared/Input";
-import { Button } from "@/Components/shared/Button";
+import { MapPin, Phone, Clock, Coffee } from "lucide-react";
+import { CustomNews } from "./CustomNews";
 
 export const Footer = () => {
   return (
-    <footer className="relative bg-gray-950/95 backdrop-blur-sm border-t border-white/5 text-slate-200 py-16 px-8 lg:px-12 mt-20">
-      {/* Línea superior luminosa */}
-      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-400/40 to-transparent"></div>
+    <footer className="relative bg-gradient-to-b from-gray-950 via-gray-900 to-black text-slate-200 overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-amber-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="container mx-auto flex flex-wrap justify-between gap-10 text-sm md:flex-nowrap">
-        {/* Logo */}
-        <div className="flex-1 min-w-[200px]">
-          <Link
-            to="/"
-            className="text-3xl font-bold tracking-tight text-white hover:text-amber-300 transition-colors duration-300"
-          >
-            Alma Café
-          </Link>
-          <p className="mt-3 text-xs text-slate-400 max-w-xs leading-relaxed">
-            El aroma que te acompaña cada día ☕ — calidad, sabor y tradición.
-          </p>
-        </div>
+      {/* Top gradient line */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
 
-        {/* Suscripción */}
-        <div className="flex flex-col gap-4 flex-1 min-w-[220px]">
-          <p className="font-semibold uppercase tracking-tight">Suscríbete</p>
-          <p className="text-xs text-slate-400">
-            Recibe las últimas noticias y ofertas exclusivas
-          </p>
-
-          <div className="flex flex-col-2 items-center gap-2 border border-white/10 px-3 py-2 backdrop-blur-md">
-            <Input
-              type="email"
-              placeholder="Ingresa tu correo electrónico"
-              className="flex-1 bg-transparent text-slate-100 placeholder:text-slate-400 focus:outline-none"
-            />
-            <Button
-              type="submit"
-              size="md"
-              effect="expandIcon"
-              filledIcon
-              className="bg-black border-slate-400 font-semibold text-white hover:bg-white/85 hover:text-black hover:ring-amber-500/70 hover:ring-2"
-            >
-              Suscribete
-            </Button>
-          </div>
-        </div>
-
-        {/* Enlaces legales */}
-        <div className="flex flex-col gap-4 flex-1 min-w-[180px]">
-          <p className="font-semibold uppercase tracking-tight">Información</p>
-          <nav className="flex flex-col gap-2 text-xs font-medium text-slate-400">
+      <div className="container mx-auto px-6 lg:px-12 py-16 relative z-10">
+        {/* Main content grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          {/* Brand section */}
+          <div className="space-y-4">
             <Link
-              to="/productos"
-              className="hover:text-amber-300 transition-colors"
+              to="/"
+              className="inline-block text-4xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent hover:from-amber-300 hover:to-amber-500 transition-all duration-300"
             >
-              Productos
+              Alma Café
             </Link>
-            <Link to="#" className="hover:text-amber-300 transition-colors">
-              Política de privacidad
-            </Link>
-            <Link to="#" className="hover:text-amber-300 transition-colors">
-              Términos de uso
-            </Link>
-          </nav>
-        </div>
+            <p className="text-sm text-slate-400 leading-relaxed max-w-xs flex items-center gap-2">
+              <Coffee className="w-4 h-4 text-amber-500 flex-shrink-0" />
+              El aroma que te acompaña cada día — calidad, sabor y tradición en cada taza.
+            </p>
 
-        {/* Redes sociales con círculos difusos */}
-        <div className="flex flex-col gap-4 flex-1 min-w-[200px]">
-          <p className="font-semibold uppercase tracking-tight">Síguenos</p>
-          <p className="text-xs leading-6 text-slate-400">
-            No te pierdas de las novedades que <strong>Alma Café</strong> tiene
-            para ti.
-          </p>
+            {/* Contact info */}
+            <div className="space-y-2 text-xs text-slate-400">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-amber-500" />
+                <span>Calle Principal #123, Ciudad</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-amber-500" />
+                <span>+1 (555) 123-4567</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-amber-500" />
+                <span>Lun - Vie: 7:00 AM - 8:00 PM</span>
+              </div>
+            </div>
+          </div>
 
-          <div className="flex gap-4 flex-wrap">
-            {socialLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={link.title}
-                className="relative flex items-center justify-center w-10 h-10 rounded-full bg-linear-to-br from-gray-800/50 via-gray-700/30 to-gray-900/10 backdrop-blur-md border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.06)] transition-transform duration-300 hover:scale-110 hover:shadow-[0_0_25px_rgba(255,215,150,0.5)]"
+          {/* Quick Links */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+              Enlaces Rápidos
+            </h3>
+            <nav className="flex flex-col gap-3 text-sm">
+              <Link
+                to="/"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
               >
-                <span className="text-slate-100 text-lg">{link.icon}</span>
-              </a>
-            ))}
+                Inicio
+              </Link>
+              <Link
+                to="/productos"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
+              >
+                Productos
+              </Link>
+              <Link
+                to="/nosotros"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
+              >
+                Nosotros
+              </Link>
+              <Link
+                to="/tienda"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
+              >
+                Tienda
+              </Link>
+            </nav>
+          </div>
+
+          {/* Legal */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+              Legal
+            </h3>
+            <nav className="flex flex-col gap-3 text-sm">
+              <Link
+                to="#"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
+              >
+                Política de Privacidad
+              </Link>
+              <Link
+                to="#"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
+              >
+                Términos de Uso
+              </Link>
+              <Link
+                to="#"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
+              >
+                Política de Cookies
+              </Link>
+              <Link
+                to="#"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
+              >
+                Devoluciones
+              </Link>
+            </nav>
+          </div>
+
+          {/* Newsletter */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+              Newsletter
+            </h3>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Suscríbete para recibir ofertas exclusivas y novedades.
+            </p>
+
+            <CustomNews buttonClassName="text-black" />
+
+            {/* Social Links */}
+            <div className="pt-4">
+              <p className="text-xs text-slate-400 mb-3 font-semibold uppercase tracking-wide">
+                Síguenos
+              </p>
+              <CustomSocials links={socialLinks} size="md" />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Línea inferior */}
-      <div className="mt-12 border-t border-white/10 pt-6 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} Alma Café. Todos los derechos reservados.
+        {/* Bottom section */}
+        <div className="border-t border-white/10 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-slate-500">
+              © {new Date().getFullYear()} <span className="text-amber-500 font-semibold">Alma Café</span>. Todos los derechos reservados.
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   );

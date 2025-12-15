@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   className?: string;
@@ -13,10 +14,17 @@ export const SectionFormProduct = ({
 }: Props) => {
   return (
     <div
-      className={`bg-white border border-gray-300 shadow-sm rounded-md flex flex-col gap-4 p-7 h-fit ${className}`}
+      className={cn(
+        "bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/20 shadow-lg rounded-2xl flex flex-col gap-6 p-8 h-fit",
+        className
+      )}
     >
       {titleSection && (
-        <h2 className="font-bold tracking-tight text-xl">{titleSection}:</h2>
+        <div className="border-b border-white/10 pb-4">
+          <h2 className="font-bold tracking-tight text-xl text-neutral-900 dark:text-white">
+            {titleSection}
+          </h2>
+        </div>
       )}
       {children}
     </div>

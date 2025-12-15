@@ -10,7 +10,7 @@ export const RootLayout = () => {
   const isSheetOpen = useGlobalStore((state) => state.isSheetOpen);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <DockNavbar />
 
       {pathname === "/" && <Banner />}

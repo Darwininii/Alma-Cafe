@@ -15,6 +15,7 @@ import {
   DashNewProductPage,
   DashProductSlugPage,
   DashOrdersPage,
+  PruebasPage,
 } from "../pages";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
       {
         path: "nosotros",
         element: <AboutPage />,
+      },
+      {
+        path: "pruebas",
+        element: <PruebasPage />,
       },
       {
         path: "login",
@@ -92,7 +97,7 @@ export const router = createBrowserRouter([
         element: <DashNewProductPage />,
       },
       {
-        path: "productos/editar:slug",
+        path: "productos/editar/:slug",
         element: <DashProductSlugPage />,
       },
       {

@@ -1,5 +1,6 @@
 import React, { type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { CustomCard } from "./CustomCard";
 
 interface FlipCardProps {
   front: ReactNode;
@@ -23,13 +24,13 @@ export const FlipCard: React.FC<FlipCardProps> = ({
   const rotationClass =
     rotate === "x"
       ? [
-          "group-hover:[transform:rotateX(180deg)]",
-          "[transform:rotateX(180deg)]",
-        ]
+        "group-hover:[transform:rotateX(180deg)]",
+        "[transform:rotateX(180deg)]",
+      ]
       : [
-          "group-hover:[transform:rotateY(180deg)]",
-          "[transform:rotateY(180deg)]",
-        ];
+        "group-hover:[transform:rotateY(180deg)]",
+        "[transform:rotateY(180deg)]",
+      ];
 
   return (
     <div className={cn("group h-64 w-48 perspective-[1000px]", className)}>
@@ -43,22 +44,34 @@ export const FlipCard: React.FC<FlipCardProps> = ({
         {/* Front */}
         <div
           className={cn(
-            "absolute inset-0 overflow-hidden rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md shadow-lg flex items-center justify-center backface-hidden",
+            "absolute inset-0 backface-hidden",
             frontClassName
           )}
         >
-          {front}
+          <CustomCard
+            variant="glass"
+            padding="none"
+            className="w-full h-full flex items-center justify-center bg-white/10 backdrop-blur-md border-white/10"
+          >
+            {front}
+          </CustomCard>
         </div>
 
         {/* Back */}
         <div
           className={cn(
-            "absolute inset-0 overflow-hidden rounded-2xl border border-white/10 bg-black/80 flex items-center justify-center p-4 backface-hidden",
+            "absolute inset-0 backface-hidden",
             rotationClass[1],
             backClassName
           )}
         >
-          {back}
+          <CustomCard
+            variant="glass"
+            padding="sm"
+            className="w-full h-full flex items-center justify-center bg-black/80 border-white/10"
+          >
+            {back}
+          </CustomCard>
         </div>
       </div>
     </div>

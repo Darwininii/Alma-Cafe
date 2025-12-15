@@ -4,7 +4,7 @@ import { extractFilePath, sanitizeFileName } from "../helpers";
 import { supabase } from "../supabase/client";
 
 export const getProducts = async (page: number) => {
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const from = (page - 1) * itemsPerPage;
   const to = from + itemsPerPage - 1;
 
@@ -33,7 +33,7 @@ export const getFilteredProducts = async ({
   page: number;
   brands: string[];
 }) => {
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const from = (page - 1) * itemsPerPage;
   const to = from + itemsPerPage - 1;
 

@@ -1,6 +1,7 @@
 import { formatPrice } from "@/helpers";
 import { useCartStore } from "@/store";
-import { BadgeMinus, BadgePlus } from "lucide-react";
+import { CustomDeleteButton } from "./CustomDeleteButton";
+import { CustomPlusMinus } from "./CustomPlusMinus";
 import { MdDeleteForever } from "react-icons/md";
 
 export interface ICartItem {
@@ -41,37 +42,28 @@ export const CartItem = ({ item }: Props) => {
 
       <div className="flex-1 space-y-3">
         <div className="flex justify-between">
-          <p className="font-black text-black">{item.name}</p>
-          <p className="text-sm font-black text-black mt-1">
+          <p className="font-black text-black dark:text-white/80">{item.name}</p>
+          <p className="text-sm font-black text-black dark:text-white/80 mt-1">
             {formatPrice(item.price)}
           </p>
         </div>
 
         <div className="flex gap-4 items-center">
-          <div className="flex items-center gap-3 px-2 py-1 border border-2 border-black/50 w-fit rounded-full">
-            <button
-              onClick={decrement}
-              disabled={item.quantity === 1}
-              className="cursor-pointer hover:text-red-600/80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed "
-            >
-              <BadgeMinus size={18} />
-            </button>
-            <span className="text-black text-sm font-black min-w-[20px] text-center">{item.quantity}</span>
-            <button
-              onClick={increment}
-              className="cursor-pointer hover:text-green-100 transition-colors"
-            >
-              <BadgePlus size={18} />
-            </button>
-          </div>
+          <CustomPlusMinus
+            value={item.quantity}
+            onDecrease={decrement}
+            onIncrease={increment}
+            disableDecrease={item.quantity === 1}
+            className="border-2 border-black/50 dark:border-white/50"
+          />
 
-          <button
-            className="cursor-pointer text-black hover:text-red-600/80 transition-colors"
+          <CustomDeleteButton
             onClick={() => removeItem(item.productId)}
             title="Eliminar producto"
-          >
-            <MdDeleteForever size={22} />
-          </button>
+            centerIcon={MdDeleteForever}
+            iconSize={22}
+            className="w-9 h-9 border border-red-500/20"
+          />
         </div>
       </div>
     </li>

@@ -1,5 +1,6 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { AddressFormValues } from "../../lib/validators";
+import { Input } from "../shared/Input";
 
 interface Props {
   register: UseFormRegister<AddressFormValues>;
@@ -18,21 +19,12 @@ export const InputAddress = ({
   placeholder,
 }: Props) => {
   return (
-    <>
-      <div
-        className={`border border-2 border-black/60 rounded-xl text-black font-bold overflow-hidden py-2 ${errors[name] && "border-red-500 font-bold"
-          } ${className}`}
-      >
-        <input
-          type="text"
-          className="w-full px-3 py-1 text-sm focus:outline-none"
-          placeholder={placeholder}
-          {...register(name)}
-        />
-      </div>
-      {errors[name] && (
-        <p className="text-red-500 text-sm">{errors[name].message}</p>
-      )}
-    </>
+    <Input
+      type="text"
+      placeholder={placeholder}
+      className={className}
+      {...register(name)}
+      error={errors[name]?.message}
+    />
   );
 };

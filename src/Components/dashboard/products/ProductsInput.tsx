@@ -5,7 +5,10 @@ import {
   type UseFormRegister,
 } from "react-hook-form";
 import type { ProductFormValues } from "../../../lib/validators";
-import { IoIosAddCircleOutline, IoIosCloseCircleOutline } from "react-icons/io";
+import { Input } from "../../shared/Input";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { CustomButton } from "../../shared/CustomButton";
+import { CustomClose } from "../../shared/CustomClose";
 
 interface Props {
   control: Control<ProductFormValues>;
@@ -56,33 +59,33 @@ export const ProductsInput = ({ control, errors, register }: Props) => {
         {fields.map((field, index) => (
           <div key={field.id}>
             <div className="grid grid-cols-5 gap-4 items-center">
-              <input
+              <Input
                 type="number"
                 placeholder="Stock"
                 {...register(`products.${index}.stock`, {
                   valueAsNumber: true,
                 })}
-                className="border rounded-md px-3 py-1.5 text-xs font-semibold placeholder:font-normal focus:outline-none appearance-none"
+                className="font-semibold"
+                containerClassName="bg-white dark:bg-stone-900"
               />
 
-              <input
+              <Input
                 type="number"
                 step="100"
                 placeholder="Precio"
                 {...register(`products.${index}.price`, {
                   valueAsNumber: true,
                 })}
-                className="border rounded-md px-3 py-1.5 text-xs font-semibold placeholder:font-normal focus:outline-none appearance-none"
+                className="font-semibold"
+                containerClassName="bg-white dark:bg-stone-900"
               />
 
               <div className="flex justify-end">
-                <button
-                  type="button"
+                <CustomClose
                   onClick={() => removeVariant(index)}
-                  className="p-1"
-                >
-                  <IoIosCloseCircleOutline size={20} />
-                </button>
+                  className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 text-slate-500 hover:text-red-500 rounded-full transition-colors w-8 h-8"
+                  iconSize={20}
+                />
               </div>
             </div>
 
@@ -95,14 +98,14 @@ export const ProductsInput = ({ control, errors, register }: Props) => {
         ))}
       </div>
 
-      <button
-        type="button"
+      <CustomButton
         onClick={addVariant}
-        className="px-4 py-2 text-slate-800 rounded-md text-sm font-semibold tracking-tight flex items-center gap-1 self-center hover:bg-slate-100"
+        className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-md text-sm font-semibold tracking-tight self-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+        leftIcon={IoIosAddCircleOutline}
+        iconSize={18}
       >
-        <IoIosAddCircleOutline size={16} />
         Añadir Variante
-      </button>
+      </CustomButton>
 
       {fields.length === 0 && errors.products && (
         <p className="text-red-500 text-xs mt-1">

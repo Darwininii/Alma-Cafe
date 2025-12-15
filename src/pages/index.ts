@@ -8,6 +8,7 @@ export * from "./OrdersUserPage";
 export * from "./CheckoutPage";
 export * from "./GraciasPage";
 export * from "./OrderUserPage";
+export * from "./PruebasPage";
 
 // DASHBOARD PAGES
 export * from "./dashboard/DashProductsPage";

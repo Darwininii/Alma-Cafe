@@ -19,7 +19,7 @@ export const HomePage: React.FC = () => {
 
   useScrollReveal([isLoading]);
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen transition-colors duration-300">
       {/* Hero Section con animación de fade in */}
       <section
         className={`
@@ -31,7 +31,7 @@ export const HomePage: React.FC = () => {
         `}
       >
         <CardFeature
-          className="bg-transparent border-0 text-3xl font-bold text-center text-gray-800"
+          className="text-3xl font-bold text-center text-gray-800 dark:text-white"
           icon="none"
           title="Descubre nuestros Productos, Horarios, Promociones y Más"
         />

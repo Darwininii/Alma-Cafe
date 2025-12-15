@@ -7,7 +7,8 @@ import {
 import type { FieldErrors, UseFormSetValue } from "react-hook-form";
 import type { ProductFormValues } from "../../../lib/validators";
 import StarterKit from "@tiptap/starter-kit";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
+import { CustomButton } from "../../shared/CustomButton";
 
 interface Props {
   setValue: UseFormSetValue<ProductFormValues>;
@@ -17,10 +18,9 @@ interface Props {
 
 export const MenuBar = ({ editor }: { editor: EditorType | null }) => {
   const buttonClass = (isActive: boolean) =>
-    `w-8 h-7 grid place-items-center  border text-sm rounded transition-all ${
-      isActive
-        ? "border-blue-500 bg-blue-100 text-blue-700"
-        : "border-gray-300 bg-white text-gray-600 hover:bg-gray-100"
+    `w-8 h-7 grid place-items-center  border text-sm rounded transition-all ${isActive
+      ? "border-blue-500 bg-blue-100 text-blue-700"
+      : "border-gray-300 bg-white text-gray-600 hover:bg-gray-100"
     }`;
 
   if (!editor) {
@@ -29,53 +29,59 @@ export const MenuBar = ({ editor }: { editor: EditorType | null }) => {
 
   return (
     <div className="flex flex-wrap gap-3">
-      <button
+      <CustomButton
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={buttonClass(editor.isActive("heading", { level: 1 }))}
-        type="button"
+        size="sm"
+        effect="magnetic"
       >
         H1
-      </button>
+      </CustomButton>
 
-      <button
+      <CustomButton
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={buttonClass(editor.isActive("heading", { level: 2 }))}
-        type="button"
+        size="sm"
+        effect="magnetic"
       >
         H2
-      </button>
+      </CustomButton>
 
-      <button
+      <CustomButton
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={buttonClass(editor.isActive("heading", { level: 3 }))}
-        type="button"
+        size="sm"
+        effect="magnetic"
       >
         H3
-      </button>
+      </CustomButton>
 
-      <button
+      <CustomButton
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={buttonClass(editor.isActive("bold"))}
-        type="button"
+        size="sm"
+        effect="magnetic"
       >
         N
-      </button>
+      </CustomButton>
 
-      <button
+      <CustomButton
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={buttonClass(editor.isActive("italic"))}
-        type="button"
+        size="sm"
+        effect="magnetic"
       >
         K
-      </button>
+      </CustomButton>
 
-      <button
+      <CustomButton
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={buttonClass(editor.isActive("strike"))}
-        type="button"
+        size="sm"
+        effect="magnetic"
       >
         S
-      </button>
+      </CustomButton>
     </div>
   );
 };

@@ -5,7 +5,8 @@ import {
 } from "react-hook-form";
 import type { ProductFormValues } from "../../../lib/validators";
 import { useEffect, useState } from "react";
-import { IoIosCloseCircleOutline } from "react-icons/io";
+import { CustomClose } from "../../shared/CustomClose";
+import { BadgeX } from "lucide-react";
 
 interface ImagePreview {
   file?: File;
@@ -84,13 +85,13 @@ export const UploaderImages = ({ setValue, errors, watch }: Props) => {
                 alt={`Preview ${index}`}
                 className="rounded-md w-full h-full object-contain"
               />
-              <button
-                type="button"
+              <CustomClose
                 onClick={() => handleRemoveImage(index)}
-                className="flex justify-end absolute -top-3 -right-4 hover:scale-110 transition-all z-10"
-              >
-                <IoIosCloseCircleOutline size={22} className="text-red-500" />
-              </button>
+                className="absolute -top-3 -right-4 bg-black/10 hover:bg-black/80 text-red-600 hover:text-white dark:text-red-600 dark:bg-white dark:hover:bg-black/80 dark:hover:text-white rounded-full border border-red-100 shadow-sm z-10 w-6 h-6 p-0"
+                iconSize={16}
+                centerIcon={BadgeX}
+                effect="magnetic"
+              />
             </div>
           </div>
         ))}
