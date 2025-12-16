@@ -4,6 +4,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Sparkles } from "lucide-react";
 import { CustomButton } from "@/Components/shared/CustomButton";
+import { CustomTitle } from "@/Components/shared/CustomTitle";
 import { GiCoffeeMug, GiChipsBag } from "react-icons/gi";
 import { LiaHotdogSolid } from "react-icons/lia";
 import { PiShoppingBagOpenFill } from "react-icons/pi";
@@ -115,7 +116,7 @@ export const Banner = () => {
 
         {/* Título */}
         <h1 className="text-4xl font-bold dark:text-white/70 lg:text-6xl mb-2">
-          Bienvenido a <span className="text-amber-800/80 dark:text-amber-700">Alma Café</span>
+          Bienvenido a <CustomTitle className="text-amber-800/80 dark:text-amber-700 text-4xl lg:text-6xl" />
         </h1>
 
         {/* Descripción */}

@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { CustomTitle } from "../Components/shared/CustomTitle";
 import { useOrder, useUser } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
 import { formatPrice } from "../helpers";
@@ -61,15 +62,7 @@ export const GraciasPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-8"
                 >
-                    <Link
-                        to="/"
-                        className="text-3xl font-bold tracking-tighter hover:opacity-80 transition-opacity"
-                    >
-                        <p>
-                            Alma
-                            <span className="text-rose-600">Café</span>
-                        </p>
-                    </Link>
+                    <CustomTitle asLink className="text-3xl" />
                 </motion.div>
 
                 {/* Main Success Card */}

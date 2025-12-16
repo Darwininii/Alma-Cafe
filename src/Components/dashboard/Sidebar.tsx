@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { dashboardLinks } from "../../constants/links";
 import { IoLogOutOutline } from "react-icons/io5";
 import { signOut } from "../../actions";
-import { Logo } from "../shared/logo";
+import { CustomTitle } from "../shared/CustomTitle";
 import { CustomButton } from "../shared/CustomButton";
 import { cn } from "../../lib/utils";
 
@@ -16,7 +16,7 @@ export const Sidebar = () => {
 
       {/* Logo Section */}
       <div className="w-full flex justify-center py-4 border-b border-white/10">
-        <Logo isDashboard />
+        <CustomTitle isDashboard asLink />
       </div>
 
       {/* Navigation */}

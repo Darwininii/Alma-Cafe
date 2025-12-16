@@ -11,6 +11,7 @@ import { MdPayments } from "react-icons/md";
 import { PiMapPinAreaFill } from "react-icons/pi";
 import { ReceiptText } from "lucide-react";
 import { Loader } from "../shared/Loader";
+import { CustomTitle } from "../shared/CustomTitle";
 
 export const FormCheckout = () => {
   const {
@@ -161,7 +162,7 @@ export const FormCheckout = () => {
                 <ReceiptText size={20} /> Información de Transferencia </p>
               <div className="space-y-1 pl-4">
                 <p><span className="font-semibold">Banco:</span> BANCO PICHINCHA</p>
-                <p><span className="font-semibold">Razón Social:</span> Alma Café</p>
+                <p><span className="font-semibold">Razón Social:</span> <CustomTitle className="text-sm" /></p>
                 <p><span className="font-semibold">RUC:</span> 123456789000</p>
                 <p><span className="font-semibold">Tipo de cuenta:</span> Corriente</p>
                 <p><span className="font-semibold">Número de cuenta:</span> 1234567890</p>

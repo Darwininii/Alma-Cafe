@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { CustomSocials } from "./CustomSocials";
+import { CustomTitle } from "./CustomTitle";
 import { socialLinks } from "../../constants/links";
 import { MapPin, Phone, Clock, Coffee } from "lucide-react";
 import { CustomNews } from "./CustomNews";
@@ -19,12 +20,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand section */}
           <div className="space-y-4">
-            <Link
-              to="/"
-              className="inline-block text-4xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent hover:from-amber-300 hover:to-amber-500 transition-all duration-300"
-            >
-              Alma Café
-            </Link>
+            <CustomTitle asLink className="text-4xl" />
             <p className="text-sm text-slate-400 leading-relaxed max-w-xs flex items-center gap-2">
               <Coffee className="w-4 h-4 text-amber-500 flex-shrink-0" />
               El aroma que te acompaña cada día — calidad, sabor y tradición en cada taza.
@@ -141,7 +137,7 @@ export const Footer = () => {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-slate-500">
-              © {new Date().getFullYear()} <span className="text-amber-500 font-semibold">Alma Café</span>. Todos los derechos reservados.
+              © {new Date().getFullYear()} <CustomTitle className="text-xs" />. Todos los derechos reservados.
             </p>
           </div>
         </div>

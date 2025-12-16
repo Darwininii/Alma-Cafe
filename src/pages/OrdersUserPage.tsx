@@ -25,7 +25,7 @@ export const OrdersUserPage = () => {
             Todavía no has hecho ningún pedido
           </p>
           <Link
-            to="/celulares"
+            to="/tiendapage"
             className="bg-black text-white uppercase font-semibold tracking-widest text-xs py-4 rounded-full px-8"
           >
             Empezar a comprar
