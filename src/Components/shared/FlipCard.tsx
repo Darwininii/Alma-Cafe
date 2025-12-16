@@ -68,7 +68,7 @@ export const FlipCard: React.FC<FlipCardProps> = ({
           <CustomCard
             variant="glass"
             padding="sm"
-            className="w-full h-full flex items-center justify-center bg-black/80 border-white/10"
+            className="w-full h-full flex items-center justify-center bg-transparent border-white/10"
           >
             {back}
           </CustomCard>

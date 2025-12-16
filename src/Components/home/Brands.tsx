@@ -90,7 +90,7 @@ export const Brands = () => {
                   <img
                     src={brand.image}
                     alt={brand.alt}
-                    className="h-full w-full object-cover mx-auto filter contrast-125"
+                    className="h-full w-full object-cover filter contrast-125 rounded-xl"
                   />
                 }
               />
