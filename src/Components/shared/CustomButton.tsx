@@ -72,7 +72,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+      "group inline-flex items-center justify-center font-medium transition-all rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 
     // Estilo único por defecto
     const defaultStyle = "bg-primary text-white hover:bg-primary/90";
@@ -115,14 +115,14 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <>
           {/* Texto normal */}
           <div className="flex items-center gap-2">
-            <div className={cn("size-2 scale-100 rounded-lg transition-all duration-300 group-hover:scale-[100.8]", dotColor)} />
-            <span className="inline-block whitespace-nowrap transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
+            <div className={cn("size-2 scale-100 rounded-lg transition-all duration-300 group-hover:scale-[100.8] group-active:scale-[100.8]", dotColor)} />
+            <span className="inline-block whitespace-nowrap transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 group-active:translate-x-12 group-active:opacity-0">
               {children}
             </span>
           </div>
 
           {/* Texto + ícono al hacer hover */}
-          <div className={cn("absolute top-0 z-10 flex size-full translate-x-12 items-center justify-center gap-2 opacity-0 transition-all duration-300 group-hover:-translate-x-5 group-hover:opacity-100", textColor)}>
+          <div className={cn("absolute top-0 z-10 flex size-full translate-x-12 items-center justify-center gap-2 opacity-0 transition-all duration-300 group-hover:-translate-x-5 group-hover:opacity-100 group-active:-translate-x-5 group-active:opacity-100", textColor)}>
             <span className="whitespace-nowrap">{children}</span>
             <DisplayIcon className="size-5" size={iconSize} />
           </div>
@@ -259,14 +259,14 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {isTailwind ? (
             <div
               className={cn(
-                "absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out",
+                "absolute inset-0 -translate-x-full group-hover:translate-x-full group-active:translate-x-full transition-transform duration-700 ease-in-out",
                 shineColor
               )}
               style={{ transform: "skewX(-20deg)" }}
             />
           ) : (
             <div
-              className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
+              className="absolute inset-0 -translate-x-full group-hover:translate-x-full group-active:translate-x-full transition-transform duration-700 ease-in-out"
               style={{
                 background: `linear-gradient(90deg, transparent, ${shineColor}, transparent)`,
                 transform: "skewX(-20deg)",
@@ -387,7 +387,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {isFromTailwind && isToTailwind ? (
             <motion.div
               className={cn(
-                "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r",
+                "absolute inset-0 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 bg-gradient-to-r",
                 gradientFrom,
                 gradientTo
               )}
@@ -402,7 +402,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
             />
           ) : (
             <motion.div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500"
               style={{
                 background: `linear-gradient(45deg, ${gradientFrom}, ${gradientTo})`,
               }}

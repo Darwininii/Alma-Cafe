@@ -46,7 +46,7 @@ export const ImageZoom = ({ img, alt, className }: Props) => {
 
             {showLens && (
                 <div
-                    className="absolute rounded-full border border-gray-200 shadow-xl pointer-events-none z-50 bg-white bg-no-repeat"
+                    className="hidden md:block absolute rounded-full border border-gray-200 shadow-xl pointer-events-none z-50 bg-white bg-no-repeat"
                     style={{
                         width: `${LENS_SIZE}px`,
                         height: `${LENS_SIZE}px`,

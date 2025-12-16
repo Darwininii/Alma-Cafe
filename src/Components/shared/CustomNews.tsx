@@ -35,6 +35,7 @@ export const CustomNews: React.FC<CustomNewsProps> = ({
                 label={label}
                 placeholder={placeholder}
                 icon={<Mail className="w-4 h-4 text-black/80 dark:text-white/80" />}
+                wrapperClassName="bg-black/10 backdrop-blur-sm border border-black/30 dark:border-white/30 hover:border-black/70 dark:hover:border-white/70 transition-colors"
                 containerClassName="w-full"
                 className={cn(
                     "bg-transparent dark:bg-transparent text-black/80 font-bold",

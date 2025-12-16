@@ -11,10 +11,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   icon?: React.ReactNode;
   containerClassName?: string;
+  wrapperClassName?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, containerClassName, label, error, icon, ...props }, ref) => {
+  ({ className, containerClassName, wrapperClassName, label, error, icon, ...props }, ref) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [mouse, setMouse] = useState({ x: 0, y: 0 });
     const [isFocused, setIsFocused] = useState(false);
@@ -56,10 +57,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
           <div
             className={cn(
-              "relative z-10 flex items-center bg-white dark:bg-stone-950 rounded-[11px] px-3 py-1 transition-all duration-300 border border-transparent",
+              "relative z-10 flex items-center bg-white dark:bg-black rounded-[11px] px-3 py-1 transition-all duration-300 border border-transparent",
               isFocused
                 ? "border-primary/50 shadow-[0_0_15px_rgba(192,144,116,0.15)]"
-                : "border-neutral-200 dark:border-stone-800 hover:border-primary/30"
+                : "border-neutral-200 dark:border-stone-800 hover:border-primary/30",
+              wrapperClassName
             )}
           >
             {/* Icono opcional */}

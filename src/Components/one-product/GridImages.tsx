@@ -58,16 +58,17 @@ export const GridImages = ({ images }: Props) => {
             key={index}
             onClick={() => handleImagesClick(image)}
             onMouseEnter={() => handleImagesClick(image)} // Hover functionality
-            className={`flex-shrink-0 w-20 h-20 p-2 border-2 ${activeImage === image ? "border-black/50" : "border-transparent"
-              } cursor-pointer bg-white/10 backdrop-blur-sm rounded-xl hover:border-black/50 transition-all focus:outline-none`}
+            className={`flex-shrink-0 w-20 h-20 p-2 border-2 ${activeImage === image ? "border-black/50 dark:border-white/50" : "border-transparent"
+              } cursor-pointer bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 group-hover:border-black/20 backdrop-blur-sm rounded-xl hover:border-black/50 transition-all focus:outline-none`}
             size="icon"
-            effect="none"
+            effect="shine"
+            effectColor="bg-amber-500/50 dark:bg-amber-600/50"
             centerIcon={ZoomIn}
           >
             <img
               src={image}
               alt={`Thumbnail ${index + 1}`}
-              className="w-full rounded-sm object-contain mix-blend-multiply"
+              className="w-full h-full rounded-xl object-cover mix-blend-multiply"
             />
           </CustomButton>
         ))}

@@ -84,7 +84,7 @@ export const Search = () => {
 
   return (
     <>
-      <div className="py-5 px-7 flex gap-10 items-center border-b border-white/20 dark:border-white/10">
+      <div className="py-5 px-7 flex gap-10 items-center border-b border-white/20 dark:border-white/10 ">
         <form
           className="flex-1"
           onSubmit={handleSearch}
@@ -94,9 +94,10 @@ export const Search = () => {
             placeholder="¿Qué buscas?"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            icon={<FaSearch size={18} />}
-            containerClassName="w-full"
-            className="bg-transparent border-none text-black dark:text-white"
+            icon={<FaSearch size={18} className="text-black/80 dark:text-white/80" />}
+            containerClassName="w-full rounded-2xl"
+            wrapperClassName="bg-black/10 backdrop-blur-sm border border-black/30 dark:border-white/30 hover:border-black/70 dark:hover:border-white/70 transition-colors"
+            className="text-black dark:text-white"
           />
         </form>
       </div>
@@ -107,11 +108,12 @@ export const Search = () => {
           searchResults.length > 0 ? (
             <ul className="space-y-2">
               {searchResults.map((product) => (
-                <li className="group" key={product.id}>
+                <li className="group/item" key={product.id}>
                   <CustomButton
                     className="flex cursor-pointer items-center gap-3 w-full p-2 rounded-lg hover:bg-white/10 dark:hover:bg-white/20 transition-colors bg-black/10 dark:bg-white/10 border-none shadow-none h-auto"
                     onClick={() => handleProductClick(product)}
                     effect="bounce"
+                    effectColor="hover:text-black"
                   >
                     <div className="h-16 w-16 bg-white/0 dark:bg-white/30 rounded-lg p-2 flex-shrink-0">
                       <img
@@ -122,10 +124,10 @@ export const Search = () => {
                     </div>
 
                     <div className="flex flex-col gap-1 text-left flex-1">
-                      <p className="text-sm font-semibold text-black dark:text-white/70 group-hover:text-primary transition-colors line-clamp-2">
+                      <p className="text-sm font-semibold text-white/80 dark:text-white/70 group-hover:text-black transition-colors line-clamp-2 dark:group-hover:text-pink-600 group-hover:font-black">
                         {product.name}
                       </p>
-                      <p className="text-sm font-bold text-black dark:text-white/70">
+                      <p className="text-sm font-bold text-white/80 dark:text-white/70 group-hover:text-black transition-colors dark:group-hover:text-white">
                         {formatPrice(product.price)}
                       </p>
                     </div>
@@ -153,6 +155,8 @@ export const Search = () => {
                   className="w-8 h-8 p-0"
                   centerIcon={MdDeleteForever}
                   iconSize={22}
+                  effect="bounce"
+
                 />
               )}
             </div>
@@ -175,10 +179,10 @@ export const Search = () => {
                       </div>
 
                       <div className="flex flex-col gap-1 text-left flex-1">
-                        <p className="font-semibold text-black dark:text-white/70 group-hover:text-primary transition-colors line-clamp-2">
+                        <p className="font-semibold text-white dark:text-white/70 transition-colors line-clamp-2 group-hover:text-black dark:group-hover:text-pink-600 group-hover:font-black">
                           {product.name}
                         </p>
-                        <p className="text-sm font-bold text-black dark:text-white">
+                        <p className="text-sm font-bold text-white/80 dark:text-white/70 group-hover:text-black dark:group-hover:text-white transition-colors">
                           {formatPrice(product.price)}
                         </p>
                       </div>
