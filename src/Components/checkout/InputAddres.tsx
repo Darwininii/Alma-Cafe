@@ -1,6 +1,6 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { AddressFormValues } from "../../lib/validators";
-import { Input } from "../shared/Input";
+import { CustomInput } from "../shared/CustomInput";
 
 interface Props {
   register: UseFormRegister<AddressFormValues>;
@@ -19,7 +19,7 @@ export const InputAddress = ({
   placeholder,
 }: Props) => {
   return (
-    <Input
+    <CustomInput
       type="text"
       placeholder={placeholder}
       className={className}

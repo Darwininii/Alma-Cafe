@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, Navigate } from "react-router-dom";
 import { useRegister, useUser } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
-import { Input } from "../Components/shared/Input";
+import { CustomInput } from "../Components/shared/CustomInput";
 import { CustomButton } from "../Components/shared/CustomButton";
 import {
   type UserRegisterFormValues,
@@ -56,28 +56,28 @@ export const RegisterPage = () => {
             className="flex flex-col items-center gap-4 w-full mt-10 sm:w-[400px] lg:w-[500px]"
             onSubmit={onRegister}
           >
-            <Input
+            <CustomInput
               type="text"
               label="Nombre Completo"
               {...register("fullName")}
               error={errors.fullName?.message}
             />
 
-            <Input
+            <CustomInput
               type="text"
               label="Celular"
               {...register("phone")}
               error={errors.phone?.message}
             />
 
-            <Input
+            <CustomInput
               type="email"
               label="Correo electrónico"
               {...register("email")}
               error={errors.email?.message}
             />
 
-            <Input
+            <CustomInput
               type="password"
               label="Contraseña"
               {...register("password")}

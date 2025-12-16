@@ -5,7 +5,7 @@ import {
   type UseFormRegister,
 } from "react-hook-form";
 import type { ProductFormValues } from "../../../lib/validators";
-import { Input } from "../../shared/Input";
+import { CustomInput } from "../../shared/CustomInput";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { CustomButton } from "../../shared/CustomButton";
 import { CustomClose } from "../../shared/CustomClose";
@@ -59,7 +59,7 @@ export const ProductsInput = ({ control, errors, register }: Props) => {
         {fields.map((field, index) => (
           <div key={field.id}>
             <div className="grid grid-cols-5 gap-4 items-center">
-              <Input
+              <CustomInput
                 type="number"
                 placeholder="Stock"
                 {...register(`products.${index}.stock`, {
@@ -69,7 +69,7 @@ export const ProductsInput = ({ control, errors, register }: Props) => {
                 containerClassName="bg-white dark:bg-stone-900"
               />
 
-              <Input
+              <CustomInput
                 type="number"
                 step="100"
                 placeholder="Precio"

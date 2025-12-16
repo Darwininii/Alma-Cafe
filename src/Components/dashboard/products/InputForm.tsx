@@ -12,7 +12,7 @@ interface Props {
   required?: boolean;
 }
 
-import { Input } from "../../shared/Input";
+import { CustomInput } from "../../shared/CustomInput";
 
 export const InputForm = ({
   className,
@@ -25,7 +25,7 @@ export const InputForm = ({
   required,
 }: Props) => {
   return (
-    <Input
+    <CustomInput
       type={type}
       label={required ? `${label} *` : label}
       placeholder={placeholder}

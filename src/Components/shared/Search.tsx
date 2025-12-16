@@ -6,7 +6,7 @@ import { CustomDeleteButton } from "./CustomDeleteButton";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaClock, FaSearch } from "react-icons/fa";
-import { Input } from "./Input";
+import { CustomInput } from "./CustomInput";
 import { MdDeleteForever } from "react-icons/md";
 import { CustomButton } from "./CustomButton";
 
@@ -89,7 +89,7 @@ export const Search = () => {
           className="flex-1"
           onSubmit={handleSearch}
         >
-          <Input
+          <CustomInput
             type="text"
             placeholder="¿Qué buscas?"
             value={searchTerm}

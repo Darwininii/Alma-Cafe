@@ -1,7 +1,7 @@
 import { type Control, type FieldErrors, useFieldArray } from "react-hook-form";
 import type { ProductFormValues } from "../../../lib/validators";
 import { useState } from "react";
-import { Input } from "../../shared/Input";
+import { CustomInput } from "../../shared/CustomInput";
 import { CustomButton } from "../../shared/CustomButton";
 import { X, Plus } from "lucide-react";
 
@@ -67,7 +67,7 @@ export const FeaturesInput = ({ control, errors }: Props) => {
       {/* Input para agregar nueva */}
       <div className="flex gap-2 items-end">
         <div className="flex-1">
-          <Input
+          <CustomInput
             type="text"
             label="Agregar Característica"
             placeholder="Ej: Acidez media-alta"

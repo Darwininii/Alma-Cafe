@@ -75,7 +75,8 @@ export const Newsletter = () => {
                   className="flex flex-col gap-4"
                   label="Correo electrónico"
                   placeholder="ejemplo@correo.com"
-                  inputClassName="bg-gray-50 dark:bg-transparent font-bold"
+                  inputClassName="bg-white/80 dark:bg-transparent font-bold"
+                  wrapperClassName="bg-white/80"
                   buttonSize="lg"
                   buttonText="¡Quiero suscribirme!"
                   buttonClassName="w-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 rounded-xl font-bold text-lg"
@@ -141,4 +142,3 @@ export const Newsletter = () => {
     </motion.section>
   );
 };
-// ...existing code...

@@ -122,7 +122,10 @@ export const Footer = () => {
               Suscríbete para recibir ofertas exclusivas y novedades.
             </p>
 
-            <CustomNews buttonClassName="text-black" />
+            <CustomNews
+              buttonClassName="text-black"
+              inputClassName="bg-white/80"
+              wrapperClassName="bg-white/80" />
 
             {/* Social Links */}
             <div className="pt-4">

@@ -3,7 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { useLogin, useUser } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
 
-import { Input } from "../Components/shared/Input";
+import { CustomInput } from "../Components/shared/CustomInput";
 import { CustomButton } from "../Components/shared/CustomButton";
 
 export const LoginPage = () => {
@@ -39,14 +39,14 @@ export const LoginPage = () => {
             className="flex flex-col items-center gap-4 w-full mt-10 sm:w-[400px] lg:w-[500px]"
             onSubmit={onLogin}
           >
-            <Input
+            <CustomInput
               type="email"
               label="Correo electrónico"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <Input
+            <CustomInput
               type="password"
               label="Contraseña"
               value={password}
