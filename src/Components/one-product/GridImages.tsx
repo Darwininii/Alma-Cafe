@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useImageZoom } from "@/hooks";
 import { ImageZoom } from "../shared/ImageZoom";
 import { CustomClose } from "../shared/CustomClose";
 import { CustomPlusMinus } from "../shared/CustomPlusMinus";
@@ -12,7 +13,30 @@ interface Props {
 export const GridImages = ({ images }: Props) => {
   const [activeImage, setActiveImage] = useState(images[0]);
   const [isOpen, setIsOpen] = useState(false);
-  const [zoom, setZoom] = useState(1);
+
+  // Hook for Zoom/Pan/Pinch logic
+  const {
+    zoom,
+    panPosition,
+    isDragging,
+    resetZoom,
+    handleZoomIn,
+    handleZoomOut,
+    handlers,
+    containerHandlers
+  } = useImageZoom();
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
   const handleImagesClick = (image: string) => {
     setActiveImage(image);
@@ -20,22 +44,12 @@ export const GridImages = ({ images }: Props) => {
 
   const openModal = () => {
     setIsOpen(true);
-    setZoom(1);
+    resetZoom();
   };
 
   const closeModal = () => {
     setIsOpen(false);
-    setZoom(1);
-  };
-
-  const handleZoomIn = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setZoom((prev) => Math.min(prev + 0.5, 3));
-  };
-
-  const handleZoomOut = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setZoom((prev) => Math.max(prev - 0.5, 1));
+    resetZoom();
   };
 
   return (
@@ -97,21 +111,26 @@ export const GridImages = ({ images }: Props) => {
             disableIncrease={zoom >= 3}
             className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/50 border border-white/20 px-6 py-2 rounded-full backdrop-blur-md dark:border-white/20 dark:bg-black/60 z-50"
             iconSize={24}
+            onClick={(e) => e.stopPropagation()}
           />
 
           {/* Image Container */}
           <div
             className="w-full h-full flex items-center justify-center overflow-hidden"
+            {...containerHandlers}
           >
             <img
               src={activeImage}
               alt="Zoomed Product"
               className="max-w-full max-h-full object-contain transition-transform duration-200 ease-out"
+              {...handlers}
               onClick={(e) => e.stopPropagation()}
               style={{
-                transform: `scale(${zoom})`,
-                cursor: zoom > 1 ? 'grab' : 'default'
+                transform: `scale(${zoom}) translate(${panPosition.x / zoom}px, ${panPosition.y / zoom}px)`,
+                cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+                touchAction: 'none'
               }}
+              draggable={false}
             />
           </div>
         </div>

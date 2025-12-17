@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useOrder, useUser, useCustomer, useOrders } from "../hooks";
+import { useOrder, useUser, useCustomer, useOrders, useImageZoom } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
 import { IoChevronBack, IoChevronForward, IoChevronDown } from "react-icons/io5";
 import { formatDate, formatPrice } from "@/helpers";
@@ -20,22 +20,21 @@ export const OrderUserPage = () => {
   const { data: customerProfile } = useCustomer(userId!);
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [zoom, setZoom] = useState(1);
-  const [isItemsExpanded, setIsItemsExpanded] = useState(true); // Default expanded
-
-  const handleZoomIn = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setZoom((prev) => Math.min(prev + 0.5, 3));
-  };
-
-  const handleZoomOut = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setZoom((prev) => Math.max(prev - 0.5, 1));
-  };
+  const [isItemsExpanded, setIsItemsExpanded] = useState(true);
+  const {
+    zoom,
+    panPosition,
+    isDragging,
+    resetZoom,
+    handleZoomIn,
+    handleZoomOut,
+    handlers,
+    containerHandlers
+  } = useImageZoom();
 
   const closeModal = () => {
     setSelectedImage(null);
-    setZoom(1);
+    resetZoom();
   };
 
   if (isLoading || !order) return <Loader />;
@@ -273,6 +272,7 @@ export const OrderUserPage = () => {
             exit={{ opacity: 0 }}
             onClick={closeModal}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm cursor-default"
+            {...containerHandlers}
           >
             <CustomPlusMinus
               value={`${Math.round(zoom * 100)}%`}
@@ -282,6 +282,7 @@ export const OrderUserPage = () => {
               disableIncrease={zoom >= 3}
               className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/50 border border-white/20 px-6 py-2 rounded-full backdrop-blur-md dark:border-white/20 dark:bg-black/60 z-50"
               iconSize={24}
+              onClick={(e) => e.stopPropagation()}
             />
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -297,12 +298,15 @@ export const OrderUserPage = () => {
               <img
                 src={selectedImage}
                 alt="Product Zoom"
-                className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl cursor-zoom-out transition-transform duration-200 ease-out"
+                className="max-w-full max-h-[85vh] object-contain rounded-lg transition-transform duration-200 ease-out"
                 onClick={(e) => e.stopPropagation()}
+                {...handlers}
                 style={{
-                  transform: `scale(${zoom})`,
-                  cursor: zoom > 1 ? 'grab' : 'default'
+                  transform: `scale(${zoom}) translate(${panPosition.x / zoom}px, ${panPosition.y / zoom}px)`,
+                  cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+                  touchAction: 'none'
                 }}
+                draggable={false}
               />
             </motion.div>
           </motion.div>

@@ -105,7 +105,7 @@ export const Pagination = ({ totalItems, page, setPage, itemsPerPage = 12 }: Pro
                 "w-10 h-10 min-w-[2.5rem] rounded-xl font-bold transition-all p-0",
                 page === p
                   ? "bg-black text-white dark:bg-black dark:text-white shadow-lg shadow-amber-500/20 scale-105"
-                  : "bg-transparent text-white dark:text-slate-300 hover:bg-black/20 dark:hover:bg-white/10"
+                  : "bg-black/10 dark:bg-white/10 text-white dark:text-slate-300 hover:bg-black/30 dark:hover:bg-white/30"
               )}
               onClick={() => goToPage(p)}
             >

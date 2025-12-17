@@ -71,15 +71,14 @@ export const generateSlug = (name: string): string => {
 
 //  Funcióna para extraer el PAth relativo al Bucket de una URL
 export const extractFilePath = (url: string) => {
-  const parts = url.split("/store/v1/object/public/product-images/");
+  // Extraer el path después del nombre del bucket (product-images)
+  const match = url.match(/\/product-images\/(.+)$/);
 
-  // Eemplo Parts: ["/store/v1/object/public/product-images/",
-  // "0120304050606023052350-Nombre-De-la-Imagen"]
-  if (parts.length !== 2) {
+  if (!match) {
     throw new Error(`URL de la imagen no Válida: ${url}`);
   }
 
-  return parts[1];
+  return match[1];
 };
 
 // Función para sanitizar nombres de archivo

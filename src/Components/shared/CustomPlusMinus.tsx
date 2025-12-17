@@ -3,7 +3,7 @@ import { BadgeMinus, BadgePlus } from "lucide-react";
 import { CustomButton } from "./CustomButton";
 import { cn } from "@/lib/utils";
 
-interface CustomPlusMinusProps {
+interface CustomPlusMinusProps extends React.HTMLAttributes<HTMLDivElement> {
     value: React.ReactNode;
     onIncrease: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
     onDecrease: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
@@ -21,6 +21,7 @@ export const CustomPlusMinus = ({
     disableIncrease = false,
     className,
     iconSize = 18,
+    ...props
 }: CustomPlusMinusProps) => {
     return (
         <div
@@ -28,6 +29,7 @@ export const CustomPlusMinus = ({
                 "flex items-center justify-between gap-3 px-3 py-1 rounded-full border border-black/20 dark:border-white/20 bg-white/50 dark:bg-black/50 backdrop-blur-sm shadow-sm",
                 className
             )}
+            {...props}
         >
             <CustomButton
                 onClick={onDecrease}

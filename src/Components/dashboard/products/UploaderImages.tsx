@@ -70,7 +70,7 @@ export const UploaderImages = ({ setValue, errors, watch }: Props) => {
     <>
       <input
         type="file"
-        accept="image/*"
+        accept="image/png, image/jpeg, image/jpg, image/webp"
         multiple
         onChange={handleImageChange}
         className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"

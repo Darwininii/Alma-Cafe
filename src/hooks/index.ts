@@ -24,3 +24,7 @@ export * from "./orders/useOrderAdmin";
 
 // Brands
 export * from "./brands/useBrands";
+
+//Image
+export * from "./useImageZoom";
+

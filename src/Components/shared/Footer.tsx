@@ -68,10 +68,10 @@ export const Footer = () => {
                 Nosotros
               </Link>
               <Link
-                to="/tienda"
+                to="/productos"
                 className="text-slate-400 hover:text-amber-400 transition-colors duration-200 hover:translate-x-1 inline-block"
               >
-                Tienda
+                Productos
               </Link>
             </nav>
           </div>
