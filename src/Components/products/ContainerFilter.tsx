@@ -5,27 +5,26 @@ import { CustomButton } from "../shared/CustomButton";
 import { MdOutlineFilterList, MdOutlineFilterListOff } from "react-icons/md";
 import { CustomDeleteButton } from "../shared/CustomDeleteButton";
 import { CustomClose } from "../shared/CustomClose";
+import { CustomInput } from "../shared/CustomInput";
+import { FaSearch } from "react-icons/fa";
+import { useBrands } from "@/hooks";
 
-
-const availableBrands = [
-  "Café",
-  "Mecatos",
-  "Galletas",
-  "Xiaomi",
-  "Realme",
-  "Honor",
-];
 
 interface Props {
   selectedBrands: string[];
   setSelectedBrands: (brands: string[]) => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
 }
 
 export const ContainerFilter = ({
   selectedBrands,
   setSelectedBrands,
+  searchTerm,
+  setSearchTerm,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { brands } = useBrands();
 
   const handleBrandChange = (brand: string) => {
     if (selectedBrands.includes(brand)) {
@@ -37,16 +36,17 @@ export const ContainerFilter = ({
 
   const FilterContent = () => (
     <div className="flex flex-col gap-3">
-      {availableBrands.map((brand) => (
+      {/* Si hay marcas cargadas, las mostramos. Si no, o está cargando, no se muestra nada o un loader si quisieras */}
+      {brands?.map((brand) => (
         <label
-          key={brand}
+          key={brand.id}
           className="relative inline-flex items-center group cursor-pointer hover:bg-white/30 dark:hover:bg-white/5 p-2 rounded-lg transition-all"
         >
           <input
             type="checkbox"
             className="sr-only peer"
-            checked={selectedBrands.includes(brand)}
-            onChange={() => handleBrandChange(brand)}
+            checked={selectedBrands.includes(brand.name)}
+            onChange={() => handleBrandChange(brand.name)}
           />
           {/* Custom Checkbox */}
           <div className="relative w-5 h-5 bg-white dark:bg-gray-800 border-2 border-black/70 dark:border-white/70 rounded-md transition-all duration-300 peer-checked:bg-gradient-to-br peer-checked:from-rose-500 peer-checked:to-rose-600 dark:peer-checked:from-rose-600 dark:peer-checked:to-rose-700 peer-checked:border-rose-500 dark:peer-checked:border-rose-600 peer-focus:ring-2 peer-focus:ring-rose-500/20 dark:peer-focus:ring-rose-400/20 peer-focus:ring-offset-2 dark:peer-focus:ring-offset-gray-900">
@@ -54,7 +54,7 @@ export const ContainerFilter = ({
             <IoCheckmark className="absolute inset-0 w-full h-full text-white opacity-0 peer-checked:opacity-100 transition-all duration-200 scale-0 peer-checked:scale-100" />
           </div>
           <span className="ml-3 text-black dark:text-white/70 group-hover:text-rose-600 dark:group-hover:text-rose-400 font-bold text-sm transition-colors select-none peer-checked:text-rose-600 dark:peer-checked:text-rose-400 peer-checked:font-semibold">
-            {brand}
+            {brand.name}
           </span>
         </label>
       ))}
@@ -63,23 +63,41 @@ export const ContainerFilter = ({
 
   return (
     <>
-      {/* Botón para Móvil */}
-      <div className="col-span-2 lg:hidden flex gap-3">
+      {/* Botón y Search para Móvil */}
+      <div className="col-span-2 lg:hidden flex gap-2 items-center h-10">
         <CustomButton
           onClick={() => setIsOpen(true)}
-          className="flex-1 bg-black dark:bg-white/80 text-white dark:text-black font-black"
-          size="md"
-          rightIcon={MdOutlineFilterList}
-          iconSize={22}
+          className="bg-black dark:bg-white/80 text-white dark:text-black shrink-0"
+          size="icon"
+          title="Filtrar Productos"
           effect="shine"
         >
-          Filtrar Productos
+          <MdOutlineFilterList size={22} />
         </CustomButton>
+
+        {/* Search Input Movil */}
+        <CustomInput
+          type="text"
+          placeholder="¿Qué buscas?"
+          label="Buscar Producto..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          icon={<FaSearch size={16} className="text-black/50 dark:text-white/50" />}
+          containerClassName="flex-1"
+          wrapperClassName="bg-white/5 dark:bg-white/5 border border-black/10 dark:border-white/10 h-10"
+          className="text-black dark:text-white text-sm"
+        />
+
         <CustomDeleteButton
-          onClick={() => setSelectedBrands([])}
+          onClick={() => {
+            setSelectedBrands([]);
+            setSearchTerm("");
+          }}
           title="Limpiar filtros"
           aria-label="Limpiar filtros"
           centerIcon={MdOutlineFilterListOff}
+          className="shrink-0 h-10 w-10"
+          disabled={selectedBrands.length === 0 && !searchTerm}
         />
       </div>
 
@@ -124,12 +142,15 @@ export const ContainerFilter = ({
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-bold text-xl text-black dark:text-white/80">Filtros</h3>
           <CustomDeleteButton
-            onClick={() => setSelectedBrands([])}
+            onClick={() => {
+              setSelectedBrands([]);
+              setSearchTerm("");
+            }}
             title="Limpiar filtros"
             aria-label="Limpiar filtros"
             centerIcon={MdOutlineFilterListOff}
             iconSize={22}
-            disabled={selectedBrands.length === 0}
+            disabled={selectedBrands.length === 0 && !searchTerm}
             className="w-8 h-8 min-w-[2rem] p-0"
           />
         </div>
@@ -137,6 +158,20 @@ export const ContainerFilter = ({
         <Separator />
 
         <div className="mt-5 space-y-5">
+          {/* Search Desktop */}
+          <div>
+            <CustomInput
+              type="text"
+              placeholder="¿Qué buscas?"
+              label="Buscar Producto..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              icon={<FaSearch size={16} className="text-black/50 dark:text-white/50" />}
+              containerClassName="w-full"
+              wrapperClassName="bg-white/5 dark:bg-white/5 border-none h-10"
+              className="text-sm"
+            />
+          </div>
           <div>
             <h3 className="font-semibold text-black dark:text-white/80 mb-3">Marcas</h3>
             <FilterContent />

@@ -16,6 +16,7 @@ import {
   DashProductSlugPage,
   DashOrdersPage,
   PruebasPage,
+  BrandsPage,
 } from "../pages";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 
@@ -107,6 +108,10 @@ export const router = createBrowserRouter([
       {
         path: "ordenes/:id",
         element: <DashOrdersPage />,
+      },
+      {
+        path: "marcas",
+        element: <BrandsPage />,
       },
     ],
   },

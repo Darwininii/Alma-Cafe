@@ -11,6 +11,7 @@ import { Loader } from "@/Components/shared/Loader";
 export const TiendaPage = () => {
   const [page, setPage] = useState(1);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const {
     data: products,
@@ -19,6 +20,7 @@ export const TiendaPage = () => {
   } = useFilteredProducts({
     page,
     brands: selectedBrands,
+    search: searchTerm,
   });
 
   // ✔ Función para obtener 1 sola imagen
@@ -45,6 +47,8 @@ export const TiendaPage = () => {
         <ContainerFilter
           setSelectedBrands={setSelectedBrands}
           selectedBrands={selectedBrands}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
 
         <div className="col-span-2 lg:col-span-2 xl:col-span-4 flex flex-col gap-12">

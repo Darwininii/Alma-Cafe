@@ -21,3 +21,6 @@ export * from "./orders/useOrders";
 export * from "./orders/useAllOrders";
 export * from "./orders/useChangeStatusOrder";
 export * from "./orders/useOrderAdmin";
+
+// Brands
+export * from "./brands/useBrands";

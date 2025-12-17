@@ -99,10 +99,10 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                                 }}
                                 onChange={handleInput}
                                 className={cn(
-                                    "w-full bg-transparent border-none outline-none text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-transparent py-2.5 h-10",
+                                    "w-full bg-transparent border-none outline-none text-sm text-neutral-900 dark:text-neutral-100 py-2.5 h-10",
                                     className
                                 )}
-                                placeholder={label ? label : props.placeholder}
+                                placeholder={isFocused || !label ? props.placeholder : ""}
                             />
                         </div>
                     </div>

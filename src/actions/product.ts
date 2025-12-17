@@ -29,9 +29,11 @@ export const getProducts = async (page: number) => {
 export const getFilteredProducts = async ({
   page = 1,
   brands = [],
+  search = "",
 }: {
   page: number;
   brands: string[];
+  search?: string;
 }) => {
   const itemsPerPage = 12;
   const from = (page - 1) * itemsPerPage;
@@ -45,6 +47,10 @@ export const getFilteredProducts = async ({
 
   if (brands.length > 0) {
     query = query.in("brand", brands);
+  }
+
+  if (search) {
+    query = query.ilike("name", `%${search}%`);
   }
 
   const { data, error, count } = await query;

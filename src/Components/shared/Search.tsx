@@ -92,11 +92,12 @@ export const Search = () => {
           <CustomInput
             type="text"
             placeholder="¿Qué buscas?"
+            label="Buscar Producto..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             icon={<FaSearch size={18} className="text-black/80 dark:text-white/80" />}
             containerClassName="w-full rounded-2xl"
-            wrapperClassName="bg-black/10 backdrop-blur-sm border border-black/30 dark:border-white/30 hover:border-black/70 dark:hover:border-white/70 transition-colors"
+            wrapperClassName="bg-white/5 backdrop-blur-sm border border-black/30 dark:border-white/30 hover:border-black/70 dark:hover:border-white/70 transition-colors"
             className="text-black dark:text-white"
           />
         </form>

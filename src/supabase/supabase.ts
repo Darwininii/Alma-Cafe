@@ -80,6 +80,30 @@ export type Database = {
           },
         ]
       }
+      brands: {
+        Row: {
+          created_at: string
+          id: string
+          keywords: string[] | null
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           created_at: string

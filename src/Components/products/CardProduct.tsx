@@ -107,7 +107,7 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag }: Props) =
                 size="sm"
                 effect="shine"
                 className={`w-full rounded-xl shadow-lg border-none justify-center ${isOutOfStock
-                  ? "bg-gray-300 dark:bg-gray-700 text-gray-600 cursor-not-allowed"
+                  ? "bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-white/50 cursor-not-allowed"
                   : "bg-black dark:bg-white text-white dark:text-black hover:bg-primary dark:hover:bg-primary hover:text-white dark:hover:text-white"
                   }`}
                 disabled={isOutOfStock}
