@@ -110,7 +110,7 @@ export const Search = () => {
               {searchResults.map((product) => (
                 <li className="group/item" key={product.id}>
                   <CustomButton
-                    className="flex cursor-pointer items-center gap-3 w-full p-2 rounded-lg hover:bg-white/10 dark:hover:bg-white/20 transition-colors bg-black/10 dark:bg-white/10 border-none shadow-none h-auto"
+                    className="flex cursor-pointer items-center gap-3 w-full p-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/20 transition-colors bg-black/10 dark:bg-white/10 border-none shadow-none h-auto"
                     onClick={() => handleProductClick(product)}
                     effect="bounce"
                     effectColor="hover:text-black"
@@ -166,7 +166,7 @@ export const Search = () => {
                 {recentProducts.map((product) => (
                   <li className="group" key={product.id}>
                     <CustomButton
-                      className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-white/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors cursor-pointer bg-transparent border-none shadow-none h-auto"
+                      className="flex items-center gap-3 w-full p-2 rounded-lg bg-black/10 hover:bg-white/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors cursor-pointer border-none shadow-none h-auto"
                       onClick={() => handleProductClick(product)}
                       effect="bounce"
                     >

@@ -68,7 +68,7 @@ export const GridImages = ({ images }: Props) => {
             <img
               src={image}
               alt={`Thumbnail ${index + 1}`}
-              className="w-full h-full rounded-xl object-cover mix-blend-multiply"
+              className="w-full h-full rounded-xl object-contain"
             />
           </CustomButton>
         ))}

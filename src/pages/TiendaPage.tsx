@@ -68,7 +68,7 @@ export const TiendaPage = () => {
                 />
               ))}
               {!isLoading && (products || []).length === 0 && (
-                <p className="text-center col-span-full py-10 text-black dark:text-white">No se encontraron productos.</p>
+                <p className="text-center font-bold col-span-full py-10 text-black dark:text-white">No se encontraron productos.</p>
               )}
             </div>
           )}

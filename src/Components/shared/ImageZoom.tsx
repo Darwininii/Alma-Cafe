@@ -41,7 +41,7 @@ export const ImageZoom = ({ img, alt, className }: Props) => {
             <img
                 src={img}
                 alt={alt}
-                className="w-full h-full object-contain mix-blend-multiply"
+                className="w-full h-full object-contain"
             />
 
             {showLens && (
