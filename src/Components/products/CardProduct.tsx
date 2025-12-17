@@ -73,14 +73,14 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag }: Props) =
       {/* Contenido Info */}
       <div className="p-6 relative z-20 bg-gradient-to-t from-white/80 via-white/40 to-transparent dark:from-black/80 dark:via-black/40 dark:to-transparent rounded-b-2xl backdrop-blur-[2px]">
         <Link to={`/productos/${slug}`} className="block group/title">
-          <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight line-clamp-2 min-h-[3rem] tracking-tight group-hover/title:text-primary transition-colors">
+          <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight line-clamp-2 min-h-[3rem] tracking-tight dark:group-hover:text-primary group-hover:text-pink-700 transition-colors">
             {name}
           </h3>
         </Link>
 
         <div className="mt-3 flex flex-col gap-4">
           <div className="flex flex-col">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">Precio</span>
+            <span className="text-xs text-black/70 dark:text-white/70 font-medium uppercase tracking-wider">Precio</span>
             <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
               {formatPrice(price)}
             </p>
