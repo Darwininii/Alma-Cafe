@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
 import { RiMotorbikeFill } from "react-icons/ri";
+import { IoChevronBack } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const ProductsPage = () => {
@@ -86,6 +87,18 @@ export const ProductsPage = () => {
       animate={{ opacity: 1 }}
       className="min-h-screen"
     >
+      <div className="pt-4">
+        <CustomButton
+          className="group inline-flex items-center gap-2 text-sm text-black dark:text-amber-500 dark:hover:text-amber-600 hover:text-black/70 hover:font-black transition-colors mb-2 cursor-pointer bg-transparent py-2 px-2 shadow-none border-none h-auto hover:bg-transparent"
+          onClick={() => navigate(-1)}
+          effect="bounce"
+          leftIcon={IoChevronBack}
+          iconSize={20}
+        >
+          <span className="font-medium text-black/70 dark:text-amber-500 dark:hover:text-amber-600 hover:font-black">Volver</span>
+        </CustomButton>
+      </div>
+
       <div className="h-fit flex flex-col lg:flex-row gap-8 lg:gap-16 mt-6 md:mt-8">
         {/* Galería de Imágenes */}
         <motion.div

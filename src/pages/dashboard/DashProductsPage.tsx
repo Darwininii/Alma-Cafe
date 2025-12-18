@@ -1,17 +1,16 @@
-import { TableProduct } from "@/Components/dashboard";
-import { IoAddCircleOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { TableProduct, DashAddButton } from "@/Components/dashboard";
+import { PackagePlus } from "lucide-react";
 
 export const DashProductsPage = () => {
   return (
     <div className="h-full flex flex-col gap-2">
-      <Link
+      <DashAddButton
         to="/dashboard/productos/new"
-        className="bg-black text-white flex items-center self-end py-1.5 px-2 rounded-md text-sm gap-1 font-semibold"
+        className="self-end"
+        icon={PackagePlus}
       >
-        <IoAddCircleOutline className="inline-block" />
         Nuevo Producto
-      </Link>
+      </DashAddButton>
 
       <TableProduct />
     </div>

@@ -5,6 +5,7 @@ import type { Brand, BrandInput } from "@/interfaces/brand.interface";
 import { CustomButton } from "@/Components/shared/CustomButton";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
 import { BrandForm } from "@/Components/dashboard/brands/BrandForm";
+import { DashAddButton } from "@/Components/dashboard/DashAddButton";
 
 export const BrandsPage = () => {
     const { brands, isLoading, createBrand, updateBrand, deleteBrand, isCreating, isUpdating } = useBrands();
@@ -48,14 +49,12 @@ export const BrandsPage = () => {
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-black dark:text-white">Gestión de Marcas</h1>
                 {!isFormOpen && (
-                    <CustomButton
+                    <DashAddButton
                         onClick={() => setIsFormOpen(true)}
-                        className="bg-black dark:bg-white text-white dark:text-black font-bold"
-                        rightIcon={FaPlus}
-                        effect="shine"
+                        icon={FaPlus}
                     >
                         Nueva Marca
-                    </CustomButton>
+                    </DashAddButton>
                 )}
             </div>
 

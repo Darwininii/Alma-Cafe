@@ -1,3 +1,4 @@
+export * from "./DashAddButton";
 export * from "./Sidebar";
 export * from "./products/TableProduct";
 
