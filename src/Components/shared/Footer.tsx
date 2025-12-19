@@ -124,11 +124,17 @@ export const Footer = () => {
               wrapperClassName="bg-white/80" />
 
             {/* Social Links */}
-            <div className="pt-4">
-              <p className="text-xs text-slate-400 mb-3 font-semibold uppercase tracking-wide">
+            <div className="pt-6">
+              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide">
                 Síguenos
               </p>
-              <CustomSocials links={socialLinks} size="md" />
+              <CustomSocials
+                links={socialLinks}
+                size="md"
+                layout="gooey"
+                className="justify-start -ml-10 -mt-6"
+                effect="magnetic"
+              />
             </div>
           </div>
         </div>

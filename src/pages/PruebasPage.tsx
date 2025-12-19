@@ -1,6 +1,6 @@
 import React from "react";
 import { CustomButton } from "@/Components/shared/CustomButton";
-import { GooeyMenu } from "@/Components/shared/GooeyMenu";
+import { CustomSocials } from "@/Components/shared/CustomSocials";
 import {
     Sparkles,
     Heart,
@@ -333,17 +333,17 @@ export const PruebasPage: React.FC = () => {
                                 Click the button to expand the menu. The gooey effect is created using SVG filters.
                             </p>
 
-                            <GooeyMenu
-                                items={[
-                                    { icon: BarChart3, label: "Analytics", onClick: () => alert("Analytics!") },
-                                    { icon: Plus, label: "Add New", onClick: () => alert("Add New!") },
-                                    { icon: Heart, label: "Favorites", onClick: () => alert("Favorites!") },
-                                    { icon: Mail, label: "Messages", onClick: () => alert("Messages!") },
-                                    { icon: Settings, label: "Settings", onClick: () => alert("Settings!") },
-                                    { icon: Share2, label: "Share", onClick: () => alert("Share!") },
+                            <CustomSocials
+                                layout="gooey"
+                                links={[
+                                    { id: 1, icon: <BarChart3 size={24} />, title: "Analytics", href: "#" },
+                                    { id: 2, icon: <Plus size={24} />, title: "Add New", href: "#" },
+                                    { id: 3, icon: <Heart size={24} />, title: "Favorites", href: "#" },
+                                    { id: 4, icon: <Mail size={24} />, title: "Messages", href: "#" },
+                                    { id: 5, icon: <Settings size={24} />, title: "Settings", href: "#" },
+                                    { id: 6, icon: <Share2 size={24} />, title: "Share", href: "#" },
                                 ]}
-                                buttonColor="bg-pink-600"
-                                itemColor="bg-pink-600"
+                                gooeyColor="bg-pink-600"
                             />
                         </div>
 
@@ -353,15 +353,14 @@ export const PruebasPage: React.FC = () => {
                                 Different Color Variation
                             </h3>
 
-                            <GooeyMenu
-                                items={[
-                                    { icon: MessageCircle, label: "Chat", onClick: () => console.log("Chat") },
-                                    { icon: Star, label: "Starred", onClick: () => console.log("Starred") },
-                                    { icon: Coffee, label: "Coffee", onClick: () => console.log("Coffee") },
-                                    // { icon: Zap, label: "Quick Action", onClick: () => console.log("Quick") },
+                            <CustomSocials
+                                layout="gooey"
+                                links={[
+                                    { id: 10, icon: <MessageCircle size={24} />, title: "Chat", href: "#" },
+                                    { id: 11, icon: <Star size={24} />, title: "Starred", href: "#" },
+                                    { id: 12, icon: <Coffee size={24} />, title: "Coffee", href: "#" },
                                 ]}
-                                buttonColor="bg-amber-500"
-                                itemColor="bg-amber-500"
+                                gooeyColor="bg-amber-500"
                             />
                         </div>
                     </div>
