@@ -63,14 +63,14 @@ export const CheckoutPage = () => {
           >
             {/* Empty cart icon */}
             <div className="relative">
-              <TbShoppingCartSearch size={120} className="text-zinc-400 dark:text-zinc-600" />
+              <TbShoppingCartSearch size={120} className="text-zinc-900 dark:text-white/80" />
             </div>
 
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-black text-zinc-800 dark:text-zinc-200">
+              <h2 className="text-3xl font-black text-zinc-900 dark:text-zinc-200">
                 Tu Carrito Está Vacío
               </h2>
-              <p className="text-zinc-600 dark:text-zinc-400 max-w-md">
+              <p className="text-zinc-800 dark:text-zinc-400 max-w-md">
                 ¡Agrega productos increíbles y comienza tu experiencia de compra!
               </p>
             </div>
@@ -78,7 +78,14 @@ export const CheckoutPage = () => {
             <CustomButton
               to="/productos"
               effect="shine"
-              className="py-4 px-8 bg-gradient-to-r from-zinc-900 to-zinc-800 dark:from-zinc-100 dark:to-zinc-200 rounded-full text-white dark:text-zinc-900 text-sm uppercase tracking-widest font-bold shadow-xl hover:shadow-2xl"
+              className="py-4 px-8 bg-zinc-900 rounded-full text-white hover:text-black dark:text-zinc-900 text-sm uppercase tracking-widest font-bold shadow-xl hover:shadow-2xl
+              dark:bg-white/90
+              dark:hover:bg-black
+              dark:hover:text-white
+              dark:hover:font-black
+              dark:hover:border-2
+              dark:hover:border-white/80
+              "
             >
               Empezar a Comprar
             </CustomButton>
