@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { CustomSocials } from "./CustomSocials";
 import { CustomTitle } from "./CustomTitle";
 import { socialLinks } from "../../constants/links";
-import { MapPin, Phone, ShieldCheck, Leaf } from "lucide-react";
+import { MapPin, Phone, ShieldCheck } from "lucide-react";
 import { CustomNews } from "./CustomNews";
 
 export const Footer = () => {

@@ -22,7 +22,7 @@ export const DashboardLayout = () => {
 
       const role = await getUserRole(session.session?.user.id as string);
 
-      if (role !== "admin") {
+      if (role !== "admin" && role !== "superAdmin" && role !== "visitor") {
         navigate("/", { replace: true });
       }
 

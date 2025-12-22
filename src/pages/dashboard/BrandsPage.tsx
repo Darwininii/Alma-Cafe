@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBrands } from "@/hooks";
+import { useBrands, useUser, useRoleUser } from "@/hooks";
 import { Loader } from "@/Components/shared/Loader";
 import type { Brand, BrandInput } from "@/interfaces/brand.interface";
 import { CustomButton } from "@/Components/shared/CustomButton";
@@ -11,6 +11,11 @@ export const BrandsPage = () => {
     const { brands, isLoading, createBrand, updateBrand, deleteBrand, isCreating, isUpdating } = useBrands();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
+
+    // Permission Check
+    const { session } = useUser(); // Ensure you import useUser
+    const { data: role } = useRoleUser(session?.user.id || "");
+    const canEdit = role === 'admin' || role === 'superAdmin';
 
     const handleSubmit = async (data: BrandInput) => {
         try {
@@ -48,7 +53,7 @@ export const BrandsPage = () => {
         <div className="space-y-8 pb-10">
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-black dark:text-white">Gestión de Marcas</h1>
-                {!isFormOpen && (
+                {!isFormOpen && canEdit && (
                     <DashAddButton
                         onClick={() => setIsFormOpen(true)}
                         icon={FaPlus}
@@ -74,22 +79,24 @@ export const BrandsPage = () => {
                         >
                             <div className="flex justify-between items-start mb-2">
                                 <h3 className="text-xl font-bold text-black dark:text-white">{brand.name}</h3>
-                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <CustomButton
-                                        onClick={() => handleEdit(brand)}
-                                        className="bg-transparent text-blue-400 hover:bg-blue-400/20 hover:text-blue-500 border-none"
-                                        size="icon"
-                                        centerIcon={FaEdit}
-                                        title="Editar marca"
-                                    />
-                                    <CustomButton
-                                        onClick={() => handleDelete(brand.id)}
-                                        className="bg-transparent text-red-400 hover:bg-red-400/20 hover:text-red-500 border-none"
-                                        size="icon"
-                                        centerIcon={FaTrash}
-                                        title="Eliminar marca"
-                                    />
-                                </div>
+                                {canEdit && (
+                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <CustomButton
+                                            onClick={() => handleEdit(brand)}
+                                            className="bg-transparent text-blue-400 hover:bg-blue-400/20 hover:text-blue-500 border-none"
+                                            size="icon"
+                                            centerIcon={FaEdit}
+                                            title="Editar marca"
+                                        />
+                                        <CustomButton
+                                            onClick={() => handleDelete(brand.id)}
+                                            className="bg-transparent text-red-400 hover:bg-red-400/20 hover:text-red-500 border-none"
+                                            size="icon"
+                                            centerIcon={FaTrash}
+                                            title="Eliminar marca"
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             <div className="space-y-2">
@@ -107,7 +114,7 @@ export const BrandsPage = () => {
 
                     {brands?.length === 0 && (
                         <div className="col-span-full py-10 text-center text-neutral-500">
-                            No hay marcas registradas. ¡Crea una nueva!
+                            No hay marcas registradas. {canEdit && "¡Crea una nueva!"}
                         </div>
                     )}
                 </div>

@@ -49,6 +49,7 @@ export const useImageZoom = ({
     const handleMouseDown = (e: MouseEvent) => {
         if (zoom <= minZoom) return;
         e.preventDefault();
+        e.stopPropagation();
         setIsDragging(true);
         dragStart.current = { x: e.clientX - panPosition.x, y: e.clientY - panPosition.y };
     };
@@ -56,6 +57,7 @@ export const useImageZoom = ({
     const handleMouseMove = (e: MouseEvent) => {
         if (!isDragging || zoom <= minZoom) return;
         e.preventDefault();
+        e.stopPropagation();
         setPanPosition({
             x: e.clientX - dragStart.current.x,
             y: e.clientY - dragStart.current.y
@@ -68,6 +70,7 @@ export const useImageZoom = ({
 
     // Touch handlers
     const handleTouchStart = (e: TouchEvent) => {
+        e.stopPropagation();
         if (e.touches.length === 2) {
             const dist = getTouchDistance(e.touches);
             pinchStartDist.current = dist;
@@ -82,6 +85,7 @@ export const useImageZoom = ({
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+        e.stopPropagation();
         if (e.touches.length === 2 && pinchStartDist.current !== null) {
             const dist = getTouchDistance(e.touches);
             const scale = dist / pinchStartDist.current;

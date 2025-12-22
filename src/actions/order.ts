@@ -4,7 +4,7 @@ import { supabase } from "../supabase/client";
 /*   CREAR ORDEN DE COMPRA       */
 
 export const createOrder = async (order: OrderInput) => {
-  // 1. Obtener el usuario autenticado + Cliente de tabla customer
+  // 1. Obtener el usuario autenticado
   const { data, error: errorUser } = await supabase.auth.getUser();
 
   if (errorUser) {
@@ -77,6 +77,11 @@ export const createOrder = async (order: OrderInput) => {
       address_id: addressData.id,
       total_amount: order.totalAmount,
       status: "Pending",
+      // WOMPI Fields
+      reference: order.reference,
+      transaction_id: order.transactionId,
+      payment_status: order.paymentStatus || "PENDING",
+      payment_method: order.paymentMethod
     })
     .select()
     .single();
@@ -86,13 +91,38 @@ export const createOrder = async (order: OrderInput) => {
     throw new Error(orderError.message);
   }
 
-  // 5. Guardar los detalles de la orden
-  const orderItems = order.cartItems.map((item) => ({
-    order_id: orderData.id,
-    products_id: item.productId,  // Corregido: products_id en lugar de variant_id
-    cantidad: item.quantity,       // Corregido: cantidad en lugar de quantity
-    price: item.price,
-  }));
+  // 5. Preparar y guardar los detalles de la orden con snapshot
+
+  // Obtener IDs de productos para buscar su info actual
+  const productIds = order.cartItems.map((item) => item.productId);
+  const { data: productsInfo, error: productsError } = await supabase
+    .from("productos")
+    .select("id, name, images, price, slug")
+    .in("id", productIds);
+
+  if (productsError) {
+    console.log("Error fetching products for snapshot", productsError);
+    // No bloqueamos la orden si falla esto, pero es ideal tenerlo.
+    // O podemos lanzar error si es crítico. Lanzaremos error para seguridad de datos.
+    throw new Error("Error al validar productos para la orden");
+  }
+
+  const orderItems = order.cartItems.map((item) => {
+    const productData = productsInfo?.find(p => p.id === item.productId);
+
+    return {
+      order_id: orderData.id,
+      products_id: item.productId,
+      cantidad: item.quantity,
+      price: item.price,
+      // Guardamos la snapshot del producto en ese momento
+      product_snapshot: productData ? {
+        name: productData.name,
+        image: productData.images?.[0] || null,
+        slug: productData.slug
+      } : null
+    };
+  });
 
   const { error: orderItemsError } = await supabase
     .from("orders_item")
@@ -134,7 +164,7 @@ export const getOrdersByCustomerId = async () => {
 
 /*   OBTENER ORDEN POR ID        */
 
-export const getOrderById = async (orderId: number) => {
+export const getOrderById = async (orderId: string) => {
   const { data: user, error: errorUser } = await supabase.auth.getUser();
   if (errorUser) throw new Error(errorUser.message);
   if (!user?.user) throw new Error("No se encontró usuario autenticado.");
@@ -150,7 +180,7 @@ export const getOrderById = async (orderId: number) => {
   const { data: order, error } = await supabase
     .from("orders")
     .select(
-      `*,  address(*), customers(full_name, email), orders_item(cantidad, price, productos!left(name, images))`
+      `*,  address(*), customers(full_name, email), orders_item(cantidad, price, product_snapshot, productos!left(name, images))`
     )
     .eq("customer_id", customer.id)
     .eq("id", orderId)
@@ -159,6 +189,7 @@ export const getOrderById = async (orderId: number) => {
   if (error) throw new Error(error.message);
 
   return {
+    id: order.id,
     customer: {
       email: order?.customers?.email,
       full_name: order?.customers?.full_name,
@@ -166,6 +197,12 @@ export const getOrderById = async (orderId: number) => {
     totalAmount: order.total_amount,
     status: order.status,
     created_at: order.created_at,
+    // WOMPI DATA
+    reference: order.reference,
+    transactionId: order.transaction_id,
+    paymentStatus: order.payment_status,
+    paymentMethod: order.payment_method,
+    currency: order.currency,
     address: {
       addressLine: order.address?.address_line,
       city: order.address?.city,
@@ -176,8 +213,8 @@ export const getOrderById = async (orderId: number) => {
     orderItems: order.orders_item.map((item) => ({
       quantity: item.cantidad,
       price: item.price,
-      productName: item.productos?.name || "Producto Eliminado",
-      productImage: item.productos?.images || null,
+      productName: item.productos?.name ?? item.product_snapshot?.name ?? "Producto Eliminado",
+      productImage: item.productos?.images ?? (item.product_snapshot?.image ? [item.product_snapshot?.image] : null),
     })),
   };
 };
@@ -198,7 +235,7 @@ export const updateOrderStatus = async ({
   id,
   status,
 }: {
-  id: number;
+  id: string;
   status: string;
 }) => {
   const { error } = await supabase
@@ -209,7 +246,7 @@ export const updateOrderStatus = async ({
   if (error) throw new Error(error.message);
 };
 
-export const getOrderByIdAdmin = async (id: number) => {
+export const getOrderByIdAdmin = async (id: string) => {
   const { data: order, error } = await supabase
     .from("orders")
     .select(
@@ -217,7 +254,7 @@ export const getOrderByIdAdmin = async (id: number) => {
       *,
       address(*),
       customers(full_name, email),
-      orders_item(cantidad, price, productos!left(name, images))
+      orders_item(cantidad, price, product_snapshot, productos!left(name, images))
     `
     )
     .eq("id", id)
@@ -226,6 +263,7 @@ export const getOrderByIdAdmin = async (id: number) => {
   if (error) throw new Error(error.message);
 
   return {
+    id: order.id,
     customer: {
       email: order?.customers?.email,
       full_name: order?.customers?.full_name,
@@ -233,6 +271,12 @@ export const getOrderByIdAdmin = async (id: number) => {
     totalAmount: order.total_amount,
     status: order.status,
     created_at: order.created_at,
+    // WOMPI DATA
+    reference: order.reference,
+    transactionId: order.transaction_id,
+    paymentStatus: order.payment_status,
+    paymentMethod: order.payment_method,
+    currency: order.currency,
     address: {
       addressLine: order.address?.address_line,
       city: order.address?.city,
@@ -243,8 +287,8 @@ export const getOrderByIdAdmin = async (id: number) => {
     orderItems: order.orders_item.map((item) => ({
       quantity: item.cantidad,
       price: item.price,
-      productName: item.productos?.name || "Producto Eliminado",
-      productImage: item.productos?.images || null,
+      productName: item.productos?.name ?? item.product_snapshot?.name ?? "Producto Eliminado",
+      productImage: item.productos?.images ?? (item.product_snapshot?.image ? [item.product_snapshot?.image] : null),
     })),
   };
 };

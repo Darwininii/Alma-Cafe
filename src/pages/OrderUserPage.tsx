@@ -1,26 +1,30 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useOrder, useUser, useCustomer, useOrders, useImageZoom } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
 import { IoChevronBack, IoChevronForward, IoChevronDown } from "react-icons/io5";
 import { formatDate, formatPrice } from "@/helpers";
-import { MapPinHouse } from "lucide-react";
+import { MapPinHouse, Receipt } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CustomButton } from "../Components/shared/CustomButton";
 import { CustomClose } from "../Components/shared/CustomClose";
 import { CustomPlusMinus } from "../Components/shared/CustomPlusMinus";
 import { OrderStatusBadge } from "../Components/shared/OrderStatusBadge";
 
+
 export const OrderUserPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: order, isLoading } = useOrder(Number(id!));
-  const { data: allOrders } = useOrders(); // Fetch all orders for navigation
+  const { data: order, isLoading } = useOrder(String(id!));
+  const { data: allOrders } = useOrders();
   const { session } = useUser();
   const userId = session?.user?.id;
   const { data: customerProfile } = useCustomer(userId!);
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const [isItemsExpanded, setIsItemsExpanded] = useState(true);
+
+  // Hook for image zoom logic
   const {
     zoom,
     panPosition,
@@ -32,27 +36,35 @@ export const OrderUserPage = () => {
     containerHandlers
   } = useImageZoom();
 
+  // Ref to track mousedown target for safe backdrop closing
+  const mouseDownTarget = useRef<EventTarget | null>(null);
+
   const closeModal = () => {
     setSelectedImage(null);
     resetZoom();
   };
 
+  const handleContainerMouseDown = (e: React.MouseEvent) => {
+    mouseDownTarget.current = e.target;
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (mouseDownTarget.current === e.currentTarget) {
+      closeModal();
+    }
+    mouseDownTarget.current = null;
+  };
+
   if (isLoading || !order) return <Loader />;
-
-
 
   const userAvatar = session?.user?.user_metadata?.avatar_url;
   const userInitials = customerProfile?.full_name
     ? customerProfile.full_name[0].toUpperCase()
     : "U";
 
-  // Navigation Logic
-  // List is sorted descending by date (Newest first).
-  // Next Button -> Newer Order (Higher ID) -> Lower Index
-  // Prev Button -> Older Order (Lower ID) -> Higher Index
-  const currentIndex = allOrders?.findIndex((o) => o.id === Number(id)) ?? -1;
-  const nextOrder = currentIndex > 0 ? allOrders?.[currentIndex - 1] : null; // Newer
-  const prevOrder = currentIndex !== -1 && currentIndex < (allOrders?.length || 0) - 1 ? allOrders?.[currentIndex + 1] : null; // Older
+  const currentIndex = allOrders?.findIndex((o) => String(o.id) === String(id)) ?? -1;
+  const nextOrder = currentIndex > 0 ? allOrders?.[currentIndex - 1] : null;
+  const prevOrder = currentIndex !== -1 && currentIndex < (allOrders?.length || 0) - 1 ? allOrders?.[currentIndex + 1] : null;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -102,7 +114,8 @@ export const OrderUserPage = () => {
             </h1>
             <p className="text-sm text-black/70 dark:text-white/70">{formatDate(order.created_at)}</p>
           </div>
-          <div>
+          <div className="flex flex-col sm:flex-row gap-3 items-end sm:items-center">
+
             <OrderStatusBadge status={order.status} className="px-4 py-1 text-sm" />
           </div>
         </div>
@@ -142,13 +155,13 @@ export const OrderUserPage = () => {
                         className="p-6 dark:hover:bg-black/30 cursor-pointer transition-colors hover:bg-black/10"
                         onClick={() => setSelectedImage(product.productImage?.[0] || null)}
                       >
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 items-center">
                           {/* Product Image */}
                           <div className="flex-shrink-0">
                             <img
                               src={product.productImage?.[0] || "/placeholder.png"}
                               alt={product.productName}
-                              className="h-24 w-24 object-cover rounded-xl border border-black/20 dark:border-white/20"
+                              className="h-20 w-20 object-cover rounded-lg border border-black/10 dark:border-white/10 shadow-sm"
                             />
                           </div>
 
@@ -157,19 +170,18 @@ export const OrderUserPage = () => {
                             <h3 className="text-base font-bold text-black/80 dark:text-white mb-1 truncate">
                               {product.productName}
                             </h3>
-                            <p className="text-sm text-black/80 dark:text-white/80 font-bold mb-3">
-                              Precio unitario: {formatPrice(product.price)}
-                            </p>
-                            <div className="flex items-center gap-4 text-sm">
-                              <span className="text-black/80 dark:text-white/80">
-                                Cantidad: <span className="font-bold text-black/80 dark:text-white/80">{product.quantity}</span>
-                              </span>
+                            <div className="text-sm text-black/60 dark:text-white/60">
+                              Price Unitario: <span className="font-semibold text-black/80 dark:text-white/80">{formatPrice(product.price)}</span>
+                            </div>
+                            <div className="text-sm text-black/60 dark:text-white/60">
+                              Cantidad: <span className="font-semibold text-black/80 dark:text-white/80">{product.quantity}</span>
                             </div>
                           </div>
 
-                          {/* Product Total */}
+                          {/* Product Subtotal */}
                           <div className="flex-shrink-0 text-right">
-                            <p className="text-lg font-black text-black/80 dark:text-white/80">
+                            <p className="text-sm text-black/60 dark:text-white/60 mb-1">Subtotal</p>
+                            <p className="text-lg font-black text-black/80 dark:text-white">
                               {formatPrice(product.price * product.quantity)}
                             </p>
                           </div>
@@ -183,33 +195,90 @@ export const OrderUserPage = () => {
           </div>
         </div>
 
-        {/* Right Column - Summary & Address */}
+        {/* Right Column - Information */}
         <div className="space-y-6">
-          {/* Order Summary Card */}
-          <div className="bg-white/80 dark:bg-[#210F37] rounded-2xl shadow-sm border border-black/20 p-6">
-            <h2 className="text-lg font-bold text-black/80 dark:text-white mb-4">Resumen del pedido</h2>
 
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-black/80 dark:text-white/80">Subtotal</span>
-                <span className="font-bold text-black/80 dark:text-white/80">{formatPrice(order.totalAmount)}</span>
+          {/* Order Receipt (Comprobante Visual) */}
+          <div className="bg-white/90 dark:bg-[#1E1E1E] rounded-2xl shadow-sm border border-black/20 p-0 overflow-hidden relative">
+            {/* Decorative Receipt Header */}
+            <div className="bg-black/5 dark:bg-white/5 px-6 py-4 border-b border-black/10 dark:border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-black/70 dark:text-white/70">
+                <Receipt size={18} />
+                <span className="font-bold text-sm tracking-wide uppercase">Resumen</span>
               </div>
-
-              <div className="flex justify-between text-sm">
-                <span className="text-black/80 dark:text-white/80">Envío (Estándar)</span>
-                <span className="font-bold text-black/80 dark:text-white/80">{formatPrice(0)}</span>
+              <div className="text-xs font-mono text-black/50 dark:text-white/50">
+                {order.reference || 'N/A'}
               </div>
+            </div>
 
-              <div className="pt-3 border-t border-black/20 dark:border-white/20">
+            <div className="p-6 space-y-4">
+              {/* Details Table */}
+              <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-base font-bold text-black/80 dark:text-white">Total</span>
-                  <span className="text-xl font-bold text-black/80 dark:text-white">{formatPrice(order.totalAmount)}</span>
+                  <span className="text-black/60 dark:text-white/60">Fecha</span>
+                  <span className="font-medium text-black/90 dark:text-white/90">{formatDate(order.created_at)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-black/60 dark:text-white/60">Método de Pago</span>
+                  <span className="font-medium text-black/90 dark:text-white/90">{order.paymentMethod || 'No especificado'}</span>
+                </div>
+              </div>
+
+              <div className="border-t border-dashed border-black/20 dark:border-white/20 my-4" />
+
+              {/* Totals */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-black/60 dark:text-white/60">Subtotal</span>
+                  <span className="font-bold text-black/90 dark:text-white/90">{formatPrice(order.totalAmount)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-black/60 dark:text-white/60">Envío</span>
+                  <span className="font-bold text-black/90 dark:text-white/90">{formatPrice(0)}</span>
+                </div>
+
+                <div className="pt-3 border-t border-black/90 dark:border-white/90 mt-2">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-base font-black text-black dark:text-white">TOTAL</span>
+                    <span className="text-2xl font-black text-black dark:text-white">{formatPrice(order.totalAmount)}</span>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Receipt Zigzag Bottom Effect (CSS Trick or SVG) - Optional, simpler solid line for now */}
+            <div className="h-2 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-black/5 to-transparent bg-size-[10px_10px] bg-repeat-x"></div>
           </div>
 
-          {/* Shipping Address Card - Redesigned */}
+          {/* Payment Information (Wompi Details) */}
+          {(order.transactionId || order.reference) && (
+            <div className="bg-white/80 dark:bg-[#210F37] rounded-2xl shadow-sm border border-black/20 p-6">
+              <h2 className="text-sm font-bold text-black/50 dark:text-white/50 uppercase tracking-widest mb-4">Información de Transacción</h2>
+              <div className="space-y-3 text-sm text-black/80 dark:text-white/80">
+                <div className="flex justify-between">
+                  <span>Estado:</span>
+                  <span className={`font-bold px-2 py-0.5 rounded text-xs ${order.paymentStatus === 'APPROVED' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+                    {order.paymentStatus || 'PENDING'}
+                  </span>
+                </div>
+                {order.transactionId && (
+                  <div className="flex flex-col">
+                    <span className="text-xs opacity-70">ID Transacción</span>
+                    <span className="font-mono font-medium">{order.transactionId}</span>
+                  </div>
+                )}
+                {order.reference && (
+                  <div className="flex flex-col">
+                    <span className="text-xs opacity-70">Referencia de Pago</span>
+                    <span className="font-mono font-medium">{order.reference}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+
+          {/* Shipping Address Card */}
           <div className="bg-white/80 dark:bg-[#210F37] rounded-2xl shadow-sm border border-black/20 dark:border-white/20 overflow-hidden">
             <div className="px-6 py-4 border-b border-black/20 bg-white/50 dark:border-white/20">
               <h2 className="text-lg font-semibold dark:font-bold text-black/80 dark:text-black">Información de envío</h2>
@@ -263,15 +332,15 @@ export const OrderUserPage = () => {
         </div>
       </div>
 
-      {/* Image Zoom Modal */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={closeModal}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm cursor-default"
+            onMouseDown={handleContainerMouseDown}
+            onClick={handleBackdropClick}
             {...containerHandlers}
           >
             <CustomPlusMinus
@@ -289,6 +358,7 @@ export const OrderUserPage = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               className="relative max-w-4xl max-h-[90vh] w-full flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
             >
               <CustomClose
                 onClick={closeModal}
@@ -298,8 +368,8 @@ export const OrderUserPage = () => {
               <img
                 src={selectedImage}
                 alt="Product Zoom"
-                className="max-w-full max-h-[85vh] object-contain rounded-lg transition-transform duration-200 ease-out"
-                onClick={(e) => e.stopPropagation()}
+                className={`max-w-full max-h-[85vh] object-contain rounded-lg will-change-transform ${isDragging ? 'transition-none' : 'transition-transform duration-200 ease-out'
+                  }`}
                 {...handlers}
                 style={{
                   transform: `scale(${zoom}) translate(${panPosition.x / zoom}px, ${panPosition.y / zoom}px)`,
@@ -312,6 +382,10 @@ export const OrderUserPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+
     </div>
   );
 };
+
+

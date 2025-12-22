@@ -84,3 +84,37 @@ export const productSchema = z.object({
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;
+
+export const creditCardSchema = z.object({
+  cardNumber: z
+    .string()
+    .min(13, "Número de tarjeta inválido")
+    .max(19, "Número de tarjeta inválido")
+    .regex(/^\d+$/, "Solo se permiten números"),
+  cardHolder: z.string().min(1, "El nombre del titular es requerido"),
+  expMonth: z
+    .string()
+    .min(2, "Mes inválido (MM)")
+    .max(2, "Mes inválido (MM)")
+    .regex(/^(0[1-9]|1[0-2])$/, "Mes inválido (01-12)"),
+  expYear: z
+    .string()
+    .min(2, "Año inválido (YY)")
+    .max(2, "Año inválido (YY)")
+    .regex(/^\d+$/, "Solo se permiten números"),
+  cvc: z
+    .string()
+    .min(3, "CVC inválido")
+    .max(4, "CVC inválido")
+    .regex(/^\d+$/, "Solo se permiten números"),
+  installments: z.number().min(1).max(36),
+});
+
+export type CreditCardFormValues = z.infer<typeof creditCardSchema>;
+
+export const checkoutSchema = z.object({
+  address: addressSchema,
+  payment: creditCardSchema,
+});
+
+export type CheckoutFormValues = z.infer<typeof checkoutSchema>;

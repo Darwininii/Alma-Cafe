@@ -1,5 +1,5 @@
 import { formatDate, formatPrice, getStatusColor } from "@/helpers";
-import { useChangeStatusOrder } from "@/hooks";
+import { useChangeStatusOrder, useUser, useRoleUser } from "@/hooks";
 import type { OrderWithCustomer } from "@/interfaces/order.interface";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,12 @@ export const TableOrdersAdmin = ({ orders }: Props) => {
   const navigate = useNavigate();
 
   const { mutate } = useChangeStatusOrder();
+
+  // Permission Check
+  const { session } = useUser();
+  const { data: role } = useRoleUser(session?.user.id || "");
+  const canEdit = role === 'admin' || role === 'superAdmin';
+
 
   const handleStatusChange = (id: number, status: string) => {
     mutate({ id, status });
@@ -73,9 +79,10 @@ export const TableOrdersAdmin = ({ orders }: Props) => {
                   <div className="relative inline-block" onClick={(e) => e.stopPropagation()}>
                     <select
                       value={order.status}
+                      disabled={!canEdit}
                       className={`appearance-none rounded-full py-1.5 px-3 pr-8 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer transition-all border ${getStatusColor(
                         order.status
-                      )}`}
+                      )} ${!canEdit ? 'opacity-70 cursor-not-allowed' : ''}`}
                       onChange={(e) => handleStatusChange(order.id, e.target.value)}
                     >
                       {statusOptions.map((option) => (

@@ -137,24 +137,42 @@ export type Database = {
           created_at: string
           customer_id: string
           id: number
+          payment_method: string | null
+          payment_status: string | null
+          reference: string | null
           status: string
           total_amount: number
+          transaction_id: string | null
+          wompi_response: Json | null
+          wompi_source_id: string | null
         }
         Insert: {
           address_id: string
           created_at?: string
           customer_id: string
           id?: number
+          payment_method?: string | null
+          payment_status?: string | null
+          reference?: string | null
           status?: string
           total_amount: number
+          transaction_id?: string | null
+          wompi_response?: Json | null
+          wompi_source_id?: string | null
         }
         Update: {
           address_id?: string
           created_at?: string
           customer_id?: string
           id?: number
+          payment_method?: string | null
+          payment_status?: string | null
+          reference?: string | null
           status?: string
           total_amount?: number
+          transaction_id?: string | null
+          wompi_response?: Json | null
+          wompi_source_id?: string | null
         }
         Relationships: [
           {
