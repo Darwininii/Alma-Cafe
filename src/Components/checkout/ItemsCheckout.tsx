@@ -6,6 +6,8 @@ import { BadgeDollarSign } from "lucide-react";
 import { CustomPlusMinus } from "../shared/CustomPlusMinus";
 import { CustomDeleteButton } from "../shared/CustomDeleteButton";
 import { MdDeleteForever } from "react-icons/md";
+import { CustomCard } from "../shared/CustomCard";
+import { CustomBadge } from "../shared/CustomBadge";
 
 export const ItemsCheckout = () => {
   const cartItems = useCartStore((state) => state.items);
@@ -28,98 +30,91 @@ export const ItemsCheckout = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-black text-black">Tu Pedido</h2>
-        <span className="text-sm font-semibold text-black/60">
-          {cartItems.length} {cartItems.length === 1 ? 'producto' : 'productos'}
-        </span>
-      </div>
-
-      {/* Items List */}
-      <ul className="space-y-4">
+    <div className="space-y-4">
+      {/* Items Grid */}
+      <div className="grid grid-cols-2 gap-2 md:gap-3 lg:gap-4">
         {cartItems.map((item, index) => (
-          <motion.li
+          <motion.div
             key={item.productId}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="group relative bg-white/40 backdrop-blur-md rounded-2xl p-4 border border-2 border-black/50 shadow-lg hover:shadow-xl hover:bg-white/50 transition-all duration-300"
           >
-            {/* Inner glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-pink-700/30 via-transparent to-transparent pointer-events-none rounded-2xl" />
+            <CustomCard
+              variant="ghost"
+              padding="sm"
+              hoverEffect="glow"
+              className="bg-black/10 dark:bg-zinc-900 backdrop-blur-md border border-zinc-700 hover:shadow-xl hover:border-zinc-600 transition-all duration-300 h-full"
+            >
+              {/* Inner accent */}
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/30 via-transparent to-transparent pointer-events-none rounded-2xl" />
 
-            <div className="relative space-y-3">
-              <div className="flex items-center gap-4">
+              <div className="relative space-y-2 md:space-y-3">
                 {/* Image with quantity badge */}
-                <div className="relative flex-shrink-0">
-                  <div className="w-25 h-25 bg-white/60 rounded-2xl p-2 flex items-center justify-center">
+                <div className="relative">
+                  <div className="w-full aspect-square bg-white/10 dark:bg-zinc-800 rounded-xl p-2 md:p-3 flex items-center justify-center border border-black/40 dark:border-zinc-700">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-full object-contain mix-blend-multiply"
+                      className="w-full h-full object-contain"
                     />
                   </div>
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -right-2 -top-2 w-7 h-7 rounded-full bg-gradient-to-br from-black to-pink-700/80 text-white flex items-center justify-center text-xs font-black shadow-lg border-2 border-black"
-                  >
-                    {item.quantity}
-                  </motion.span>
+                  <CustomBadge
+                    count={item.quantity}
+                    className="absolute -right-1 -top-1 md:-right-2 md:-top-2 w-6 h-6 md:w-7 md:h-7"
+                  />
                 </div>
 
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-black text-sm line-clamp-2 mb-1">
+                {/* Product Info */}
+                <div className="space-y-0.5 md:space-y-1">
+                  <h3 className="font-bold text-white/90 dark:text-white text-xs md:text-sm line-clamp-2">
                     {item.name}
                   </h3>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-black/60 font-medium">
+                  <div className="flex items-center justify-between text-[10px] md:text-xs">
+                    <span className="text-white/60 font-medium">
                       {formatPrice(item.price)} c/u
                     </span>
-                    <span className="text-lg font-black text-black">
+                    <span className="text-sm md:text-base font-black text-white/90 dark:text-white">
                       {formatPrice(item.price * item.quantity)}
                     </span>
                   </div>
                 </div>
-              </div>
 
-              {/* Quantity Controls */}
-              <div className="flex items-center justify-between pt-2 border-t border-white/40">
-                <CustomPlusMinus
-                  value={item.quantity}
-                  onDecrease={() => handleDecrement(item.productId, item.quantity)}
-                  onIncrease={() => handleIncrement(item.productId, item.quantity)}
-                  disableDecrease={item.quantity === 1}
-                  className="bg-black/10 border-2 border-black/60 dark:bg-white/10 dark:border-white/20"
-                />
+                {/* Controls */}
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/50 dark:border-zinc-700">
+                  <CustomPlusMinus
+                    value={item.quantity}
+                    onDecrease={() => handleDecrement(item.productId, item.quantity)}
+                    onIncrease={() => handleIncrement(item.productId, item.quantity)}
+                    disableDecrease={item.quantity === 1}
+                    className="flex-1 max-w-[120px] bg-black/50 dark:bg-zinc-800 border dark:border-zinc-700"
+                  />
 
-                <CustomDeleteButton
-                  onClick={() => handleRemove(item.productId)}
-                  title="Eliminar producto"
-                  centerIcon={MdDeleteForever}
-                  iconSize={22}
-                  className="w-9 h-9 border border-red-500/20"
-                />
+                  <CustomDeleteButton
+                    onClick={() => handleRemove(item.productId)}
+                    title="Eliminar producto"
+                    centerIcon={MdDeleteForever}
+                    iconSize={18}
+                    className="shrink-0 w-9 h-9 md:w-10 md:h-10 dark:bg-red-900/50 border dark:border-red-700 dark:hover:bg-red-800"
+                  />
+                </div>
               </div>
-            </div>
-          </motion.li>
+            </CustomCard>
+          </motion.div>
         ))}
-      </ul>
+      </div>
 
       {/* Summary Section */}
-      <div className="space-y-4 pt-4 border-t-2 border-white/40">
+      <div className="space-y-4 pt-4 border-t border-zinc-300 dark:border-zinc-700">
         {/* Shipping */}
-        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 rounded-xl border border-2 border-green-700">
+        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-500 via-emerald-600 to-green-600 dark:from-emerald-700 dark:via-emerald-800 dark:to-green-800 rounded-xl border-2 border-emerald-600 dark:border-emerald-700 shadow-md">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-green-600/80 rounded-lg">
-              <RiMotorbikeFill className="text-black" size={20} />
+            <div className="p-2 bg-emerald-600 dark:bg-emerald-900/50 rounded-lg">
+              <RiMotorbikeFill className="text-white" size={20} />
             </div>
-            <span className="text-sm font-bold text-black">Envío</span>
+            <span className="text-sm font-bold text-white">Envío</span>
           </div>
-          <span className="text-sm font-black text-black uppercase tracking-wide">
+          <span className="text-sm font-black text-white uppercase tracking-wide">
             ¡Gratis!
           </span>
         </div>
@@ -128,22 +123,22 @@ export const ItemsCheckout = () => {
         <motion.div
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
-          className="relative bg-gradient-to-br from-black via-gray-900 p-6 rounded-2xl shadow-2xl overflow-hidden"
+          className="relative bg-gradient-to-br from-zinc-900 via-zinc-800 to-black  p-6 rounded-2xl shadow-2xl overflow-hidden"
         >
           {/* Animated background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-pink-600/50 animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-r from-zinc-800/30 via-primary/20 to-transparent dark:from-zinc-200/20 dark:via-primary/10 animate-pulse" />
 
           <div className="relative flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-white/60 uppercase tracking-wider mb-1">
+              <p className="text-sm font-medium text-zinc-30 uppercase tracking-wider mb-1">
                 Total a Pagar
               </p>
-              <p className="text-4xl font-black text-white">
+              <p className="text-3xl md:text-4xl font-black text-white">
                 {formatPrice(totalAmount)}
               </p>
             </div>
-            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <BadgeDollarSign size={45} />
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-white/20 dark:bg-zinc-900/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+              <BadgeDollarSign size={40} className="text-white" />
             </div>
           </div>
         </motion.div>

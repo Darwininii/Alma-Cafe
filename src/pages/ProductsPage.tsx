@@ -16,8 +16,8 @@ import toast from "react-hot-toast";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
 import { RiMotorbikeFill } from "react-icons/ri";
-import { IoChevronBack } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
+import { CustomBack } from "@/Components/shared/CustomBack";
 
 export const ProductsPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -88,15 +88,7 @@ export const ProductsPage = () => {
       className="min-h-screen"
     >
       <div className="pt-4">
-        <CustomButton
-          className="group inline-flex items-center gap-2 text-sm text-black dark:text-amber-500 dark:hover:text-amber-600 hover:text-black/70 hover:font-black transition-colors mb-2 cursor-pointer bg-transparent py-2 px-2 shadow-none border-none h-auto hover:bg-transparent"
-          onClick={() => navigate(-1)}
-          effect="bounce"
-          leftIcon={IoChevronBack}
-          iconSize={20}
-        >
-          <span className="font-medium text-black/70 dark:text-amber-500 dark:hover:text-amber-600 hover:font-black">Volver</span>
-        </CustomButton>
+        <CustomBack onClick={() => navigate(-1)} />
       </div>
 
       <div className="h-fit flex flex-col lg:flex-row gap-8 lg:gap-16 mt-6 md:mt-8">
@@ -187,11 +179,12 @@ export const ProductsPage = () => {
                 </div>
 
                 {/* Botones de acción */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <CustomButton
-                    className="w-full bg-white text-black font-bold py-4 rounded-xl shadow-lg hover:bg-gray-100 border-none"
+                    className="w-full sm:flex-1 bg-white text-black font-bold py-4 md:py-5 rounded-xl shadow-lg hover:bg-gray-100 border-none text-base md:text-lg"
                     onClick={addToCart}
                     leftIcon={FaShoppingCart}
+                    iconSize={24}
                     size="lg"
                     effect="bounce"
                   >
@@ -199,9 +192,10 @@ export const ProductsPage = () => {
                   </CustomButton>
 
                   <CustomButton
-                    className="w-full bg-gradient-to-r from-black/80 to-rose-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-black/40 border border-white/10"
+                    className="w-full sm:flex-1 bg-gradient-to-r from-black/80 to-rose-600 text-white font-bold py-4 md:py-5 rounded-xl shadow-lg hover:shadow-black/40 border border-white/10 text-base md:text-lg"
                     onClick={buyNow}
                     leftIcon={MdPayments}
+                    iconSize={24}
                     size="lg"
                     effect="shine"
                   >
@@ -211,14 +205,14 @@ export const ProductsPage = () => {
               </div>
             )}
 
-            <div className="flex gap-4 pt-6 border-t border-black/10 dark:border-white/10">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-black/10 dark:border-white/10">
               <CustomButton
-                className="flex-1 flex-col h-auto py-3 gap-1 bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 text-black/80 dark:text-white/80 shadow-none"
+                className="flex-1 flex-col h-auto py-3 gap-1 bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 text-black/80 dark:text-white/80 shadow-none min-h-[80px]"
                 effect="none"
                 title="Envío Seguro"
               >
                 <RiMotorbikeFill size={24} className="mb-1" />
-                <span className="text-[10px] md:text-xs font-bold">Envío Seguro</span>
+                <span className="text-[10px] sm:text-xs font-bold">Envío Seguro</span>
               </CustomButton>
 
               <CustomButton
@@ -226,12 +220,12 @@ export const ProductsPage = () => {
                   `Hola, quiero saber más a cerca del producto: '${product.name}'.`
                 )}`}
                 target="_blank"
-                className="flex-1 flex-col h-auto py-3 gap-1 bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 text-black/80 dark:text-white/80 shadow-none"
+                className="flex-1 flex-col h-auto py-3 gap-1 bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 text-black/80 dark:text-white/80 shadow-none min-h-[80px]"
                 effect="none"
                 title="Contactar Soporte"
               >
                 <MessagesSquare size={24} className="mb-1" />
-                <span className="text-[10px] md:text-xs font-bold">
+                <span className="text-[10px] sm:text-xs font-bold">
                   Soporte 24/7
                 </span>
               </CustomButton>

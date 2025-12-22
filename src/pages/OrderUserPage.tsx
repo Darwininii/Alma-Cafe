@@ -10,6 +10,7 @@ import { CustomButton } from "../Components/shared/CustomButton";
 import { CustomClose } from "../Components/shared/CustomClose";
 import { CustomPlusMinus } from "../Components/shared/CustomPlusMinus";
 import { OrderStatusBadge } from "../Components/shared/OrderStatusBadge";
+import { CustomBack } from "../Components/shared/CustomBack";
 
 
 export const OrderUserPage = () => {
@@ -70,15 +71,7 @@ export const OrderUserPage = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <CustomButton
-          className="group inline-flex items-center gap-2 text-sm text-black dark:text-amber-500 dark:hover:text-amber-600 hover:text-black/70 hover:font-black transition-colors mb-6 cursor-pointer bg-transparent py-2 px-2 shadow-none border-none h-auto hover:bg-transparent"
-          onClick={() => navigate("/account/pedidos")}
-          effect="bounce"
-          leftIcon={IoChevronBack}
-          iconSize={20}
-        >
-          <span className="font-medium text-black/70 dark:text-amber-500 dark:hover:text-amber-600 hover:font-black">Volver a Pedidos</span>
-        </CustomButton>
+        <CustomBack onClick={() => navigate("/account/pedidos")} className="mb-6" />
 
         {/* Navigation Buttons */}
         <div className="flex items-center gap-2 mb-4">

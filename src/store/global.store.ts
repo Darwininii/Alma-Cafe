@@ -1,7 +1,7 @@
 import { create, type StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
-type SheetContent = "cart" | "search" | null;
+type SheetContent = "cart" | "search" | "checkout" | null;
 
 export interface GlobalState {
   isSheetOpen: boolean;

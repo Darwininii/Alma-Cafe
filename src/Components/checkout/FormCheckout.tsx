@@ -16,6 +16,8 @@ import { Loader } from "../shared/Loader";
 import { PaymentService } from "../../services/payment.service";
 import { CustomInput } from "../shared/CustomInput";
 import { CustomButton } from "../shared/CustomButton";
+import { CustomCard } from "../shared/CustomCard";
+import { CustomCheckbox } from "../shared/CustomCheckbox";
 
 // Helper to format currency
 const COP = new Intl.NumberFormat('es-CO', {
@@ -33,6 +35,8 @@ export const FormCheckout = () => {
     control,
     formState: { errors },
     handleSubmit,
+    watch,
+    setValue,
   } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -234,37 +238,39 @@ export const FormCheckout = () => {
   return (
     <div className="relative">
       {isProcessing && (
-        <div className="absolute inset-0 z-50 bg-white/50 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+        <div className="absolute inset-0 z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
           <div className="flex flex-col items-center gap-4">
-            <Loader className="text-amber-600" />
-            <p className="font-bold text-amber-800 animate-pulse">Confirmando transacción con el banco...</p>
+            <Loader className="text-primary" />
+            <p className="font-bold text-zinc-900 dark:text-zinc-100 animate-pulse">Confirmando transacción con el banco...</p>
           </div>
         </div>
       )}
 
-      <form className="flex flex-col gap-8" onSubmit={onSubmit}>
+      <form className="flex flex-col gap-6 md:gap-8" onSubmit={onSubmit}>
         {/* Delivery Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/60 shadow-lg"
         >
-          <h3 className="text-2xl font-black text-black mb-6 flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-orange-500 to-rose-600 rounded-lg shadow-md">
-              <PiMapPinAreaFill className="text-white" size={22} />
-            </div>
-            Dirección de Entrega
-          </h3>
+          <CustomCard variant="glass" padding="lg" className="border border-zinc-200 dark:border-zinc-700"
+          >
+            <h3 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-6 flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-orange-500 to-rose-600 rounded-lg shadow-md">
+                <PiMapPinAreaFill className="text-white" size={22} />
+              </div>
+              Dirección de Entrega
+            </h3>
 
-          <div className="space-y-4">
-            <InputAddress register={register} errors={errors} name="address.addressLine" placeholder="Dirección y número" />
-            <InputAddress register={register} errors={errors} name="address.state" placeholder="Barrio / Localidad" />
-            <div className="grid grid-cols-2 gap-4">
-              <InputAddress register={register} errors={errors} name="address.city" placeholder="Ciudad" />
-              <InputAddress register={register} errors={errors} name="address.postalCode" placeholder="C. Postal (Opc)" />
+            <div className="space-y-4">
+              <InputAddress register={register} errors={errors} name="address.addressLine" placeholder="Dirección y número" />
+              <InputAddress register={register} errors={errors} name="address.state" placeholder="Barrio / Localidad" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <InputAddress register={register} errors={errors} name="address.city" placeholder="Ciudad" />
+                <InputAddress register={register} errors={errors} name="address.postalCode" placeholder="C. Postal (Opc)" />
+              </div>
+              <InputAddress register={register} errors={errors} name="address.country" placeholder="País" />
             </div>
-            <InputAddress register={register} errors={errors} name="address.country" placeholder="País" />
-          </div>
+          </CustomCard>
         </motion.div>
 
         {/* Payment Logic */}
@@ -272,117 +278,132 @@ export const FormCheckout = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="relative bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/60 shadow-lg"
         >
-          <h3 className="text-2xl font-black text-black mb-6 flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md">
-              <MdPayments className="text-white" size={22} />
-            </div>
-            Método de Pago
-          </h3>
+          <CustomCard variant="glass" padding="lg" className="border border-zinc-200 dark:border-zinc-700">
+            <h3 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-6 flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md">
+                <MdPayments className="text-white" size={22} />
+              </div>
+              Método de Pago
+            </h3>
 
-          {/* Payment Tabs (Simplified for now) */}
-          <div className="flex gap-4 mb-6">
-            <button
-              type="button"
-              onClick={() => setPaymentMethod('CARD')}
-              className={`flex-1 py-3 rounded-xl font-bold transition-all border-2 flex items-center justify-center gap-2 ${paymentMethod === 'CARD'
-                ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm'
-                : 'border-transparent bg-white/50 text-slate-500 hover:bg-white/80'
-                }`}
-            >
-              <MdCreditCard size={20} /> Tarjeta Crédito/Débito
-            </button>
-            {/* Future Nequi implementation */}
-          </div>
-
-          <AnimatePresence mode="wait">
-            {paymentMethod === 'CARD' && (
-              <motion.div
-                key="card-form"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="space-y-4"
+            {/* Payment Tabs (Simplified for now) */}
+            <div className="flex gap-3 md:gap-4 mb-6">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('CARD')}
+                className={`flex-1 py-3 px-2 rounded-xl font-bold transition-all border-2 flex items-center justify-center gap-2 text-sm md:text-base ${paymentMethod === 'CARD'
+                  ? 'border-indigo-600 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 shadow-sm'
+                  : 'border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/30 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50'
+                  }`}
               >
-                {/* ... existing fields ... */}
-                <CustomInput
-                  label="Nombre en la tarjeta"
-                  placeholder="COMO APARECE EN EL PLÁSTICO"
-                  {...register("payment.cardHolder")}
-                  error={errors.payment?.cardHolder}
-                  wrapperClassName="bg-white/60"
-                />
+                <MdCreditCard size={20} /> <span className="hidden sm:inline">Tarjeta Crédito/Débito</span><span className="sm:hidden">Tarjeta</span>
+              </button>
+              {/* Future Nequi implementation */}
+            </div>
 
-                <CustomInput
-                  label="Número de tarjeta"
-                  placeholder="0000 0000 0000 0000"
-                  maxLength={19}
-                  {...register("payment.cardNumber")}
-                  error={errors.payment?.cardNumber}
-                  wrapperClassName="bg-white/60"
-                />
-
-                <div className="grid grid-cols-3 gap-4">
+            <AnimatePresence mode="wait">
+              {paymentMethod === 'CARD' && (
+                <motion.div
+                  key="card-form"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-4"
+                >
+                  {/* ... existing fields ... */}
                   <CustomInput
-                    label="Mes (MM)"
-                    placeholder="MM"
-                    maxLength={2}
-                    {...register("payment.expMonth")}
-                    error={errors.payment?.expMonth}
+                    label="Nombre en la tarjeta"
+                    placeholder="COMO APARECE EN EL PLÁSTICO"
+                    {...register("payment.cardHolder")}
+                    error={errors.payment?.cardHolder?.message}
                     wrapperClassName="bg-white/60"
                   />
+
                   <CustomInput
-                    label="Año (YY)"
-                    placeholder="YY"
-                    maxLength={2}
-                    {...register("payment.expYear")}
-                    error={errors.payment?.expYear}
+                    label="Número de tarjeta"
+                    placeholder="0000 0000 0000 0000"
+                    maxLength={19}
+                    {...register("payment.cardNumber")}
+                    error={errors.payment?.cardNumber?.message}
                     wrapperClassName="bg-white/60"
                   />
-                  <CustomInput
-                    label="CVC"
-                    placeholder="123"
-                    maxLength={4}
-                    type="password"
-                    {...register("payment.cvc")}
-                    error={errors.payment?.cvc}
-                    wrapperClassName="bg-white/60"
-                  />
-                </div>
 
-                <div className="pt-2">
-                  <label className="text-sm font-bold text-slate-700 block mb-2">Cuotas</label>
-                  <select
-                    {...register("payment.installments", { valueAsNumber: true })}
-                    className="w-full bg-white/60 border border-slate-200 rounded-xl p-3 font-medium outline-none focus:ring-2 focus:ring-indigo-500"
-                  >
-                    {[1, 2, 3, 4, 6, 12, 24, 36].map(n => (
-                      <option key={n} value={n}>{n} {n === 1 ? 'Cuota' : 'Cuotas'}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* TERMS AND CONDITIONS */}
-                <div className="flex items-center gap-3 p-3 bg-white/50 rounded-xl">
-                  <input type="checkbox" required id="terms" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500" />
-                  <label htmlFor="terms" className="text-sm text-slate-600">
-                    Acepto haber leído los <a href={permalink} target="_blank" rel="noopener noreferrer" className="text-indigo-600 font-bold underline">Términos y Condiciones</a> y autorizo el pago.
-                  </label>
-                </div>
-
-                <div className="mt-6 p-4 bg-indigo-50 rounded-xl border border-indigo-100 flex items-start gap-3">
-                  <div className="p-1 bg-white rounded-md shadow-sm">
-                    <span className="text-xs font-bold text-indigo-600">SSL</span>
+                  <div className="grid grid-cols-3 gap-3 md:gap-4">
+                    <CustomInput
+                      label="Mes (MM)"
+                      placeholder="MM"
+                      maxLength={2}
+                      {...register("payment.expMonth")}
+                      error={errors.payment?.expMonth?.message}
+                    />
+                    <CustomInput
+                      label="Año (YY)"
+                      placeholder="YY"
+                      maxLength={2}
+                      {...register("payment.expYear")}
+                      error={errors.payment?.expYear?.message}
+                    />
+                    <CustomInput
+                      label="CVC"
+                      placeholder="123"
+                      maxLength={4}
+                      type="password"
+                      {...register("payment.cvc")}
+                      error={errors.payment?.cvc?.message}
+                    />
                   </div>
-                  <p className="text-xs text-indigo-800 leading-relaxed">
-                    Tus datos están protegidos. La transacción se procesa de forma segura a través de WOMPI y nunca almacenamos tu información financiera completa.
-                  </p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
+                  <div className="pt-2">
+                    <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300 block mb-2">Cuotas</label>
+                    <select
+                      {...register("payment.installments", { valueAsNumber: true })}
+                      className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl p-3 font-medium text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-all"
+                    >
+                      {[1, 2, 3, 4, 6, 12, 24, 36].map(n => (
+                        <option key={n} value={n}>{n} {n === 1 ? 'Cuota' : 'Cuotas'}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* TERMS AND CONDITIONS */}
+                  <div className="flex items-center gap-3 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-zinc-700">
+                    <input
+                      type="checkbox"
+                      id="terms-required"
+                      required
+                      className="sr-only"
+                      {...register("terms")}
+                    />
+                    <div className="shrink-0">
+                      <CustomCheckbox
+                        id="terms"
+                        checked={!!watch("terms")}
+                        onChange={(checked) => {
+                          setValue("terms", checked, { shouldValidate: true });
+                        }}
+                        label=""
+                        className="p-0 m-0 hover:bg-transparent dark:hover:bg-transparent"
+                      />
+                    </div>
+                    <label htmlFor="terms" className="text-sm text-zinc-700 dark:text-zinc-300 cursor-pointer">
+                      Acepto haber leído los <a href={permalink} target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 font-bold underline hover:text-indigo-700 dark:hover:text-indigo-300">Términos y Condiciones</a> y autorizo el pago.
+                    </label>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800/50 flex items-start gap-3">
+                    <div className="p-1 bg-white dark:bg-zinc-800 rounded-md shadow-sm border border-indigo-200 dark:border-indigo-700">
+                      <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">SSL</span>
+                    </div>
+                    <p className="text-xs text-indigo-800 dark:text-indigo-200 leading-relaxed">
+                      Tus datos están protegidos. La transacción se procesa de forma segura a través de WOMPI y nunca almacenamos tu información financiera completa.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+          </CustomCard>
         </motion.div>
 
         {/* Submit Button */}
@@ -391,7 +412,7 @@ export const FormCheckout = () => {
           size="lg"
           effect="shine"
           disabled={isProcessing}
-          className="w-full py-6 text-xl bg-gradient-to-r from-gray-900 to-black shadow-2xl hover:shadow-gray-900/50"
+          className="w-full py-5 md:py-6 text-lg font-bold md:text-xl bg-linear-to-r from-zinc-900 to-pink-800 dark:from-zinc-200 dark:to-pink-600 text-white dark:text-black shadow-2xl hover:shadow-primary/30"
         >
           {isProcessing ? 'Procesando...' : `Pagar ${COP.format(totalAmount)}`}
         </CustomButton>

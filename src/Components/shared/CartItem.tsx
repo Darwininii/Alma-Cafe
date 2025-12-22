@@ -54,7 +54,7 @@ export const CartItem = ({ item }: Props) => {
             onDecrease={decrement}
             onIncrease={increment}
             disableDecrease={item.quantity === 1}
-            className="border-2 border-black/50 dark:border-white/50"
+            className="border-2 border-black/50 dark:border-white/50 bg-black/20"
           />
 
           <CustomDeleteButton

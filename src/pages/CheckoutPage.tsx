@@ -1,17 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "../store/cart.store";
 import { FormCheckout } from "../Components/checkout/FormCheckout";
-import { ItemsCheckout } from "../Components/checkout/ItemsCheckout";
 import { useUser } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
 import { useEffect } from "react";
 import { supabase } from "../supabase/client";
 import { motion } from "framer-motion";
-import { TbArrowBigLeftFilled, TbShoppingCartSearch } from "react-icons/tb";
+import { TbShoppingCartSearch } from "react-icons/tb";
+import { CustomTitle } from "../Components/shared/CustomTitle";
+import { CustomButton } from "../Components/shared/CustomButton";
+import { CustomBack } from "../Components/shared/CustomBack";
+import { useGlobalStore } from "../store/global.store";
+import { FaShoppingBag } from "react-icons/fa";
+import { CustomBadge } from "../Components/shared/CustomBadge";
+import { Sheet } from "../Components/shared/Sheet";
 
 export const CheckoutPage = () => {
   const totalItems = useCartStore((state) => state.totalItemsInCart);
-
+  const openSheet = useGlobalStore((state) => state.openSheet);
+  const isSheetOpen = useGlobalStore((state) => state.isSheetOpen);
   const { isLoading } = useUser();
 
   const navigate = useNavigate();
@@ -28,7 +35,7 @@ export const CheckoutPage = () => {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br "
+      className="min-h-screen bg-linnear-to-br "
       style={{
         minHeight: "100vh",
       }}
@@ -37,94 +44,83 @@ export const CheckoutPage = () => {
       <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="h-[100px] backdrop-blur-xl text-black flex items-center justify-between px-10 border-b-2 border-transparent shadow-lg sticky top-0 z-50"
+        className="h-[100px] backdrop-blur-xl flex items-center justify-between px-6 md:px-10 shadow-lg sticky top-0 z-50"
       >
-        <Link
-          to="/"
-          className="text-4xl font-bold tracking-tighter transition-all hover:scale-105 duration-300"
-        >
-          <p className="bg-gradient-to-r from-black/80 via-black to-black/80 bg-clip-text text-transparent">
-            Alma
-            <span className="bg-gradient-to-r from-black/80 to-rose-600 bg-clip-text text-transparent">
-              Café
-            </span>
-          </p>
-        </Link>
+        <CustomTitle asLink className="text-3xl md:text-4xl" />
 
-        <Link
-          to="/productos"
-          className="flex items-center gap-2 font-bold text-lg hover:text-rose-600/70 transition-colors"
-        >
-          <TbArrowBigLeftFilled size={24} />
-          Volver
-        </Link>
+        <CustomBack to="/productos" />
       </motion.header>
 
-      <main className="w-full h-full flex relative">
+      <main className="w-full h-full relative">
         {totalItems === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center gap-8 w-full"
+            className="flex flex-col items-center justify-center gap-8 w-full px-6"
             style={{
               height: "calc(100vh - 100px)",
             }}
           >
             {/* Empty cart icon */}
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-600 blur-3xl opacity-30 animate-pulse" />
-              <div className="relative w-32 h-32 bg-black/20 backdrop-blur-xl rounded-full flex items-center justify-center border-4 border-black/40 shadow-2xl">
-                <TbShoppingCartSearch size={60} className="text-black" />
-              </div>
+              <TbShoppingCartSearch size={120} className="text-zinc-400 dark:text-zinc-600" />
             </div>
 
-            <div className="text-center space-y-3">
-              <p className="text-2xl font-black text-black">
-                Tu carrito está vacío
-              </p>
-              <p className="text-sm text-black/80 font-medium">
-                ¡Agrega productos para continuar con tu compra!
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-black text-zinc-800 dark:text-zinc-200">
+                Tu Carrito Está Vacío
+              </h2>
+              <p className="text-zinc-600 dark:text-zinc-400 max-w-md">
+                ¡Agrega productos increíbles y comienza tu experiencia de compra!
               </p>
             </div>
 
-            <Link
+            <CustomButton
               to="/productos"
-              className="group relative py-4 px-8 bg-gradient-to-r from-black to-gray-800 rounded-full text-white text-sm uppercase tracking-widest font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden"
+              effect="shine"
+              className="py-4 px-8 bg-gradient-to-r from-zinc-900 to-zinc-800 dark:from-zinc-100 dark:to-zinc-200 rounded-full text-white dark:text-zinc-900 text-sm uppercase tracking-widest font-bold shadow-xl hover:shadow-2xl"
             >
-              <span className="relative z-10">Empezar a Comprar</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Link>
+              Empezar a Comprar
+            </CustomButton>
           </motion.div>
         ) : (
           <>
-            {/* Form Section */}
+            {/* Form Section - Now Full Width */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="w-full md:w-[50%] p-6 md:p-10 overflow-y-auto"
-              style={{
-                maxHeight: "calc(100vh - 100px)",
-              }}
+              className="w-full max-w-4xl mx-auto p-4 md:p-6 lg:p-10"
             >
               <FormCheckout />
             </motion.div>
 
-            {/* Items Summary Section */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br backdrop-blur-xl w-[50%] sticky top-[100px] right-0 p-6 md:p-10 hidden md:block border-l-2 border-transparent shadow-2xl overflow-y-auto"
-              style={{
-                maxHeight: "calc(100vh - 100px)",
-              }}
-            >
-              <ItemsCheckout />
-            </motion.div>
+            {/* Floating Button to Open Sheet */}
+            <div className="fixed bottom-6 right-6 z-40">
+              <CustomButton
+                onClick={() => openSheet("checkout")}
+                effect="shine"
+                size="lg"
+                className="bg-linner-to-r from-zinc-900 to-zinc-800 dark:from-zinc-100 dark:to-zinc-200 font-black text-black/80 hover:text-black dark:text-white rounded-full shadow-2xl hover:shadow-zinc-900/50 dark:hover:shadow-zinc-100/50 px-5 py-3.5 border-none h-auto"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="relative">
+                    <FaShoppingBag size={25} />
+                    <CustomBadge
+                      count={totalItems}
+                      className="absolute -top-2 -right-2 w-5 h-5 text-[10px]"
+                    />
+                  </div>
+
+                </div>
+              </CustomButton>
+            </div>
           </>
         )}
       </main>
+
+      {/* Sheet Component */}
+      {isSheetOpen && <Sheet />}
     </div>
   );
 };

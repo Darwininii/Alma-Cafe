@@ -50,7 +50,7 @@ export const Cart = () => {
           <div className="py-5 px-5">
             <CustomButton
               to="/checkout"
-              className="w-full bg-black dark:bg-white/70 font-black text-white dark:text-black py-3.5 hover:bg-gradient-to-r from-black/80 dark:from-white/50 to-rose-600 rounded-full shadow-md hover:shadow-black/40 transition-all duration-300"
+              className="w-full bg-black dark:bg-white/80 font-black text-white dark:text-black py-3.5 hover:bg-linear-to-r from-black/80 dark:from-white/50 to-rose-600 rounded-full shadow-md hover:shadow-black/40 transition-all duration-300"
               size="lg"
               leftIcon={MdPayments}
               effect="shine"
@@ -59,7 +59,7 @@ export const Cart = () => {
               Comprar
             </CustomButton>
             <CustomButton
-              className="mt-3 w-full font-black text-black dark:text-black border border-black/70 dark:border-white/70 rounded-full py-3 hover:bg-red-300/80 dark:hover:bg-red-900/40 hover:text-red-800/80 dark:hover:text-red-400 hover:border-red-800/80 dark:hover:border-red-600 transition-all duration-300"
+              className="mt-3 w-full font-black text-black dark:text-red-400 border border-black/70 dark:border-red-600 rounded-full py-3 hover:bg-red-300/80 dark:bg-red-900/40 dark:hover:bg-primary/80 dark:hover:text-white/80 hover:text-red-800/80 hover:border-red-800/80 dark:hover:border-white/70 transition-all duration-300"
               onClick={cleanCart}
               size="lg"
               leftIcon={MdDeleteForever}

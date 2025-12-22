@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Separator } from "../shared/Separator";
-import { IoCheckmark } from "react-icons/io5";
 import { CustomButton } from "../shared/CustomButton";
 import { MdOutlineFilterList, MdOutlineFilterListOff } from "react-icons/md";
 import { CustomDeleteButton } from "../shared/CustomDeleteButton";
@@ -8,6 +7,7 @@ import { CustomClose } from "../shared/CustomClose";
 import { CustomInput } from "../shared/CustomInput";
 import { FaSearch } from "react-icons/fa";
 import { useBrands } from "@/hooks";
+import { CustomCheckbox } from "../shared/CustomCheckbox";
 
 
 interface Props {
@@ -38,25 +38,13 @@ export const ContainerFilter = ({
     <div className="flex flex-col gap-3">
       {/* Si hay marcas cargadas, las mostramos. Si no, o está cargando, no se muestra nada o un loader si quisieras */}
       {brands?.map((brand) => (
-        <label
+        <CustomCheckbox
           key={brand.id}
-          className="relative inline-flex items-center group cursor-pointer hover:bg-white/30 dark:hover:bg-white/5 p-2 rounded-lg transition-all"
-        >
-          <input
-            type="checkbox"
-            className="sr-only peer"
-            checked={selectedBrands.includes(brand.name)}
-            onChange={() => handleBrandChange(brand.name)}
-          />
-          {/* Custom Checkbox */}
-          <div className="relative w-5 h-5 bg-white dark:bg-gray-800 border-2 border-black/70 dark:border-white/70 rounded-md transition-all duration-300 peer-checked:bg-gradient-to-br peer-checked:from-rose-500 peer-checked:to-rose-600 dark:peer-checked:from-rose-600 dark:peer-checked:to-rose-700 peer-checked:border-rose-500 dark:peer-checked:border-rose-600 peer-focus:ring-2 peer-focus:ring-rose-500/20 dark:peer-focus:ring-rose-400/20 peer-focus:ring-offset-2 dark:peer-focus:ring-offset-gray-900">
-            {/* Checkmark */}
-            <IoCheckmark className="absolute inset-0 w-full h-full text-white opacity-0 peer-checked:opacity-100 transition-all duration-200 scale-0 peer-checked:scale-100" />
-          </div>
-          <span className="ml-3 text-black dark:text-white/70 group-hover:text-rose-600 dark:group-hover:text-rose-400 font-bold text-sm transition-colors select-none peer-checked:text-rose-600 dark:peer-checked:text-rose-400 peer-checked:font-semibold">
-            {brand.name}
-          </span>
-        </label>
+          id={`brand-${brand.id}`}
+          checked={selectedBrands.includes(brand.name)}
+          onChange={() => handleBrandChange(brand.name)}
+          label={brand.name}
+        />
       ))}
     </div>
   );
