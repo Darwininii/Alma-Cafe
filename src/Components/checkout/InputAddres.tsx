@@ -1,30 +1,28 @@
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import type { AddressFormValues } from "../../lib/validators";
+import type { FieldErrors, UseFormRegister, FieldValues, Path } from "react-hook-form";
 import { CustomInput } from "../shared/CustomInput";
 
-interface Props {
-  register: UseFormRegister<AddressFormValues>;
-  errors: FieldErrors<AddressFormValues>;
-
-  name: keyof AddressFormValues;
+interface Props<T extends FieldValues> {
+  register: UseFormRegister<T>;
+  errors: FieldErrors<T>;
+  name: Path<T>;
   className?: string;
   placeholder: string;
 }
 
-export const InputAddress = ({
+export const InputAddress = <T extends FieldValues>({
   register,
   errors,
   name,
   className,
   placeholder,
-}: Props) => {
+}: Props<T>) => {
   return (
     <CustomInput
       type="text"
-      placeholder={placeholder}
+      label={placeholder}
       className={className}
       {...register(name)}
-      error={errors[name]?.message}
+      error={errors[name as string]?.message as string}
     />
   );
 };

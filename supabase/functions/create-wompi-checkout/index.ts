@@ -51,8 +51,8 @@ serve(async (req) => {
         const WOMPI_API_URL = isTest ? "https://sandbox.wompi.co/v1/transactions" : "https://production.wompi.co/v1/transactions";
 
         // 6. Validations
-        if (!items || items.length === 0 || !payment?.token || !customer_id || !address_id) {
-            throw new Error("Missing required fields: items, payment.token, customer_id, address_id");
+        if (!items || items.length === 0 || !customer_id || !address_id || !payment) {
+            throw new Error("Missing required fields: items, payment, customer_id, address_id");
         }
 
         // 7. Data Verification (Prices)
@@ -95,16 +95,66 @@ serve(async (req) => {
         const reference = `ORD-${Date.now()}-${Math.random().toString(36).substring(7).toUpperCase()}`;
         const amountInCents = Math.round(totalAmount * 100);
 
+        // Construct Payment Method Logic
+        let paymentMethodPayload: any = {};
+
+        switch (payment.type) {
+            case "CARD":
+                if (!payment.token || !payment.installments) throw new Error("Missing token or installments for CARD");
+                paymentMethodPayload = {
+                    type: "CARD",
+                    token: payment.token,
+                    installments: payment.installments
+                };
+                break;
+            case "NEQUI":
+                if (!payment.phone_number) throw new Error("Missing phone_number for NEQUI");
+                paymentMethodPayload = {
+                    type: "NEQUI",
+                    phone_number: payment.phone_number
+                };
+                break;
+            case "PSE":
+                // Wompi requires specific fields for PSE
+                paymentMethodPayload = {
+                    type: "PSE",
+                    user_type: payment.user_type,
+                    user_legal_id: payment.user_legal_id,
+                    user_legal_id_type: payment.user_legal_id_type,
+                    financial_institution_code: payment.financial_institution_code,
+                    payment_description: `Pago a Comercio - ${reference}`
+                };
+                break;
+            case "BANCOLOMBIA_TRANSFER":
+            case "BANCOLOMBIA_COLLECT":
+            case "NEQUI_PUSH": // Though NEQUI type is preferred usually
+            case "DAVIPLATA":
+            case "EFECTY":
+                paymentMethodPayload = {
+                    type: payment.type,
+                    // Async methods might need user details inside payment_method depending on method, but usually just type for basic ones or user_legal_id if strict
+                };
+                break;
+            default:
+                // Fallback: try to pass what was sent if it's a raw object? 
+                // Or default to CARD if token exists?
+                if (payment.token) {
+                    paymentMethodPayload = {
+                        type: "CARD",
+                        token: payment.token,
+                        installments: payment.installments || 1
+                    };
+                } else {
+                    throw new Error("Unsupported payment type or missing data");
+                }
+        }
+
         const wompiPayload: any = {
             amount_in_cents: amountInCents,
             currency: "COP",
             customer_email: payment.email,
             reference: reference,
-            payment_method: {
-                type: "CARD",
-                token: payment.token,
-                installments: payment.installments
-            },
+            payment_method: paymentMethodPayload,
             acceptance_token: payment.acceptance_token,
             session_id: sessionId || undefined
         };

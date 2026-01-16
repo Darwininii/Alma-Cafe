@@ -19,12 +19,6 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
         const containerRef = useRef<HTMLDivElement | null>(null);
         const [mouse, setMouse] = useState({ x: 0, y: 0 });
         const [isFocused, setIsFocused] = useState(false);
-        const [hasValue, setHasValue] = useState(!!props.value);
-
-        // Actualizar estado si el value cambia externamente
-        React.useEffect(() => {
-            setHasValue(!!props.value || (props.defaultValue as string)?.length > 0);
-        }, [props.value, props.defaultValue]);
 
         const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
             if (!containerRef.current) return;
@@ -33,11 +27,6 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                 x: e.clientX - rect.left,
                 y: e.clientY - rect.top,
             });
-        };
-
-        const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setHasValue(e.target.value.length > 0);
-            props.onChange?.(e);
         };
 
         return (
@@ -72,23 +61,10 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                         )}
 
                         <div className="relative w-full">
-                            {/* Etiqueta flotante */}
-                            {label && (
-                                <label
-                                    className={cn(
-                                        "absolute left-0 transition-all duration-200 pointer-events-none text-neutral-400 font-medium",
-                                        isFocused || hasValue || props.value
-                                            ? "-top-1 text-[10px] text-primary"
-                                            : "top-2.5 text-sm"
-                                    )}
-                                >
-                                    {label}
-                                </label>
-                            )}
-
                             <input
                                 ref={ref}
                                 {...props}
+                                placeholder={props.placeholder || " "}
                                 onFocus={(e) => {
                                     setIsFocused(true);
                                     props.onFocus?.(e);
@@ -97,13 +73,28 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                                     setIsFocused(false);
                                     props.onBlur?.(e);
                                 }}
-                                onChange={handleInput}
                                 className={cn(
-                                    "w-full bg-transparent border-none outline-none text-sm text-neutral-900 dark:text-neutral-100 py-2.5 h-10",
+                                    "peer w-full bg-transparent border-none outline-none text-sm text-neutral-900 dark:text-neutral-100 py-2.5 h-10 placeholder:text-transparent focus:placeholder:text-zinc-400",
                                     className
                                 )}
-                                placeholder={isFocused || !label ? props.placeholder : ""}
                             />
+
+                            {/* Etiqueta flotante */}
+                            {label && (
+                                <label
+                                    className={cn(
+                                        "absolute left-0 pointer-events-none transition-all duration-200 font-medium truncate max-w-full z-10",
+                                        // Default (Floating / Has Value)
+                                        "-top-1 text-[10px] text-primary",
+                                        // Placeholder Shown (Empty) - Push to Middle
+                                        "peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-neutral-400",
+                                        // Focus (Active) - Pull to Top (Overrides Placeholder Shown)
+                                        "peer-focus:-top-1 peer-focus:translate-y-0 peer-focus:text-[10px] peer-focus:text-primary"
+                                    )}
+                                >
+                                    {label}
+                                </label>
+                            )}
                         </div>
                     </div>
                 </div>

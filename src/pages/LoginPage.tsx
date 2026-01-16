@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useLogin, useUser } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
 
@@ -7,6 +7,9 @@ import { CustomInput } from "../Components/shared/CustomInput";
 import { CustomButton } from "../Components/shared/CustomButton";
 
 export const LoginPage = () => {
+  const [searchParams] = useSearchParams();
+  const redirectPath = searchParams.get("redirect") || "/";
+
   const [email, setEmail] = useState(" hola@hola.com");
   const [password, setPassword] = useState(" hola12345678");
 
@@ -21,7 +24,7 @@ export const LoginPage = () => {
 
   if (isLoading) return <Loader />;
 
-  if (session) return <Navigate to="/" />;
+  if (session) return <Navigate to={redirectPath} />;
 
   return (
     <div className="h-full flex flex-col items-center mt-12 gap-5 transition-colors duration-300">

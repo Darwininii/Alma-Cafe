@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
 import { CustomButton } from "./CustomButton";
 
@@ -8,10 +9,17 @@ interface Props {
 }
 
 export const CustomBack = ({ to, onClick, className }: Props) => {
+    const navigate = useNavigate();
+
+    const handleBack = () => {
+        if (onClick) onClick();
+        else if (to) navigate(to);
+        else navigate(-1);
+    };
+
     return (
         <CustomButton
-            to={to}
-            onClick={onClick}
+            onClick={handleBack}
             effect="shine"
             leftIcon={TbArrowBigLeftFilled}
             iconSize={24}

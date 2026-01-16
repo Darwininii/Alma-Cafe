@@ -135,6 +135,7 @@ export type Database = {
         Row: {
           address_id: string
           created_at: string
+          currency: string | null
           customer_id: string
           id: number
           payment_method: string | null
@@ -149,6 +150,7 @@ export type Database = {
         Insert: {
           address_id: string
           created_at?: string
+          currency?: string | null
           customer_id: string
           id?: number
           payment_method?: string | null
@@ -163,6 +165,7 @@ export type Database = {
         Update: {
           address_id?: string
           created_at?: string
+          currency?: string | null
           customer_id?: string
           id?: number
           payment_method?: string | null
@@ -198,6 +201,7 @@ export type Database = {
           id: string
           order_id: number
           price: number
+          product_snapshot: Json | null
           products_id: string
         }
         Insert: {
@@ -206,6 +210,7 @@ export type Database = {
           id?: string
           order_id: number
           price: number
+          product_snapshot?: Json | null
           products_id: string
         }
         Update: {
@@ -214,6 +219,7 @@ export type Database = {
           id?: string
           order_id?: number
           price?: number
+          product_snapshot?: Json | null
           products_id?: string
         }
         Relationships: [
@@ -298,7 +304,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_or_create_customer: {
+        Args: {
+          p_email: string
+          p_full_name: string
+          p_phone?: string
+          p_user_id?: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

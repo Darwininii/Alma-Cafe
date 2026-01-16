@@ -1,17 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useGlobalStore } from "../../store/global.store";
-import { useCartStore } from "../../store/cart.store";
 import { Cart } from "./Cart";
 import { Search } from "./Search";
 import { CustomClose } from "./CustomClose";
-import { ItemsCheckout } from "../checkout/ItemsCheckout";
-import { FaShoppingBag } from "react-icons/fa";
-import { CustomBadge } from "./CustomBadge";
 
 export const Sheet = () => {
   const sheetContent = useGlobalStore((state) => state.sheetContent);
   const closeSheet = useGlobalStore((state) => state.closeSheet);
-  const totalItems = useCartStore((state) => state.totalItemsInCart);
   const sheetRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -40,8 +35,6 @@ export const Sheet = () => {
         return <Cart />;
       case "search":
         return <Search />;
-      case "checkout":
-        return <ItemsCheckout />;
       default:
         return null;
     }
@@ -73,25 +66,14 @@ export const Sheet = () => {
         {/* Header del Sheet */}
         <div className="sticky top-0 bg-white/30 dark:bg-black/30 backdrop-blur-lg border-b border-white/20 dark:border-white/15 flex justify-between items-center px-4 py-3 rounded-t-3xl z-10">
           <div className="flex items-center gap-3">
-            {sheetContent === "checkout" && (
-              <>
-                <FaShoppingBag size={20} className="text-black dark:text-white" />
-                <CustomBadge
-                  count={totalItems}
-                  className="w-5 h-5 text-[10px]"
-                />
-              </>
-            )}
             <h2 className="text-lg font-black capitalize text-black dark:text-white">
               {sheetContent === "cart"
                 ? "Tu carrito"
                 : sheetContent === "search"
                   ? "Buscar productos"
-                  : sheetContent === "checkout"
-                    ? "Tu pedido"
-                    : sheetContent === "recent"
-                      ? "Vistos recientemente"
-                      : ""}
+                  : sheetContent === "recent"
+                    ? "Vistos recientemente"
+                    : ""}
             </h2>
           </div>
           <CustomClose

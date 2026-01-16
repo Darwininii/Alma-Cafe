@@ -26,6 +26,7 @@ export const addressSchema = z.object({
     .max(10, "El código postal no debe exceder los 10 carácteres")
     .optional(),
   country: z.string().min(1, "El país es requerido"),
+  phone: z.string().min(10, "El teléfono es requerido (min 10 dígitos)"),
 });
 
 export type UserRegisterFormValues = z.infer<typeof userRegisterSchema>;
@@ -85,12 +86,13 @@ export const productSchema = z.object({
 
 export type ProductFormValues = z.infer<typeof productSchema>;
 
-export const creditCardSchema = z.object({
+export const cardPaymentSchema = z.object({
+  type: z.literal("CARD"),
   cardNumber: z
     .string()
     .min(13, "Número de tarjeta inválido")
     .max(19, "Número de tarjeta inválido")
-    .regex(/^\d+$/, "Solo se permiten números"),
+    .regex(/^[\d\s]+$/, "Solo se permiten números"),
   cardHolder: z.string().min(1, "El nombre del titular es requerido"),
   expMonth: z
     .string()
@@ -110,11 +112,40 @@ export const creditCardSchema = z.object({
   installments: z.number().min(1).max(36),
 });
 
-export type CreditCardFormValues = z.infer<typeof creditCardSchema>;
+export const nequiPaymentSchema = z.object({
+  type: z.literal("NEQUI"),
+  phoneNumber: z
+    .string()
+    .min(10, "El número debe tener 10 dígitos")
+    .max(10, "El número debe tener 10 dígitos")
+    .regex(/^3[\d]{9}$/, "Debe ser un número celular válido (empieza por 3)"),
+});
+
+export const psePaymentSchema = z.object({
+  type: z.literal("PSE"),
+  financialInstitutionCode: z.string().min(1, "Selecciona un banco"),
+  userType: z.enum(["0", "1"], { required_error: "Selecciona el tipo de persona" }), // 0: Natural, 1: Jurídica
+  userLegalIdType: z.string().min(1, "Selecciona tipo de documento"),
+  userLegalId: z.string().min(1, "El número de documento es requerido"),
+});
+
+export const asyncPaymentSchema = z.object({
+  type: z.enum(["BANCOLOMBIA_TRANSFER", "BANCOLOMBIA_COLLECT", "NEQUI_PUSH", "DAVIPLATA", "EFECTY"]), // Extended for future
+});
+
+// Union de todos los métodos de pago
+export const paymentMethodSchema = z.discriminatedUnion("type", [
+  cardPaymentSchema,
+  nequiPaymentSchema,
+  psePaymentSchema,
+  // asyncPaymentSchema // Dejamos esto pendiente si usa inputs adicionales, por ahora solo type
+]);
+
+export type PaymentMethodFormValues = z.infer<typeof paymentMethodSchema>;
 
 export const checkoutSchema = z.object({
   address: addressSchema,
-  payment: creditCardSchema,
+  payment: paymentMethodSchema,
 });
 
 export type CheckoutFormValues = z.infer<typeof checkoutSchema>;

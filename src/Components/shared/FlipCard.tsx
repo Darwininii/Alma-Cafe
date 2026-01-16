@@ -10,6 +10,7 @@ interface FlipCardProps {
   containerClassName?: string;
   frontClassName?: string;
   backClassName?: string;
+  isFlipped?: boolean;
 }
 
 export const FlipCard: React.FC<FlipCardProps> = ({
@@ -20,6 +21,7 @@ export const FlipCard: React.FC<FlipCardProps> = ({
   containerClassName,
   frontClassName,
   backClassName,
+  isFlipped,
 }) => {
   const rotationClass =
     rotate === "x"
@@ -32,12 +34,17 @@ export const FlipCard: React.FC<FlipCardProps> = ({
         "[transform:rotateY(180deg)]",
       ];
 
+  const manualRotationClass =
+    rotate === "x" ? "[transform:rotateX(180deg)]" : "[transform:rotateY(180deg)]";
+
+  const isManual = isFlipped !== undefined;
+
   return (
     <div className={cn("group h-64 w-48 perspective-[1000px]", className)}>
       <div
         className={cn(
           "relative h-full rounded-2xl transition-all duration-500 transform-3d",
-          rotationClass[0],
+          isManual ? (isFlipped ? manualRotationClass : "") : rotationClass[0],
           containerClassName
         )}
       >
