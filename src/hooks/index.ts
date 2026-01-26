@@ -15,7 +15,6 @@ export * from "./auth/useCustomer";
 export * from "./auth/useRoleUser";
 
 // Orders
-export * from "./orders/useCreateOrder";
 export * from "./orders/useOrder";
 export * from "./orders/useOrders";
 export * from "./orders/useAllOrders";

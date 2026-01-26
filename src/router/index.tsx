@@ -9,7 +9,6 @@ import {
   RegisterPage,
   OrdersUserPage,
   CheckoutPage,
-  GraciasPage,
   OrderUserPage,
   DashProductsPage,
   DashNewProductPage,
@@ -77,10 +76,7 @@ export const router = createBrowserRouter([
     path: "/checkout",
     element: <CheckoutPage />,
   },
-  {
-    path: "/checkout/:id/gracias",
-    element: <GraciasPage />,
-  },
+
   {
     path: "/dashboard",
     element: <DashboardLayout />,

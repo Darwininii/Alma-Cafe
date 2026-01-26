@@ -6,7 +6,6 @@ export * from "./LoginPage";
 export * from "./RegisterPage";
 export * from "./OrdersUserPage";
 export * from "./CheckoutPage";
-export * from "./GraciasPage";
 export * from "./OrderUserPage";
 export * from "./PruebasPage";
 
