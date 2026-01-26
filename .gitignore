@@ -1,7 +1,6 @@
 .env
 
 services/payment.service.ts
-*.sql
 
 # Logs
 logs

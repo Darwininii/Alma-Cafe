@@ -1,6 +1,6 @@
 # React + TypeScript + Vite
 
-Ecommerce de Alma Café, Desarrollo de React
+Ecommerce, Desarrollo de React
 
 ## Herramientas Utilizadas:
 
