@@ -6,7 +6,7 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-
 import { useGlobalStore } from "@/store/global.store";
 import { useCartStore } from "@/store";
 import { useUser, useCustomer } from "@/hooks";
-import { RiShoppingBag3Line } from "react-icons/ri";
+import { RiShoppingBag3Line, RiShoppingBag3Fill } from "react-icons/ri";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useThemeStore } from "@/store/theme.store";
 import { Loader } from "./Loader";
@@ -175,13 +175,25 @@ export const DockNavbar = () => {
             size="icon"
             effect="none"
           >
-            <RiShoppingBag3Line
-              size={20}
-              className={`${baseIconClass} ${hovered === 11
-                ? "scale-125 text-black dark:text-yellow-400/80"
-                : "text-slate-800 dark:text-white/70"
-                }`}
-            />
+
+
+            {totalItemsInCart > 0 ? (
+               <RiShoppingBag3Fill
+                 size={20}
+                 className={`${baseIconClass} ${hovered === 11
+                   ? "scale-125 text-black dark:text-yellow-400/80"
+                   : "text-slate-800 dark:text-white/70"
+                   }`}
+               />
+            ) : (
+               <RiShoppingBag3Line
+                 size={20}
+                 className={`${baseIconClass} ${hovered === 11
+                   ? "scale-125 text-black dark:text-yellow-400/80"
+                   : "text-slate-800 dark:text-white/70"
+                   }`}
+               />
+            )}
 
             {/* 🔹 Contador animado */}
             <CustomBadge
@@ -201,7 +213,7 @@ export const DockNavbar = () => {
           ) : session ? (
             <Link
               to="/account"
-              className="border-3 text-black dark:text-white border-black/70 dark:border-white/70 dark:hover:border-yellow-600/80 dark:hover:text-white/80 w-9 h-9 rounded-2xl grid place-items-center font-black text-black bg-white/20 dark:bg-black/50 hover:bg-black/10 hover:text-white/80 dark:hover:bg-yellow-600/50 transition"
+              className="border-3 dark:text-white border-black/70 dark:border-white/70 dark:hover:border-yellow-600/80 dark:hover:text-white/80 w-9 h-9 rounded-2xl grid place-items-center font-black text-black bg-white/20 dark:bg-black/50 hover:bg-black/10 hover:text-white/80 dark:hover:bg-yellow-600/50 transition"
             >
               {customer && customer.full_name
                 ? customer.full_name[0].toUpperCase()
