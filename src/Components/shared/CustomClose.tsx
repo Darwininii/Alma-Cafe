@@ -21,7 +21,7 @@ export const CustomClose = ({
             centerIcon={centerIcon}
             iconSize={iconSize}
             className={cn(
-                "rounded-full bg-gray-100/50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white",
+                "rounded-full bg-gray-100/50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white aspect-square p-0 flex items-center justify-center",
                 className
             )}
             {...props}

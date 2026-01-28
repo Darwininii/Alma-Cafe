@@ -1,5 +1,6 @@
 // PRODUCTOS
 export * from "./products/useProducts";
+export * from "./products/useAllProducts";
 export * from "./products/useProduct";
 export * from "./products/useFilteredProducts";
 export * from "./products/useHomeProducts";

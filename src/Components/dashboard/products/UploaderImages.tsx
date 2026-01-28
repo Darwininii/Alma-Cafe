@@ -4,9 +4,10 @@ import {
   type UseFormWatch,
 } from "react-hook-form";
 import type { ProductFormValues } from "../../../lib/validators";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CustomClose } from "../../shared/CustomClose";
-import { BadgeX } from "lucide-react";
+import { BadgeX, Upload } from "lucide-react";
+import { CustomButton } from "../../shared/CustomButton";
 
 interface ImagePreview {
   file?: File;
@@ -21,6 +22,7 @@ interface Props {
 
 export const UploaderImages = ({ setValue, errors, watch }: Props) => {
   const [images, setImages] = useState<ImagePreview[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Verificar si hay errores con las imágenes
   const formImages = watch("images");
@@ -66,28 +68,49 @@ export const UploaderImages = ({ setValue, errors, watch }: Props) => {
     );
   };
 
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <input
         type="file"
+        ref={fileInputRef}
         accept="image/png, image/jpeg, image/jpg, image/webp"
         multiple
         onChange={handleImageChange}
-        className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
+        className="hidden"
       />
+
+      <CustomButton
+        type="button"
+        onClick={handleButtonClick}
+        className="w-full bg-neutral-100 hover:bg-neutral-200 dark:bg-white/5 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-300 border-2 border-dashed border-neutral-300 dark:border-white/20 h-auto py-8 flex-col gap-2 rounded-2xl"
+        effect="none"
+      >
+        <div className="bg-white dark:bg-black/40 p-3 rounded-full shadow-sm">
+            <Upload className="w-6 h-6 text-primary" />
+        </div>
+        <div className="flex flex-col items-center gap-1">
+            <span className="font-semibold text-lg">Elegir imágenes</span>
+            <span className="text-xs text-neutral-400 font-medium">JPEG, PNG, WEBP</span>
+        </div>
+      </CustomButton>
 
       <div className="grid grid-cols-4 lg:grid-cols-2 gap-4">
         {images.map((image, index) => (
           <div key={index}>
-            <div className="border border-gray-200 w-full h-20 rounded-md p-1 relative lg:h-28">
+            <div className="border border-gray-200 w-full h-20 rounded-md p-1 relative lg:h-28 bg-white dark:bg-black/20">
               <img
                 src={image.previewUrl}
                 alt={`Preview ${index}`}
                 className="rounded-md w-full h-full object-contain"
               />
               <CustomClose
+                type="button"
                 onClick={() => handleRemoveImage(index)}
-                className="absolute -top-3 -right-4 bg-black/10 hover:bg-black/80 text-red-600 hover:text-white dark:text-red-600 dark:bg-white dark:hover:bg-black/80 dark:hover:text-white rounded-full border border-red-100 shadow-sm z-10 w-6 h-6 p-0"
+                className="absolute -top-3 -right-4 bg-white hover:bg-red-50 text-red-600 border border-red-100 shadow-sm z-10 w-7 h-7 p-0"
                 iconSize={16}
                 centerIcon={BadgeX}
                 effect="magnetic"
@@ -97,9 +120,9 @@ export const UploaderImages = ({ setValue, errors, watch }: Props) => {
         ))}
       </div>
 
-      {formImages?.length === 0 && errors.images && (
-        <p className="text-red-500 text-xs mt-1">{errors.images.message}</p>
+      {(formImages?.length === 0 || !formImages) && errors.images && (
+        <p className="text-red-500 text-xs mt-1 font-medium bg-red-50 dark:bg-red-900/10 px-3 py-2 rounded-lg border border-red-100 dark:border-red-900/20">{errors.images.message}</p>
       )}
-    </>
+    </div>
   );
 };

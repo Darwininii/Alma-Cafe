@@ -17,6 +17,7 @@ export interface Product {
   price: number;
   stock: string | null; // "Disponible" | "Agotado"
   tag?: ProductTag; // Nuevo campo para tags
+  is_active?: boolean; // Campo para soft delete
 }
 
 // Producto preparado para mostrar en la UI

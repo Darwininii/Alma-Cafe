@@ -3,7 +3,8 @@ import type { ProductFormValues } from "../../../lib/validators";
 import { useState } from "react";
 import { CustomInput } from "../../shared/CustomInput";
 import { CustomButton } from "../../shared/CustomButton";
-import { X, Plus } from "lucide-react";
+import { CustomDeleteButton } from "../../shared/CustomDeleteButton";
+import { FaPlus } from "react-icons/fa";
 
 interface Props {
   control: Control<ProductFormValues>;
@@ -49,16 +50,11 @@ export const FeaturesInput = ({ control, errors }: Props) => {
                 </span>
               </div>
 
-              <CustomButton
+              <CustomDeleteButton
                 onClick={() => remove(index)}
-                className="text-neutral-400 hover:text-red-500 transition-colors p-1 h-auto bg-transparent hover:bg-transparent"
-                size="icon"
-                effect="none"
-                centerIcon={X}
-                iconSize={14}
-              >
-                <span className="sr-only">Eliminar</span>
-              </CustomButton>
+                className="h-8 w-8"
+                iconSize={16}
+              />
             </li>
           ))}
         </ul>
@@ -80,11 +76,11 @@ export const FeaturesInput = ({ control, errors }: Props) => {
         </div>
         <CustomButton
           onClick={handleAddFeature}
-          className="bg-neutral-900 dark:bg-white text-white dark:text-black h-10 w-10 rounded-[14px] flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
+          className="bg-neutral-900 dark:bg-white text-white dark:text-black h-12 w-12 rounded-[11px] flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
           disabled={!newFeature.trim()}
           size="icon"
           effect="none"
-          centerIcon={Plus}
+          centerIcon={FaPlus}
           iconSize={20}
         />
       </div>

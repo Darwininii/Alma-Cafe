@@ -183,7 +183,7 @@ export const getOrderById = async (orderId: string) => {
       `*,  address(*), customers(full_name, email), orders_item(cantidad, price, product_snapshot, productos!left(name, images))`
     )
     .eq("customer_id", customer.id)
-    .eq("id", orderId)
+    .eq("id", Number(orderId))
     .single();
 
   if (error) throw new Error(error.message);
@@ -210,7 +210,7 @@ export const getOrderById = async (orderId: string) => {
       postalCode: order.address?.postal_code,
       country: order.address?.country,
     },
-    orderItems: order.orders_item.map((item) => ({
+    orderItems: order.orders_item.map((item: any) => ({
       quantity: item.cantidad,
       price: item.price,
       productName: item.productos?.name ?? item.product_snapshot?.name ?? "Producto Eliminado",
@@ -221,27 +221,62 @@ export const getOrderById = async (orderId: string) => {
 
 /*      ADMINISTRADOR            */
 
-export const getAllOrders = async () => {
-  const { data, error } = await supabase
+export const getAllOrders = async ({
+  page,
+  searchTerm = "",
+}: {
+  page?: number;
+  searchTerm?: string;
+} = {}) => {
+  const itemsPerPage = 10;
+  
+  let query = supabase
     .from("orders")
-    .select("id, total_amount, status, created_at, customers(full_name, email)")
+    .select(
+      "id, total_amount, status, created_at, customers!inner(full_name, email)",
+      { count: "exact" }
+    )
     .order("created_at", { ascending: false });
 
+  if (searchTerm) {
+    if (!isNaN(Number(searchTerm))) {
+         // Numeric -> Search Order ID
+         query = query.eq('id', Number(searchTerm));
+    } else {
+         // Text -> Search Customer fields
+         query = query.or(`full_name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%`, { foreignTable: 'customers' });
+    }
+  }
+
+  // Si se pasa pagina, paginamos. Si no, devolvemos todo.
+  if (page) {
+    const from = (page - 1) * itemsPerPage;
+    const to = from + itemsPerPage - 1;
+    const { data, error, count } = await query.range(from, to);
+    if (error) throw new Error(error.message);
+    return { data, count };
+  }
+
+  const { data, error, count } = await query;
   if (error) throw new Error(error.message);
-  return data;
+  
+  return {
+    data,
+    count
+  };
 };
 
 export const updateOrderStatus = async ({
   id,
   status,
 }: {
-  id: string;
+  id: number;
   status: string;
 }) => {
   const { error } = await supabase
     .from("orders")
     .update({ status })
-    .eq("id", id);
+    .eq("id", Number(id));
 
   if (error) throw new Error(error.message);
 };
@@ -257,7 +292,7 @@ export const getOrderByIdAdmin = async (id: string) => {
       orders_item(cantidad, price, product_snapshot, productos!left(name, images))
     `
     )
-    .eq("id", id)
+    .eq("id", Number(id))
     .single();
 
   if (error) throw new Error(error.message);
@@ -284,7 +319,7 @@ export const getOrderByIdAdmin = async (id: string) => {
       postalCode: order.address?.postal_code,
       country: order.address?.country,
     },
-    orderItems: order.orders_item.map((item) => ({
+    orderItems: order.orders_item.map((item: any) => ({
       quantity: item.cantidad,
       price: item.price,
       productName: item.productos?.name ?? item.product_snapshot?.name ?? "Producto Eliminado",

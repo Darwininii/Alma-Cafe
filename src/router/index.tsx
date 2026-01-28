@@ -14,6 +14,7 @@ import {
   DashNewProductPage,
   DashProductSlugPage,
   DashOrdersPage,
+  DashboardOrderPage,
   PruebasPage,
   BrandsPage,
 } from "../pages";
@@ -103,7 +104,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "ordenes/:id",
-        element: <DashOrdersPage />,
+        element: <DashboardOrderPage />,
       },
       {
         path: "marcas",

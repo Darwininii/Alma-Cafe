@@ -15,6 +15,7 @@ export const getProducts = async (page: number) => {
   } = await supabase
     .from("productos")
     .select("*", { count: "exact" })
+    .eq("is_active", true)
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -24,6 +25,21 @@ export const getProducts = async (page: number) => {
   }
 
   return { product, count };
+};
+
+export const getAllProducts = async () => {
+  const { data: products, error } = await supabase
+    .from("productos")
+    .select("id, name, slug, brand, stock, price, images, tag")
+    .eq("is_active", true)
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.log(error.message);
+    throw new Error(error.message);
+  }
+
+  return products as Product[];
 };
 
 export const getFilteredProducts = async ({
@@ -42,6 +58,7 @@ export const getFilteredProducts = async ({
   let query = supabase
     .from("productos")
     .select("* ", { count: "exact" })
+    .eq("is_active", true)
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -67,6 +84,7 @@ export const getRecentProducts = async () => {
   const { data: productos, error } = await supabase
     .from("productos")
     .select("*")
+    .eq("is_active", true)
     .order("created_at", { ascending: false })
     .limit(4);
 
@@ -82,6 +100,7 @@ export const getRandomProducts = async () => {
   const { data: productos, error } = await supabase
     .from("productos")
     .select("*")
+    .eq("is_active", true)
     .limit(20);
 
   if (error) {
@@ -105,6 +124,7 @@ export const getProductBySlug = async (slug: string) => {
   const { data, error } = await supabase
     .from("productos")
     .select("*")
+    .eq("is_active", true)
     .eq("slug", slug)
     .single();
 
@@ -120,6 +140,7 @@ export const searchProducts = async (searchTerm: string) => {
   const { data, error } = await supabase
     .from("productos")
     .select("*")
+    .eq("is_active", true)
     .ilike("name", `%${searchTerm}%`);
 
   if (error) {
@@ -216,38 +237,13 @@ export const createProduct = async (productInput: ProductInput) => {
 };
 
 export const deleteProduct = async (productId: string) => {
-  // 2. Obtener las imágenes del producto antes de eliminarlo
-  const { data: productImages, error: productImagesError } = await supabase
+  // Soft delete: cambiar is_active a false
+  const { error } = await supabase
     .from("productos")
-    .select("images")
-    .eq("id", productId)
-    .single();
-
-  if (productImagesError) throw new Error(productImagesError.message);
-
-  // 3. Eliminar el producto
-  const { error: productDeleteError } = await supabase
-    .from("productos")
-    .delete()
+    .update({ is_active: false })
     .eq("id", productId);
 
-  if (productDeleteError) throw new Error(productDeleteError.message);
-
-  // 4. Eliminar las imágenes del bucket
-  if (productImages.images.length > 0) {
-    const folderName = productId;
-
-    const paths = productImages.images.map((image) => {
-      const fileName = image.split("/").pop();
-      return `${folderName}/${fileName}`;
-    });
-
-    const { error: storageError } = await supabase.storage
-      .from("product-images")
-      .remove(paths);
-
-    if (storageError) throw new Error(storageError.message);
-  }
+  if (error) throw new Error(error.message);
 
   return true;
 };

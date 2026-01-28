@@ -252,6 +252,7 @@ export type Database = {
           slug: string
           stock: string
           tag: string | null
+          is_active: boolean
         }
         Insert: {
           brand: string
@@ -265,6 +266,7 @@ export type Database = {
           slug: string
           stock?: string
           tag?: string | null
+          is_active?: boolean
         }
         Update: {
           brand?: string
@@ -278,6 +280,7 @@ export type Database = {
           slug?: string
           stock?: string
           tag?: string | null
+          is_active?: boolean
         }
         Relationships: []
       }

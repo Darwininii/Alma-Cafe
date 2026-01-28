@@ -124,7 +124,7 @@ export const nequiPaymentSchema = z.object({
 export const psePaymentSchema = z.object({
   type: z.literal("PSE"),
   financialInstitutionCode: z.string().min(1, "Selecciona un banco"),
-  userType: z.enum(["0", "1"], { required_error: "Selecciona el tipo de persona" }), // 0: Natural, 1: Jurídica
+  userType: z.enum(["0", "1"], { message: "Selecciona el tipo de persona" }), // 0: Natural, 1: Jurídica
   userLegalIdType: z.string().min(1, "Selecciona tipo de documento"),
   userLegalId: z.string().min(1, "El número de documento es requerido"),
 });

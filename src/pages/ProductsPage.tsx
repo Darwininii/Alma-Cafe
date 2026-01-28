@@ -121,7 +121,7 @@ export const ProductsPage = () => {
               <h1 className="text-3xl md:text-4xl font-black tracking-tight text-black dark:text-white/80 drop-shadow-md">{product.name}</h1>
 
               <div className="flex flex-col md:flex-row md:items-center gap-4">
-                <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+                <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
                   {formatPrice(product.price)}
                 </span>
 
@@ -146,7 +146,7 @@ export const ProductsPage = () => {
                     className="text-sm flex items-start gap-3 font-medium text-black/80 dark:text-gray-200"
                     whileHover={{ x: 5 }}
                   >
-                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 shadow-[0_0_8px_rgba(234,88,12,0.6)]" />
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0 shadow-[0_0_8px_rgba(234,88,12,0.6)]" />
                     <span className="leading-relaxed">{feature}</span>
                   </motion.li>
                 ))}
@@ -192,7 +192,7 @@ export const ProductsPage = () => {
                   </CustomButton>
 
                   <CustomButton
-                    className="w-full sm:flex-1 bg-gradient-to-r from-black/80 to-rose-600 text-white font-bold py-4 md:py-5 rounded-xl shadow-lg hover:shadow-black/40 border border-white/10 text-base md:text-lg"
+                    className="w-full sm:flex-1 bg-linear-to-r from-black/80 to-rose-600 text-white font-bold py-4 md:py-5 rounded-xl shadow-lg hover:shadow-black/40 border border-white/10 text-base md:text-lg"
                     onClick={buyNow}
                     leftIcon={MdPayments}
                     iconSize={24}

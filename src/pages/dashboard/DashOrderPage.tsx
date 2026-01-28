@@ -4,140 +4,172 @@ import { Loader } from "../../Components/shared/Loader";
 import { formatPrice, formatDate } from "../../helpers";
 import { useOrderAdmin } from "@/hooks";
 import { CustomButton } from "../../Components/shared/CustomButton";
-import { useState } from "react";
-import { FileText } from "lucide-react";
-
-
-const tableHeaders = ["Producto", "Cantidad", "Total"];
+import { StatusBadge } from "../../Components/shared/StatusBadge";
+import { User, MapPin, CreditCard, Package } from "lucide-react";
 
 export const DashboardOrderPage = () => {
   const navigate = useNavigate();
 
   const { id } = useParams<{ id: string }>();
-
-  // FIX: Pass string ID directly, assuming useOrderAdmin is fixed
   const { data: order, isLoading } = useOrderAdmin(id!);
 
   if (isLoading || !order) return <Loader />;
 
   return (
-    <div>
-      <div className="flex justify-between items-center">
-        <CustomButton
-          className="border rounded-full py-2 border-slate-200 px-5 flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-widest hover:bg-stone-100 transition-all bg-transparent shadow-none"
-          onClick={() => navigate(-1)}
-          effect="none"
-          size="sm"
-        >
-          <IoChevronBack size={16} />
-          Volver
-        </CustomButton>
-
-        <div className="flex flex-col items-center gap-1.5">
-          <h1 className="text-3xl font-bold">Pedido #{id?.slice(0, 8)}...</h1>
-          <p className="text-sm"> {formatDate(order.created_at)}</p>
-        </div>
-
-
-      </div>
-
-      <div className="flex flex-col mt-10 mb-5 gap-10">
-        <table className="text-sm w-full caption-bottom overflow-auto">
-          <thead className="border-b border-gray-200 pb-3">
-            <tr className="text-sm font-bold">
-              {tableHeaders.map((header, index) => (
-                <th key={index} className="h-12 px-4 text-left">
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody className="[&_tr:last-child]:border-0">
-            {order.orderItems.map((item, index) => (
-              <tr key={index} className="border-b border-gray-200">
-                <td className="p-4 font-medium tracking-tighter flex gap-3 items-center">
-                  <img
-                    src={item.productImage ? item.productImage[0] : ""}
-                    alt={item.productName}
-                    className="h-20 w-20 object-contain rounded-lg"
-                  />
-                  <span>{item.productName}</span>
-                </td>
-                <td className="p-4 font-medium tracking-tighter text-center">
-                  {item.quantity}
-                </td>
-                <td className="p-4 font-medium tracking-tighter text-center">
-                  {formatPrice(item.price * item.quantity)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div className="flex flex-col gap-3 text-slate-600 text-sm self-end w-1/2">
-          <div className="flex justify-between">
-            <p>Subtotal</p>
-            <p>{formatPrice(order.totalAmount)}</p>
-          </div>
-          <div className="flex justify-between">
-            <p>Envío (Standard)</p>
-            <p>{formatPrice(0)}</p>
-          </div>
-          <div className="flex justify-between text-black font-semibold">
-            <p>Total</p>
-            <p>{formatPrice(order.totalAmount)}</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <h2 className="text-lg font-bold">Información del Pago</h2>
-          <div className="border border-stone-300 p-5 flex flex-col gap-5 rounded-lg">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <h3 className="font-medium text-stone-500">Estado</h3>
-                <span className={`font-bold ${order.paymentStatus === 'APPROVED' ? 'text-green-600' : 'text-amber-600'}`}>
-                  {order.paymentStatus || 'PENDIENTE'}
-                </span>
-              </div>
-              <div>
-                <h3 className="font-medium text-stone-500">Método</h3>
-                <p className="font-semibold">{order.paymentMethod || 'Tarjeta'}</p>
-              </div>
-              <div>
-                <h3 className="font-medium text-stone-500">Referencia</h3>
-                <p className="font-mono text-xs bg-gray-100 p-1 rounded inline-block">{order.reference || 'N/A'}</p>
-              </div>
-              <div>
-                <h3 className="font-medium text-stone-500">ID Transacción</h3>
-                <p className="font-mono text-xs bg-gray-100 p-1 rounded inline-block">{order.transactionId || 'N/A'}</p>
-              </div>
+    <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-20">
+      {/* Header with Back Button */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/40 dark:bg-black/40 backdrop-blur-xl p-6 rounded-3xl border border-white/20 shadow-lg">
+        <div className="flex items-center gap-4">
+          <CustomButton
+            size="icon"
+            effect="magnetic"
+            className="bg-white/50 hover:bg-white text-neutral-600 hover:text-black border border-white/20 shadow-sm"
+            onClick={() => navigate(-1)}
+          >
+            <IoChevronBack size={20} />
+          </CustomButton>
+          <div>
+            <div className="flex items-center gap-3">
+                 <h1 className="font-black tracking-tight text-3xl text-neutral-900 dark:text-white">
+                    Pedido #{id?.slice(0, 8)}
+                </h1>
+                <StatusBadge 
+                    status={order.status === 'Pending' ? 'Pendiente' : order.status} 
+                    variant={order.status === 'Paid' ? 'success' : order.status === 'Pending' ? 'warning' : 'neutral'} 
+                    className="text-sm px-3 py-1"
+                />
             </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <h2 className="text-lg font-bold">Dirección</h2>
-
-          <div className="border border-stone-300 p-5 flex flex-col gap-5 rounded-lg">
-            <div className="space-y-1">
-              <h3 className="font-medium">Cliente:</h3>
-              <p>{order.customer.full_name}</p>
-              <p className="text-sm text-stone-500">{order.customer.email}</p>
-            </div>
-
-            <div className="flex flex-col gap-1 text-sm">
-              <h3 className="font-medium text-base">Envío:</h3>
-              <p>{order.address.addressLine}</p>
-              <p>{order.address.city}, {order.address.state}</p>
-              <p>{order.address.postalCode}</p>
-              <p>{order.address.country}</p>
-            </div>
+           
+            <p className="text-neutral-500 font-medium text-sm mt-1">
+              Realizado el {formatDate(order.created_at)}
+            </p>
           </div>
         </div>
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column: Order Items */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+              {/* Items Table */}
+              <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm overflow-hidden flex flex-col">
+                  <div className="p-6 border-b border-white/10 flex items-center gap-2">
+                        <Package className="text-primary w-5 h-5" />
+                        <h2 className="font-bold text-lg text-neutral-800 dark:text-gray-100">Productos</h2>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm caption-bottom">
+                         <thead className="bg-neutral-100/50 dark:bg-white/5">
+                            <tr className="border-b border-white/10 text-left text-neutral-500 dark:text-neutral-400 font-medium">
+                                <th className="h-10 px-6 font-medium">Producto</th>
+                                <th className="h-10 px-6 font-medium text-center">Cant.</th>
+                                <th className="h-10 px-6 font-medium text-right">Total</th>
+                            </tr>
+                        </thead>
+                         <tbody className="divide-y divide-white/10">
+                            {order.orderItems.map((item, index) => (
+                                <tr key={index} className="hover:bg-white/50 dark:hover:bg-white/5 transition-colors">
+                                    <td className="p-4 pl-6 align-middle">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-16 w-16 rounded-xl border border-white/20 bg-white shadow-sm overflow-hidden shrink-0">
+                                                <img
+                                                    src={item.productImage ? item.productImage[0] : ""}
+                                                    alt={item.productName}
+                                                    className="h-full w-full object-contain p-1"
+                                                />
+                                            </div>
+                                            <span className="font-bold text-neutral-700 dark:text-gray-200 line-clamp-2">
+                                                {item.productName}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td className="p-4 px-6 align-middle text-center font-medium">
+                                        x{item.quantity}
+                                    </td>
+                                    <td className="p-4 pr-6 align-middle text-right font-bold text-neutral-900 dark:text-white">
+                                        {formatPrice(item.price * item.quantity)}
+                                    </td>
+                                </tr>
+                            ))}
+                         </tbody>
+                    </table>
+                  </div>
+                  {/* Summary Footer */}
+                   <div className="bg-neutral-50/50 dark:bg-black/20 p-6 flex flex-col gap-3 border-t border-white/10">
+                        <div className="flex justify-between text-sm text-neutral-500">
+                            <span>Subtotal</span>
+                            <span>{formatPrice(order.totalAmount)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-neutral-500">
+                            <span>Envío</span>
+                            <span className="text-green-600 font-medium">Gratis</span>
+                        </div>
+                         <div className="w-full h-px bg-neutral-200 dark:bg-white/10 my-1" />
+                        <div className="flex justify-between text-lg font-black text-neutral-900 dark:text-white">
+                            <span>Total</span>
+                            <span>{formatPrice(order.totalAmount)}</span>
+                        </div>
+                   </div>
+              </div>
+          </div>
 
+          {/* Right Column: Customer & Payment Info */}
+          <div className="space-y-6">
+              {/* Customer Info */}
+               <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6 flex flex-col gap-4">
+                    <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-white/10 pb-3">
+                        <User className="text-primary w-5 h-5" />
+                        <h2 className="font-bold text-lg text-neutral-800 dark:text-gray-100">Cliente</h2>
+                    </div>
+                     <div className="space-y-1">
+                        <p className="font-bold text-base text-neutral-900 dark:text-white">{order.customer.full_name}</p>
+                        <p className="text-sm text-neutral-500">{order.customer.email}</p>
+                    </div>
+               </div>
+
+                {/* Shipping Info */}
+               <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6 flex flex-col gap-4">
+                    <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-white/10 pb-3">
+                        <MapPin className="text-primary w-5 h-5" />
+                        <h2 className="font-bold text-lg text-neutral-800 dark:text-gray-100">Envío</h2>
+                    </div>
+                     <div className="space-y-1 text-sm text-neutral-600 dark:text-neutral-300">
+                        <p>{order.address.addressLine}</p>
+                         <p>{order.address.city}, {order.address.state}</p>
+                        <p>{order.address.postalCode}</p>
+                        <p className="font-bold">{order.address.country}</p>
+                    </div>
+               </div>
+
+                {/* Payment Info */}
+               <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6 flex flex-col gap-4">
+                    <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-white/10 pb-3">
+                        <CreditCard className="text-primary w-5 h-5" />
+                        <h2 className="font-bold text-lg text-neutral-800 dark:text-gray-100">Pago</h2>
+                    </div>
+                     <div className="space-y-3">
+                        <div className="flex justify-between items-center text-sm">
+                            <span className="text-neutral-500">Estado</span>
+                             <StatusBadge 
+                                status={order.paymentStatus || 'PENDIENTE'} 
+                                variant={order.paymentStatus === 'APPROVED' ? 'success' : 'warning'} 
+                            />
+                        </div>
+                         <div className="flex justify-between items-center text-sm">
+                            <span className="text-neutral-500">Método</span>
+                            <span className="font-semibold text-neutral-700 dark:text-neutral-300">{order.paymentMethod || 'N/A'}</span>
+                        </div>
+                        {order.reference && (
+                             <div className="pt-2">
+                                <span className="text-xs text-neutral-400 block mb-1">Referencia</span>
+                                <code className="bg-neutral-100 dark:bg-white/10 px-2 py-1 rounded text-xs font-mono block w-full truncate">
+                                    {order.reference}
+                                </code>
+                            </div>
+                        )}
+                    </div>
+               </div>
+          </div>
+      </div>
     </div>
   );
 };

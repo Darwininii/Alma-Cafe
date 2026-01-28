@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react"; // Import Loader2
 import type { LucideIcon } from "lucide-react";
 import type { IconType } from "react-icons";
 import { motion, type MotionProps } from "framer-motion";
@@ -30,6 +31,8 @@ export type ButtonEffect =
 
 export interface ButtonProps extends MotionButtonBaseProps {
   size?: ButtonSize;
+  variant?: "solid" | "outline" | "ghost" | "link"; // New variant prop
+  isLoading?: boolean; // New isLoading prop
   leftIcon?: LucideIcon | IconType;
   rightIcon?: LucideIcon | IconType;
   centerIcon?: LucideIcon | IconType;
@@ -54,6 +57,8 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     {
       effect = "none",
       size = "md",
+      variant = "solid",
+      isLoading = false,
       filledIcon = false,
       leftIcon: LeftIcon,
       rightIcon: RightIcon,
@@ -74,9 +79,17 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     // Base styles
     const baseStyles =
-      "group inline-flex items-center justify-center font-medium transition-all rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+      "group inline-flex items-center justify-center font-medium transition-all rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none cursor-pointer relative";
 
-    const defaultStyle = "bg-primary text-white hover:bg-primary/90";
+    // Variants
+    const variantStyles = {
+      solid: "bg-primary text-white hover:bg-primary/90",
+      outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+      ghost: "hover:bg-accent hover:text-accent-foreground",
+      link: "text-primary underline-offset-4 hover:underline",
+    };
+
+    const defaultStyle = variantStyles[variant];
 
     // Size mappings
     const sizes: Record<ButtonSize, string> = {
@@ -787,9 +800,10 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const content = (
       <>
-        {FinalLeftIcon && <FinalLeftIcon className={cn("mr-2", size === "icon" && "m-0", iconClass)} size={iconSize} />}
-        {children ? children : (size === "icon" && FinalCenterIcon && <FinalCenterIcon className={iconClass} size={iconSize} />)}
-        {FinalRightIcon && <FinalRightIcon className={cn("ml-2", size === "icon" && "m-0", iconClass)} size={iconSize} />}
+        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {!isLoading && FinalLeftIcon && <FinalLeftIcon className={cn("mr-2", size === "icon" && "m-0", iconClass)} size={iconSize} />}
+        {children ? children : (size === "icon" && FinalCenterIcon && !isLoading && <FinalCenterIcon className={iconClass} size={iconSize} />)}
+        {!isLoading && FinalRightIcon && <FinalRightIcon className={cn("ml-2", size === "icon" && "m-0", iconClass)} size={iconSize} />}
       </>
     );
 

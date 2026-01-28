@@ -14,6 +14,9 @@ export const useUpdateProduct = (productId: string) => {
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["product"],
+      });
       toast.success("Producto actualizado", {
         position: "bottom-right",
       });
