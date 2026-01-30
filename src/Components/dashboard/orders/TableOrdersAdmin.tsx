@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { formatDate, formatPrice } from "@/helpers";
 import Fuse from "fuse.js";
 import { useChangeStatusOrder, useUser, useRoleUser, useAllOrders } from "@/hooks";
@@ -9,7 +9,7 @@ import { CustomButton } from "@/Components/shared/CustomButton";
 import { StatusBadge } from "@/Components/shared/StatusBadge";
 import { CustomInput } from "@/Components/shared/CustomInput";
 import { Search, Filter } from "lucide-react";
-import "cally";
+import { Calendar } from "@/Components/shared/Calendar";
 
 
 
@@ -31,14 +31,8 @@ export const TableOrdersAdmin = () => {
   // Advanced Filters State
   const [showFilters, setShowFilters] = useState(false);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: "", end: "" });
+  const [dateRange, setDateRange] = useState<{ start: string; end: string } | null>(null);
   
-  // State to control the month being viewed
-  const [viewDate, setViewDate] = useState(() => new Date().toISOString().split("T")[0]);
-
-  // Calendar Ref for event listening
-  const calendarRangeRef = useRef<any>(null);
-
   // Fetch ALL orders for client-side search
   const { orders: allOrders, isLoading } = useAllOrders(); 
   const { mutate } = useChangeStatusOrder();
@@ -48,35 +42,22 @@ export const TableOrdersAdmin = () => {
   const { data: role } = useRoleUser(session?.user.id || "");
   const canEdit = role === 'admin' || role === 'superAdmin';
 
-  // Attach event listener for cally 'change' event
-  useEffect(() => {
-     const el = calendarRangeRef.current;
-     if (!el) return;
-
-     const handleChange = (e: any) => {
-         const value = e.target.value || "";
-         const [start, end] = value.split("/");
-         setDateRange({ start: start || "", end: end || "" });
-         setPage(1);
-     };
-
-     el.addEventListener("change", handleChange);
-     return () => {
-         el.removeEventListener("change", handleChange);
-     };
-  }, []);
-
   const handleStatusChange = (id: number, status: string) => {
     mutate({ id, status });
   };
 
-  const handleMonthChange = (direction: 'next' | 'prev') => {
-      const date = new Date(viewDate);
-      // Determine direction
-      const change = direction === 'next' ? 1 : -1;
-      // create new date 1st of next/prev month
-      const newDate = new Date(date.getFullYear(), date.getMonth() + change, 1);
-      setViewDate(newDate.toISOString().split("T")[0]);
+  const handleToggleFilters = () => {
+    setShowFilters(!showFilters);
+    // User requested explicit "Accept/Clear" buttons in calendar, so we don't auto-set or auto-clear date here anymore.
+    // However, if we want to be nice, we could clear when closing, but let's stick to explicit control for now as implied.
+    // Actually, if I close filters, I probably want to see "All" again?
+    // The previous request said: "only view current day data provided filters are opened".
+    // "Accept" button applies filter. "Clear" button clears filter.
+    // So logic: Open Filters -> No filter applied yet (or previous filter). User selects -> Accept -> Filter Applied.
+    // If user closes filters -> Filter persists? Or clears?
+    // "only view current day data... provided filters are opened" suggested a transient state.
+    // With explicit buttons, likely the user wants standard behavior: Filters apply when I say so.
+    // I will just toggle visibility.
   };
   
   // 1. First, apply strict filters (Status + Date)
@@ -85,11 +66,11 @@ export const TableOrdersAdmin = () => {
       if (statusFilter !== "all" && order.status !== statusFilter) return false;
 
       // Date Filter
-      if (dateRange.start) {
+      if (dateRange?.start) {
           const orderDate = new Date(order.created_at).toISOString().split('T')[0];
           if (orderDate < dateRange.start) return false;
       }
-      if (dateRange.end) {
+      if (dateRange?.end) {
           const orderDate = new Date(order.created_at).toISOString().split('T')[0];
           if (orderDate > dateRange.end) return false;
       }
@@ -145,7 +126,7 @@ export const TableOrdersAdmin = () => {
                 />
             </div>
             <CustomButton 
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={handleToggleFilters}
                 variant={showFilters ? "solid" : "outline"}
                 className={showFilters ? "bg-neutral-800 text-white border-neutral-800" : "border-neutral-300 dark:border-white/20"}
                 leftIcon={Filter} 
@@ -195,80 +176,30 @@ export const TableOrdersAdmin = () => {
                       </div>
                   </div>
 
-                  {/* Date Range using Cally */}
+                  {/* Date Range using HeroUI */}
                   <div className="flex flex-col gap-2 w-full sm:w-auto animate-in fade-in zoom-in duration-300 items-center sm:items-start">
-                      <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider block w-full text-left">Fecha</label>
-                      <div className="p-4 bg-white dark:bg-black/40 border border-neutral-200 dark:border-white/10 rounded-2xl shadow-xl backdrop-blur-md w-fit mx-auto">
-                        <calendar-range 
-                            ref={calendarRangeRef}
-                            value={`${dateRange.start}/${dateRange.end}`} 
-                            class="text-neutral-800 dark:text-neutral-200"
-                        >
-                            {/* Custom Header for Calendar */}
-                            <div className="flex items-center justify-between mb-4 gap-4">
-                                <CustomButton 
-                                    size="sm" 
-                                    variant="outline" 
-                                    onClick={(e) => { e.preventDefault(); handleMonthChange('prev'); }}
-                                    className="h-8 w-8 p-0 rounded-full border-neutral-200 dark:border-white/10"
-                                >
-                                    {"<"}
-                                </CustomButton>
-
-                                <div className="flex-1 flex flex-col items-center">
-                                    <span className="text-sm font-bold capitalize">
-                                        {/* Display Current Month/Year based on viewDate */}
-                                        {new Date(viewDate).toLocaleDateString("es-ES", { month: 'long', year: 'numeric' })}
-                                    </span>
-                                    {(dateRange.start || dateRange.end) && (
-                                     <button 
-                                        onClick={(e) => {
-                                            e.preventDefault(); 
-                                            e.stopPropagation();
-                                            setDateRange({ start: "", end: "" });
-                                            setPage(1);
-                                        }}
-                                        className="text-[10px] font-bold text-red-500 hover:text-red-600 transition-colors uppercase tracking-wide mt-1"
-                                     >
-                                        Limpiar Filtros
-                                     </button>
-                                    )}
-                                </div>
-
-                                <CustomButton 
-                                    size="sm" 
-                                    variant="outline" 
-                                    onClick={(e) => { e.preventDefault(); handleMonthChange('next'); }}
-                                    className="h-8 w-8 p-0 rounded-full border-neutral-200 dark:border-white/10"
-                                >
-                                    {">"}
-                                </CustomButton>
-                            </div>
-                            
-                            <style>{`
-                                calendar-range {
-                                    --color-accent: #000;
-                                    --color-text-on-accent: #fff;
-                                }
-                                .dark calendar-range {
-                                    --color-accent: #fff;
-                                    --color-text-on-accent: #000;
-                                }
-                                calendar-month {
-                                    --font-family: inherit;
-                                }
-                                /* Hide default header and buttons */
-                                calendar-month::part(button) {
-                                    display: none;
-                                }
-                                calendar-month::part(header) {
-                                    display: none; 
-                                }
-                            `}</style>
-                            
-                            {/* Pass startDate prop to control the month view */}
-                            <calendar-month startDate={viewDate}></calendar-month>
-                        </calendar-range>
+                      <div className="flex items-center justify-between w-full">
+                          <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider block text-left">Fecha</label>
+                          {(dateRange) && (
+                              <button 
+                                 onClick={() => {
+                                     setDateRange(null);
+                                     setPage(1);
+                                 }}
+                                 className="text-[10px] font-bold text-red-500 hover:text-red-600 transition-colors uppercase tracking-wide"
+                              >
+                                 Limpiar Filtros
+                              </button>
+                          )}
+                      </div>
+                      <div className="w-fit mx-auto">
+                        <Calendar 
+                            value={dateRange}
+                            onChange={(value) => {
+                                setDateRange(value);
+                                setPage(1);
+                            }}
+                        />
                       </div>
                   </div>
 
