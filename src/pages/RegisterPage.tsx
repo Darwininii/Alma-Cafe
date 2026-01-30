@@ -5,102 +5,134 @@ import { useRegister, useUser } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
 import { CustomInput } from "../Components/shared/CustomInput";
 import { CustomButton } from "../Components/shared/CustomButton";
-import {
-  type UserRegisterFormValues,
-  userRegisterSchema,
-} from "../lib/validators";
+import { type UserRegisterFormValues, userRegisterSchema } from "../lib/validators";
+import { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 export const RegisterPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<UserRegisterFormValues>({
-    defaultValues: {
-      fullName: "",
-      email: "",
-      password: "",
-      phone: "",
-    },
-    resolver: zodResolver(userRegisterSchema),
-  });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<UserRegisterFormValues>({
+        defaultValues: {
+            fullName: "",
+            email: "",
+            password: "",
+            phone: "",
+        },
+        resolver: zodResolver(userRegisterSchema),
+    });
 
-  const { mutate, isPending } = useRegister();
-  const { session, isLoading } = useUser();
+    const [showPassword, setShowPassword] = useState(false);
+    const { mutate, isPending } = useRegister();
+    const { session, isLoading } = useUser();
 
-  const onRegister = handleSubmit((data) => {
-    const { email, password, fullName, phone } = data;
+    const onRegister = handleSubmit((data) => {
+        const { email, password, fullName, phone } = data;
+        mutate({ email, password, fullName, phone });
+    });
 
-    mutate({ email, password, fullName, phone });
-  });
+    if (isLoading) return <Loader />;
 
-  if (isLoading) return <Loader />;
+    if (session) return <Navigate to="/" />;
 
-  if (session) return <Navigate to="/" />;
+    return (
+        <div className="min-h-screen flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-white/80 dark:bg-black/80 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-primary/50 to-transparent opacity-50" />
 
-  return (
-    <div className="h-full flex flex-col items-center mt-12 gap-5 transition-colors duration-300">
-      <h1 className="text-4xl font-bold capitalize text-black dark:text-white">Regístrate</h1>
+                <div className="flex flex-col items-center gap-2 mb-8">
+                    <h1 className="text-3xl font-black text-center text-neutral-900 dark:text-white tracking-tight">
+                        Regístrate
+                    </h1>
+                    <p className="text-sm font-medium text-center text-neutral-500 dark:text-neutral-400">
+                        Crea tu cuenta para empezar
+                    </p>
+                </div>
 
-      <p className="text-sm font-medium text-black dark:text-white">
-        Por favor, rellene los siguientes campos:
-      </p>
+                {isPending ? (
+                    <div className="w-full h-40 flex justify-center items-center">
+                        <Loader />
+                    </div>
+                ) : (
+                    <>
+                        <form
+                            className="flex flex-col gap-4 w-full"
+                            onSubmit={onRegister}
+                        >
+                            <CustomInput
+                                type="text"
+                                label="Nombre Completo"
+                                placeholder="Tu nombre"
+                                {...register("fullName")}
+                                error={errors.fullName?.message}
+                            />
 
-      {isPending ? (
-        <div className="w-full h-full flex justify-center mt-20">
-          <Loader />
+                            <CustomInput
+                                type="text"
+                                label="Celular"
+                                placeholder="Tu número de celular"
+                                {...register("phone")}
+                                error={errors.phone?.message}
+                            />
+
+                            <CustomInput
+                                type="email"
+                                label="Correo electrónico"
+                                placeholder="ejemplo@correo.com"
+                                {...register("email")}
+                                error={errors.email?.message}
+                            />
+
+                            <CustomInput
+                                type={showPassword ? "text" : "password"}
+                                label="Contraseña"
+                                placeholder="Crea una contraseña segura"
+                                {...register("password")}
+                                error={errors.password?.message}
+                                rightElement={
+                                    <CustomButton
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-neutral-500 hover:text-primary dark:text-neutral-400"
+                                        title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                                    >
+                                        {showPassword ? <FaRegEyeSlash size={18} /> : <FaRegEye size={18} />}
+                                    </CustomButton>
+                                }
+                            />
+
+                            <CustomButton
+                                className="w-full font-bold shadow-lg shadow-primary/20 mt-4"
+                                type="submit"
+                                effect="shine"
+                                variant="primary"
+                                size="lg"
+                            >
+                                REGISTRARME
+                            </CustomButton>
+                        </form>
+
+                        <div className="flex flex-col items-center gap-3 mt-8 pt-6 border-t border-neutral-200 dark:border-white/10">
+                            <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                                ¿Ya tienes una cuenta?
+                            </span>
+                            <Link to="/login" className="w-full">
+                                <CustomButton
+                                    variant="ghost"
+                                    className="w-full font-semibold border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-white/5"
+                                    effect="wobble"
+                                >
+                                    Iniciar sesión
+                                </CustomButton>
+                            </Link>
+                        </div>
+                    </>
+                )}
+            </div>
         </div>
-      ) : (
-        <>
-          <form
-            className="flex flex-col items-center gap-4 w-full mt-10 sm:w-[400px] lg:w-[500px]"
-            onSubmit={onRegister}
-          >
-            <CustomInput
-              type="text"
-              label="Nombre Completo"
-              {...register("fullName")}
-              error={errors.fullName?.message}
-            />
-
-            <CustomInput
-              type="text"
-              label="Celular"
-              {...register("phone")}
-              error={errors.phone?.message}
-            />
-
-            <CustomInput
-              type="email"
-              label="Correo electrónico"
-              {...register("email")}
-              error={errors.email?.message}
-            />
-
-            <CustomInput
-              type="password"
-              label="Contraseña"
-              {...register("password")}
-              error={errors.password?.message}
-            />
-
-            <CustomButton
-              className="bg-black dark:bg-white text-white dark:text-black uppercase font-semibold tracking-widest text-xs py-4 rounded-full mt-5 w-full hover:opacity-90 transition-opacity"
-              type="submit"
-              effect="shine"
-            >
-              Registrarme
-            </CustomButton>
-          </form>
-
-          <p className="text-sm text-stone-800 dark:text-gray-300">
-            ¿Ya tienes una cuenta?
-            <Link to="/registro" className="underline ml-2">
-              Inicia sesión
-            </Link>
-          </p>
-        </>
-      )}
-    </div>
-  );
+    );
 };

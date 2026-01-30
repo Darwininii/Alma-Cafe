@@ -2,23 +2,23 @@ import { useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useLogin, useUser } from "../hooks";
 import { Loader } from "../Components/shared/Loader";
-
 import { CustomInput } from "../Components/shared/CustomInput";
 import { CustomButton } from "../Components/shared/CustomButton";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 export const LoginPage = () => {
   const [searchParams] = useSearchParams();
   const redirectPath = searchParams.get("redirect") || "/";
 
-  const [email, setEmail] = useState(" hola@hola.com");
-  const [password, setPassword] = useState(" hola12345678");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const { mutate, isPending } = useLogin();
   const { session, isLoading } = useUser();
 
   const onLogin = (e: React.FormEvent) => {
     e.preventDefault();
-
     mutate({ email, password });
   };
 
@@ -27,52 +27,86 @@ export const LoginPage = () => {
   if (session) return <Navigate to={redirectPath} />;
 
   return (
-    <div className="h-full flex flex-col items-center mt-12 gap-5 transition-colors duration-300">
-      <h1 className="text-4xl font-bold capitalize text-black dark:text-white">Iniciar sesión</h1>
-
-      <p className="text-sm font-medium text-black dark:text-white">¡Que bueno tenerte de vuelta!</p>
-
-      {isPending ? (
-        <div className="w-full h-full flex justify-center mt-20">
-          <Loader />
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white/80 dark:bg-black/80 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+        {/* Decorative background effect */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-primary/50 to-transparent opacity-50" />
+        
+        <div className="flex flex-col items-center gap-2 mb-8">
+            <h1 className="text-3xl font-black text-center text-neutral-900 dark:text-white tracking-tight">
+                Iniciar sesión
+            </h1>
+            <p className="text-sm font-medium text-center text-neutral-500 dark:text-neutral-400">
+                ¡Que bueno tenerte de vuelta!
+            </p>
         </div>
-      ) : (
-        <>
-          <form
-            className="flex flex-col items-center gap-4 w-full mt-10 sm:w-[400px] lg:w-[500px]"
-            onSubmit={onLogin}
-          >
-            <CustomInput
-              type="email"
-              label="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
 
-            <CustomInput
-              type="password"
-              label="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-
-            <CustomButton
-              className="bg-black dark:bg-white text-white dark:text-black uppercase font-semibold tracking-widest text-xs py-4 rounded-full mt-5 w-full hover:opacity-90 transition-opacity"
-              type="submit"
-              effect="shine"
+        {isPending ? (
+          <div className="w-full h-40 flex justify-center items-center">
+            <Loader />
+          </div>
+        ) : (
+          <>
+            <form
+              className="flex flex-col gap-5 w-full"
+              onSubmit={onLogin}
             >
-              Iniciar sesión
-            </CustomButton>
-          </form>
+              <CustomInput
+                type="email"
+                label="Correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="ejemplo@correo.com"
+              />
 
-          <p className="text-sm text-stone-800 dark:text-gray-300">
-            ¿No tienes una cuenta?
-            <Link to="/registro" className="underline ml-2">
-              Regístrate
-            </Link>
-          </p>
-        </>
-      )}
+              <CustomInput
+                type={showPassword ? "text" : "password"}
+                label="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                rightElement={
+                    <CustomButton
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        variant="ghost"
+                        size="icon"
+                        className="text-neutral-500 hover:text-primary dark:text-neutral-400"
+                        title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                    >
+                        {showPassword ? <FaRegEyeSlash size={18} /> : <FaRegEye size={18} />}
+                    </CustomButton>
+                }
+              />
+
+              <CustomButton
+                className="w-full font-bold shadow-lg shadow-primary/20 mt-2"
+                type="submit"
+                effect="shine"
+                variant="primary"
+                size="lg"
+              >
+                INICIAR SESIÓN
+              </CustomButton>
+            </form>
+
+            <div className="flex flex-col items-center gap-3 mt-8 pt-6 border-t border-neutral-200 dark:border-white/10">
+              <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                ¿No tienes una cuenta?
+              </span>
+              <Link to="/registro" className="w-full">
+                <CustomButton
+                    variant="ghost"
+                    className="w-full font-semibold border text-black bg-black/80 border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-white/5"
+                    effect="wobble"
+                >
+                    Registrarme
+                </CustomButton>
+              </Link>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

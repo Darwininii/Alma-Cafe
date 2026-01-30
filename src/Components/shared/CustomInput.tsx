@@ -10,12 +10,13 @@ interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
     icon?: React.ReactNode;
+    rightElement?: React.ReactNode;
     containerClassName?: string;
     wrapperClassName?: string;
 }
 
 export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
-    ({ className, containerClassName, wrapperClassName, label, error, icon, ...props }, ref) => {
+    ({ className, containerClassName, wrapperClassName, label, error, icon, rightElement, ...props }, ref) => {
         const containerRef = useRef<HTMLDivElement | null>(null);
         const [mouse, setMouse] = useState({ x: 0, y: 0 });
         const [isFocused, setIsFocused] = useState(false);
@@ -96,6 +97,13 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                                 </label>
                             )}
                         </div>
+
+                        {/* Right Element (e.g. Toggle Password) */}
+                        {rightElement && (
+                            <div className="ml-2">
+                                {rightElement}
+                            </div>
+                        )}
                     </div>
                 </div>
 

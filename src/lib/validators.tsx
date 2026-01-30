@@ -5,7 +5,7 @@ export const userRegisterSchema = z.object({
   email: z.string().email("El correo electrónico no es válido"),
   password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
   fullName: z.string().min(1, "El nombre completo es requerido"),
-  phone: z.string().optional(),
+  phone: z.string().min(10, "El número de celular debe tener al menos 10 dígitos"),
 });
 
 export const addressSchema = z.object({
