@@ -1,5 +1,5 @@
 import { formatPrice } from "@/helpers";
-import { MdCheckCircle } from "react-icons/md";
+import { MdCheckCircle, MdAccessTime } from "react-icons/md";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
 
@@ -51,9 +51,22 @@ export const TransactionReceipt = ({ data }: TransactionReceiptProps) => {
             <div className="w-full max-w-2xl mx-auto border-2 border-black p-8 text-black bg-white print:mt-12">
                 {/* Header */}
                 <div className="text-center mb-8 border-b-2 border-black pb-6">
-                    <MdCheckCircle size={64} className="mx-auto text-black mb-4" />
-                    <h1 className="text-3xl font-bold mb-2 text-black">COMPROBANTE DE PAGO</h1>
-                    <p className="text-lg text-gray-600">Transacción Aprobada</p>
+                    {(data.status === 'Pending' || data.status === 'Pendiente') ? (
+                        <MdAccessTime size={64} className="mx-auto mb-4 text-yellow-600" />
+                    ) : (data.status === 'Cancelled' || data.status === 'Cancelado') ? (
+                         <MdCheckCircle size={64} className="mx-auto mb-4 text-red-500" />
+                    ) : (
+                        <MdCheckCircle size={64} className="mx-auto mb-4 text-black" />
+                    )}
+
+                    <h1 className="text-3xl font-bold mb-2 text-black">
+                        {(data.status === 'Cancelled' || data.status === 'Cancelado') ? 'ORDEN CANCELADA' :
+                         (data.status === 'Pending' || data.status === 'Pendiente') ? 'PAGO PENDIENTE' : 'COMPROBANTE DE PAGO'}
+                    </h1>
+                    <p className="text-lg text-gray-600">
+                        {(data.status === 'Cancelled' || data.status === 'Cancelado') ? 'La transacción no fue exitosa' :
+                         (data.status === 'Pending' || data.status === 'Pendiente') ? 'La transacción está en proceso' : 'Transacción Aprobada'}
+                    </p>
                 </div>
 
                 {/* Details Grid */}
@@ -72,19 +85,24 @@ export const TransactionReceipt = ({ data }: TransactionReceiptProps) => {
 
                     <div className="col-span-2 border-t border-dashed border-gray-400 my-2"></div>
 
-                    <div>
-                        <p className="text-xs uppercase tracking-widest font-bold text-gray-500 mb-1">ID Transacción</p>
-                        <p className="font-mono font-medium text-lg">{data.transactionId}</p>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-xs uppercase tracking-widest font-bold text-gray-500 mb-1">Método</p>
-                        <p className="font-medium text-lg">{data.paymentMethod}</p>
-                    </div>
+                    {data.status !== 'CANCELLED' && data.status !== 'Cancelado' && data.status !== 'Cancelled' &&
+                     data.status !== 'Pending' && data.status !== 'Pendiente' && (
+                        <>
+                            <div>
+                                <p className="text-xs uppercase tracking-widest font-bold text-gray-500 mb-1">ID Transacción</p>
+                                <p className="font-mono font-medium text-lg">{data.transactionId}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-xs uppercase tracking-widest font-bold text-gray-500 mb-1">Método</p>
+                                <p className="font-medium text-lg">{data.paymentMethod}</p>
+                            </div>
 
-                    <div className="col-span-2">
-                        <p className="text-xs uppercase tracking-widest font-bold text-gray-500 mb-1">Email Cliente</p>
-                        <p className="font-medium text-lg">{data.email}</p>
-                    </div>
+                            <div className="col-span-2">
+                                <p className="text-xs uppercase tracking-widest font-bold text-gray-500 mb-1">Email Cliente</p>
+                                <p className="font-medium text-lg">{data.email}</p>
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {/* Footer Total */}

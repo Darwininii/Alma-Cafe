@@ -4,12 +4,9 @@ import { CustomSocials } from "@/Components/shared/CustomSocials";
 import {
     Sparkles,
     Heart,
-    ShoppingCart,
     Star,
     Zap,
     Coffee,
-    ArrowRight,
-    CheckCircle,
     Share2,
     Mail,
     MessageCircle,

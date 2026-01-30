@@ -5,7 +5,8 @@ import { formatPrice, formatDate } from "../../helpers";
 import { useOrderAdmin } from "@/hooks";
 import { CustomButton } from "../../Components/shared/CustomButton";
 import { StatusBadge } from "../../Components/shared/StatusBadge";
-import { User, MapPin, CreditCard, Package } from "lucide-react";
+import { User, MapPin, Package } from "lucide-react";
+import { BiSolidBadgeDollar } from "react-icons/bi";
 
 export const DashboardOrderPage = () => {
   const navigate = useNavigate();
@@ -34,8 +35,8 @@ export const DashboardOrderPage = () => {
                     Pedido #{id?.slice(0, 8)}
                 </h1>
                 <StatusBadge 
-                    status={order.status === 'Pending' ? 'Pendiente' : order.status} 
-                    variant={order.status === 'Paid' ? 'success' : order.status === 'Pending' ? 'warning' : 'neutral'} 
+                    status={order.status} 
+                    variant={order.status === 'Paid' ? 'success' : order.status === 'Pending' ? 'warning' : order.status === 'Cancelled' ? 'error' : 'neutral'} 
                     className="text-sm px-3 py-1"
                 />
             </div>
@@ -143,25 +144,25 @@ export const DashboardOrderPage = () => {
                 {/* Payment Info */}
                <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6 flex flex-col gap-4">
                     <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-white/10 pb-3">
-                        <CreditCard className="text-primary w-5 h-5" />
+                        <BiSolidBadgeDollar className="text-primary w-5 h-5" />
                         <h2 className="font-bold text-lg text-neutral-800 dark:text-gray-100">Pago</h2>
                     </div>
                      <div className="space-y-3">
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-neutral-500">Estado</span>
                              <StatusBadge 
-                                status={order.paymentStatus || 'PENDIENTE'} 
-                                variant={order.paymentStatus === 'APPROVED' ? 'success' : 'warning'} 
+                                status={order.status} 
+                                variant={order.status === 'Paid' ? 'success' : order.status === 'Pending' ? 'warning' : order.status === 'Cancelled' ? 'error' : 'neutral'} 
                             />
                         </div>
                          <div className="flex justify-between items-center text-sm">
                             <span className="text-neutral-500">Método</span>
                             <span className="font-semibold text-neutral-700 dark:text-neutral-300">{order.paymentMethod || 'N/A'}</span>
                         </div>
-                        {order.reference && (
+                        {order.reference && order.status !== 'Cancelled' && (
                              <div className="pt-2">
                                 <span className="text-xs text-neutral-400 block mb-1">Referencia</span>
-                                <code className="bg-neutral-100 dark:bg-white/10 px-2 py-1 rounded text-xs font-mono block w-full truncate">
+                                <code className="bg-neutral-100 dark:bg-white/10 px-2 py-1 rounded text-xs text-white font-mono block w-full truncate">
                                     {order.reference}
                                 </code>
                             </div>

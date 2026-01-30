@@ -5,15 +5,15 @@ import { useCheckoutStore } from "../../../store/checkout.store";
 import { useCartStore } from "../../../store/cart.store";
 import { PaymentService } from "../../../services/payment.service";
 import { CustomInput } from "../../shared/CustomInput";
-import { CustomButton } from "../../shared/CustomButton";
-import { CustomCard } from "../../shared/CustomCard";
-import { MdCreditCard } from "react-icons/md";
-import { TransactionModal } from "../TransactionModal";
 import { useNavigate } from "react-router-dom";
-import { Loader } from "../../shared/Loader";
 import { checkoutSchema } from "../../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckoutNavigation } from "./CheckoutNavigation";
+import { MdCreditCard } from "react-icons/md";
+import { CustomCard } from "../../shared/CustomCard";
+import { TransactionModal } from "../TransactionModal";
+import { CustomButton } from "../../shared/CustomButton";
+import { TbSquareLetterNFilled } from "react-icons/tb";
 
 const COP = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
 
@@ -24,13 +24,14 @@ export const PaymentStep = () => {
 
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState<'CARD' | 'NEQUI' | 'PSE' | 'ASYNC'>('CARD');
-    const [financialInstitutions, setFinancialInstitutions] = useState<{ code: string; name: string }[]>([]);
+    const [financialInstitutions] = useState<{ code: string; name: string }[]>([]);
 
     // Wompi Data
     const [acceptanceToken, setAcceptanceToken] = useState<string>("");
 
     // Modal State
     const [transactionId, setTransactionId] = useState<string | null>(null);
+    const [orderId, setOrderId] = useState<string | number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Focus Refs
@@ -38,7 +39,7 @@ export const PaymentStep = () => {
     const cvcRef = useRef<HTMLInputElement>(null);
 
 
-    const { register, watch, handleSubmit, formState: { errors }, setValue } = useForm({
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: zodResolver(checkoutSchema),
         defaultValues: {
             payment: { type: "CARD", installments: 1 },
@@ -109,8 +110,8 @@ export const PaymentStep = () => {
             const { data: customerId, error: custError } = await supabase.rpc('get_or_create_customer', {
                 p_email: userEmail,
                 p_full_name: payer.fullName,
-                p_user_id: userId || null,
-                p_phone: payer.phone || null
+                p_user_id: userId || undefined,
+                p_phone: payer.phone || undefined
             });
 
             if (custError) {
@@ -122,7 +123,7 @@ export const PaymentStep = () => {
 
 
             // 2. Address (Save shipping data Securely via RPC)
-            const { data: addressId, error: addrErr } = await supabase.rpc('create_checkout_address', {
+            const { data: addressId, error: addrErr } = await supabase.rpc('create_checkout_address' as any, {
                 p_customer_id: customerId,
                 p_address_line: shippingData?.addressLine,
                 p_city: shippingData?.city,
@@ -191,6 +192,7 @@ export const PaymentStep = () => {
                 const txId = result.order?.transaction_id || result.data?.id;
                 if (txId) {
                     setTransactionId(txId);
+                    if (result.order?.id) setOrderId(result.order.id);
                     setIsModalOpen(true);
                     // Cart clean moved to finishProcess
                 } else {
@@ -225,22 +227,25 @@ export const PaymentStep = () => {
             <div className="flex justify-center gap-4 mb-10">
                 {[
                     { id: 'CARD', label: 'Tarjeta', icon: MdCreditCard },
-                    { id: 'NEQUI', label: 'Nequi', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Nequi.png' }
+                    { id: 'NEQUI', label: 'Nequi', icon: TbSquareLetterNFilled }
                 ].map(m => (
-                    <button
+                    <CustomButton
                         key={m.id}
                         type="button"
                         onClick={() => setPaymentMethod(m.id as any)}
-                        className={`
-                            relative flex flex-col items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all
+                        variant="ghost"
+                        effect="shine"
+                        className={`border-2 h-auto p-3 rounded-xl transition-all
                             ${paymentMethod === m.id
                                 ? 'border-primary bg-primary/5 text-primary'
                                 : 'border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900 text-zinc-500 hover:border-zinc-300'}
                         `}
                     >
-                        {m.icon ? <m.icon size={24} /> : <img src={m.img} alt={m.label} className="h-6 object-contain" />}
-                        <span className="text-xs font-bold">{m.label}</span>
-                    </button>
+                        <span className="flex flex-col items-center justify-center gap-2 w-full">
+                            {m.icon && <m.icon size={24} />}
+                            <span className="text-xs font-bold">{m.label}</span>
+                        </span>
+                    </CustomButton>
                 ))}
             </div>
 
@@ -261,7 +266,7 @@ export const PaymentStep = () => {
                                             e.target.value = formatted.substring(0, 19);
                                         }
                                     })}
-                                    error={errors.payment?.cardNumber?.message as string}
+                                    error={(errors.payment as any)?.cardNumber?.message as string}
                                     maxLength={19}
                                 />
                                 <div className="grid grid-cols-2 gap-4">
@@ -269,7 +274,7 @@ export const PaymentStep = () => {
                                         label="Titular"
                                         placeholder="Como aparece en la tarjeta"
                                         {...register('payment.cardHolder')}
-                                        error={errors.payment?.cardHolder?.message as string}
+                                        error={(errors.payment as any)?.cardHolder?.message as string}
                                     />
                                     <div className="grid grid-cols-2 gap-2">
                                         <CustomInput
@@ -280,7 +285,7 @@ export const PaymentStep = () => {
                                                     if (e.target.value.length === 2) yearRef.current?.focus();
                                                 }
                                             })}
-                                            error={errors.payment?.expMonth?.message as string}
+                                            error={(errors.payment as any)?.expMonth?.message as string}
                                             maxLength={2}
                                         />
                                         {(() => {
@@ -298,7 +303,7 @@ export const PaymentStep = () => {
                                                         yearOnChange(e);
                                                         if (e.target.value.length === 2) cvcRef.current?.focus();
                                                     }}
-                                                    error={errors.payment?.expYear?.message as string}
+                                                    error={(errors.payment as any)?.expYear?.message as string}
                                                     maxLength={2}
                                                 />
                                             );
@@ -318,7 +323,7 @@ export const PaymentStep = () => {
                                                     cvcHookRef(e);
                                                     cvcRef.current = e;
                                                 }}
-                                                error={errors.payment?.cvc?.message as string}
+                                                error={(errors.payment as any)?.cvc?.message as string}
                                                 maxLength={4}
                                             />
                                         );
@@ -329,7 +334,7 @@ export const PaymentStep = () => {
                                         type="number"
                                         placeholder="1"
                                         {...register('payment.installments', { valueAsNumber: true })}
-                                        error={errors.payment?.installments?.message as string}
+                                        error={(errors.payment as any)?.installments?.message as string}
                                         min={1}
                                         max={36}
                                     />
@@ -344,7 +349,7 @@ export const PaymentStep = () => {
                                 label="Celular Nequi"
                                 placeholder="300 000 0000"
                                 {...register('payment.phoneNumber')}
-                                error={errors.payment?.phoneNumber?.message as string}
+                                error={(errors.payment as any)?.phoneNumber?.message as string}
                             />
                         </div>
                     )}
@@ -362,7 +367,7 @@ export const PaymentStep = () => {
                                         <option key={`${bank.code}-${index}`} value={bank.code}>{bank.name}</option>
                                     ))}
                                 </select>
-                                {errors.payment?.financialInstitutionCode && <p className="text-red-500 text-xs mt-1">{errors.payment.financialInstitutionCode.message as string}</p>}
+                                {(errors.payment as any)?.financialInstitutionCode && <p className="text-red-500 text-xs mt-1">{(errors.payment as any).financialInstitutionCode.message as string}</p>}
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -394,7 +399,7 @@ export const PaymentStep = () => {
                                 label="Número de Documento"
                                 placeholder="123456789"
                                 {...register('payment.userLegalId')}
-                                error={errors.payment?.userLegalId?.message as string}
+                                error={(errors.payment as any)?.userLegalId?.message as string}
                             />
                         </div>
                     )}
@@ -414,6 +419,7 @@ export const PaymentStep = () => {
                     setTransactionId(null);
                 }}
                 transactionId={transactionId}
+                orderId={orderId}
                 onFinish={finishProcess}
             />
         </div>

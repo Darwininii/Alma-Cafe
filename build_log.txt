@@ -1,0 +1,6 @@
+
+> alma-cafe@0.0.0 build
+> tsc -b && vite build
+
+src/Components/dashboard/products/TableProduct.tsx(15,1): error TS6133: 'CustomInput' is declared but its value is never read.
+src/Components/dashboard/products/TableProduct.tsx(16,1): error TS6133: 'Search' is declared but its value is never read.

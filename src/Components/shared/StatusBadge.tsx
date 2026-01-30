@@ -9,23 +9,33 @@ interface StatusBadgeProps {
 }
 
 const variantStyles: Record<StatusType, string> = {
-  success: "bg-green-100/80 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800",
-  warning: "bg-yellow-100/80 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800",
-  error: "bg-red-100/80 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800",
-  info: "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800",
-  neutral: "bg-gray-100/80 text-gray-700 dark:bg-gray-800/50 dark:text-gray-400 border-gray-200 dark:border-gray-700",
+  success: "bg-green-500 text-white dark:text-black shadow-lg shadow-green-500/20 border-transparent",
+  warning: "bg-yellow-500 text-white dark:text-black shadow-lg shadow-yellow-500/20 border-transparent",
+  error: "bg-red-500 text-white dark:text-black shadow-lg shadow-red-500/20 border-transparent",
+  info: "bg-blue-500 text-white dark:text-black shadow-lg shadow-blue-500/20 border-transparent",
+  neutral: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700",
+};
+
+const statusMap: Record<string, string> = {
+  Pending: "Pendiente",
+  Paid: "Pagado",
+  Cancelled: "Cancelado",
+  Shipped: "Enviado",
+  Delivered: "Entregado",
 };
 
 export const StatusBadge = ({ status, variant = "neutral", className }: StatusBadgeProps) => {
+  const displayStatus = statusMap[status] || status;
+  
   return (
     <span
       className={cn(
-        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border shadow-sm backdrop-blur-sm",
+        "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border shadow-md transition-all",
         variantStyles[variant],
         className
       )}
     >
-      {status}
+      {displayStatus}
     </span>
   );
 };

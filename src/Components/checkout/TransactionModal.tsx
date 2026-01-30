@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MdCheckCircle, MdError, MdPrint, MdPhoneAndroid, MdAccountBalance } from 'react-icons/md';
+import { MdCheckCircle, MdError, MdPhoneAndroid, MdAccountBalance } from 'react-icons/md';
 import { CustomButton } from '../shared/CustomButton';
 import { CustomClose } from '../shared/CustomClose';
 import { CustomPrint } from '../shared/CustomPrint';
 import { TransactionReceipt } from './TransactionReceipt';
 import { Loader } from '../shared/Loader';
 import { useCheckoutStore } from '../../store/checkout.store';
+import { useChangeStatusOrder } from '../../hooks';
 
 // Helper to format currency
 const formatCurrency = (amount: number, currency: string = 'COP') => {
@@ -21,6 +22,7 @@ interface TransactionModalProps {
     isOpen: boolean;
     onClose: () => void;
     transactionId: string | null;
+    orderId: string | number | null;
     onFinish: () => void; // Called when user clicks "Finalizar" on success
 }
 
@@ -43,11 +45,12 @@ interface WompiTransactionData {
     created_at: string;
 }
 
-export const TransactionModal = ({ isOpen, onClose, transactionId, onFinish }: TransactionModalProps) => {
+export const TransactionModal = ({ isOpen, onClose, transactionId, orderId, onFinish }: TransactionModalProps) => {
     const { payer } = useCheckoutStore();
-    const [status, setStatus] = useState<'LOADING' | 'PENDING' | 'APPROVED' | 'DECLINED' | 'ERROR'>('LOADING');
+    const { mutate: changeStatus } = useChangeStatusOrder();
+    const [status, setStatus] = useState<'LOADING' | 'PENDING' | 'APPROVED' | 'DECLINED' | 'ERROR' | 'VOIDED'>('LOADING');
     const [data, setData] = useState<WompiTransactionData | null>(null);
-    const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const pollIntervalRef = useRef<any>(null);
 
     // Initial Fetch & Polling Logic
     useEffect(() => {
@@ -72,9 +75,17 @@ export const TransactionModal = ({ isOpen, onClose, transactionId, onFinish }: T
                     // Update local status map
                     setStatus(currentStatus);
 
-                    // Stop polling if final state
+                    // Stop polling if final state and trigger DB update
                     if (['APPROVED', 'DECLINED', 'ERROR', 'VOIDED'].includes(currentStatus)) {
                         if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+
+                        if (orderId) {
+                            if (currentStatus === 'APPROVED') {
+                                changeStatus({ id: Number(orderId), status: 'Paid' });
+                            } else if (['DECLINED', 'ERROR', 'VOIDED'].includes(currentStatus)) {
+                                changeStatus({ id: Number(orderId), status: 'Cancelled' });
+                            }
+                        }
                     }
                 }
             } catch (error) {
@@ -92,11 +103,6 @@ export const TransactionModal = ({ isOpen, onClose, transactionId, onFinish }: T
             if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
         };
     }, [isOpen, transactionId]);
-
-
-    const handlePrint = () => {
-        window.print();
-    };
 
     if (!isOpen) return null;
 
@@ -121,7 +127,7 @@ export const TransactionModal = ({ isOpen, onClose, transactionId, onFinish }: T
                         {/* 1. LOADING / INITIAL */}
                         {(status === 'LOADING') && (
                             <div className="flex flex-col items-center py-8">
-                                <Loader size={48} color="#4F46E5" />
+                                <Loader size={48} />
                                 <p className="mt-4 text-zinc-600 dark:text-zinc-400 font-medium">Verificando estado de la transacción...</p>
                             </div>
                         )}
@@ -202,7 +208,7 @@ export const TransactionModal = ({ isOpen, onClose, transactionId, onFinish }: T
                                                 <span className="font-mono text-black dark:text-zinc-200 text-sm">{data.id}</span>
                                             </div>
                                         </div>
-                                        <CustomButton effect="ghost" onClick={onFinish} variant="primary" className="w-full">
+                                        <CustomButton variant="ghost" onClick={onFinish} className="w-full">
                                             Entendido, Finalizar
                                         </CustomButton>
                                     </>

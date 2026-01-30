@@ -4,6 +4,7 @@ import { useDeleteProduct, useProducts, useAllProducts } from "../../../hooks";
 import { Loader } from "../../shared/Loader";
 import { formatPrice } from "../../../helpers";
 import { Pagination } from "../../shared/Pagination";
+import { CustomFiltered } from "../../shared/CustomFiltered";
 import { CustomButton } from "../../shared/CustomButton";
 import { CustomDeleteButton } from "../../shared/CustomDeleteButton";
 import { MdEditSquare } from "react-icons/md";
@@ -11,8 +12,6 @@ import { TiPlus } from "react-icons/ti";
 import { CustomModal } from "../../shared/CustomModal";
 import { StatusBadge } from "../../shared/StatusBadge";
 import Fuse from "fuse.js";
-import { CustomInput } from "@/Components/shared/CustomInput";
-import { Search } from "lucide-react";
 
 const tableHeaders = [
   "",
@@ -23,14 +22,33 @@ const tableHeaders = [
   "Acciones",
 ];
 
+const filterOptions = [
+    { value: "Disponible", label: "Disponible", variant: "success" },
+    { value: "Agotado", label: "Agotado", variant: "error" },
+    { value: "Nuevo", label: "Nuevo", variant: "info" },
+    { value: "Promoción", label: "Promoción", variant: "warning" },
+];
+
 export const TableProduct = () => {
   const [page, setPage] = useState(1);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string[]>(["all"]);
+  // We won't use dateRange for products, but CustomFiltered requires the prop unless optional?
+  // I made it optional in CustomFiltered? No, I made `showDateFilter` boolean optional.
+  // But `dateRange` and `setDateRange` props are REQUIRED in the interface?
+  // Let me check CustomFilteredProps interface in CustomFiltered.tsx...
+  // It says: dateRange: { ... } | null; setDateRange: ...
+  // So I MUST pass them.
+  const [dateRange, setDateRange] = useState<{ start: string; end: string } | null>(null);
+
+  // Determine if we are in "client-side filtering" mode (Search OR Status Filter)
+  const isFiltering = searchTerm !== "" || !statusFilter.includes("all");
 
   // Search Logic (Fuse.js)
   const { products: paginatedProducts, isLoading: isLoadingPaginated, totalProducts: totalServerProducts } = useProducts({
-    page: searchTerm ? 1 : page,
+    page: isFiltering ? 1 : page,
   });
 
   const { products: allProducts, isLoading: isLoadingAll } = useAllProducts();
@@ -61,18 +79,53 @@ export const TableProduct = () => {
     threshold: 0.3, 
   });
 
-  const filteredProducts = searchTerm 
+  const filteredProducts = (searchTerm 
     ? fuse.search(searchTerm).map(result => result.item) 
-    : paginatedProducts;
+    : (allProducts || [])).filter(product => {
+        if (statusFilter.includes("all")) return true;
+        
+        // Check if product matches ANY of the selected filters
+        // Logic: Intersection of product attributes and selected filters.
+        // Actually, usually "all" means no filter.
+        // If I select "Disponible", I want products where stock status is available.
+        // If I select "Nuevo", I want products with tag "Nuevo".
+        // If I select "Disponible" AND "Nuevo", do I want OR or AND?
+        // Usually UI filters are inclusive (OR) within category, but here they are mixed.
+        // Let's assume OR for simplicity or AND?
+        // Let's do partial match.
+        
+        let matches = false;
+        
+        // Check Stock
+        let stockStatus = "Neutro";
+        const stockVal = Number(product.stock);
+        if (product.stock === "Agotado") stockStatus = "Agotado";
+        else if (product.stock === "Disponible") stockStatus = "Disponible";
+        else if (!isNaN(stockVal)) {
+            stockStatus = stockVal === 0 ? "Agotado" : "Disponible";
+        }
+        
+        if (statusFilter.includes(stockStatus)) matches = true;
+        
+        // Check Tag
+        if (product.tag && statusFilter.includes(product.tag)) matches = true;
+        
+        // However, if I select "Disponible", I shouldn't see "Agotado" even if it has "Nuevo" tag?
+        // Or if I select "Disponible" and "Nuevo", I want products that are BOTH?
+        // CustomFiltered generic logic `toggleStatusFilter` is simplistic (just adds/removes string).
+        // Let's assume if I select multiple, it's OR.
+        
+        return matches;
+    });
 
-  const totalItems = searchTerm ? (filteredProducts?.length || 0) : (totalServerProducts || 0);
+  const totalItems = isFiltering ? (filteredProducts?.length || 0) : (totalServerProducts || 0);
 
   const itemsPerPage = 12; 
-  const displayedProducts = searchTerm 
+  const displayedProducts = isFiltering 
     ? filteredProducts?.slice((page - 1) * itemsPerPage, page * itemsPerPage) 
     : paginatedProducts;
 
-  const isLoading = searchTerm ? isLoadingAll : isLoadingPaginated;
+  const isLoading = isFiltering ? isLoadingAll : isLoadingPaginated;
 
   const confirmDelete = () => {
     if (productToDelete) {
@@ -102,44 +155,62 @@ export const TableProduct = () => {
       <div className="flex flex-col flex-1 border border-white/20 rounded-3xl p-6 sm:p-8 bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-2xl relative overflow-hidden min-h-[70vh]">
         <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-primary/50 to-transparent opacity-50" />
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
-          <div>
-            <h1 className="font-black text-3xl tracking-tight text-neutral-900 dark:text-white">
-              Productos
-            </h1>
-            <p className="text-base mt-2 font-medium text-neutral-500 dark:text-neutral-400">
-              Gestiona el inventario de tu Ecommerce
-            </p>
-          </div>
-
-           {/* Search and New Product */}
-           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-end">
-                <div className="relative w-full sm:w-64">
-                    <CustomInput
-                        icon={<Search className="h-5 w-5" />}
-                        placeholder="Buscar producto..."
-                        value={searchTerm}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setSearchTerm(e.target.value);
-                            setPage(1);
-                        }}
-                        wrapperClassName="h-[38px] py-1"
-                        className="h-full py-0"
-                    />
-                </div>
-
+        <CustomFiltered
+            searchTerm={searchTerm}
+            setSearchTerm={(term) => {
+                setSearchTerm(term);
+                setPage(1);
+            }}
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+            statusFilter={statusFilter}
+            toggleStatusFilter={(status) => {
+                if (status === "all") {
+                    setStatusFilter(["all"]);
+                } else {
+                    setStatusFilter(prev => {
+                        let newFilters = prev.filter(f => f !== "all");
+                        if (newFilters.includes(status)) {
+                            newFilters = newFilters.filter(f => f !== status);
+                        } else {
+                            newFilters.push(status);
+                        }
+                        return newFilters.length === 0 ? ["all"] : newFilters;
+                    });
+                }
+                setPage(1);
+            }}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            handleClearAllFilters={() => {
+                setStatusFilter(["all"]);
+                setPage(1);
+            }}
+            statusOptions={filterOptions}
+            title="Estado del producto"
+            showDateFilter={false}
+            actions={
                 <Link to="/dashboard/productos/new">
                     <CustomButton
                         effect="shine"
                         iconSize={18}
-                        className="bg-primary hover:bg-primary/90 text-black dark:text-white font-bold shadow-lg shadow-primary/20 w-full sm:w-auto"
+                        className="bg-primary hover:bg-primary/90 text-black dark:text-white font-bold shadow-lg shadow-primary/20"
                         rightIcon={TiPlus}
                     >
                         Nuevo
                     </CustomButton>
                 </Link>
-           </div>
-        </div>
+            }
+        >
+             <div>
+                <h1 className="font-black text-3xl tracking-tight text-neutral-900 dark:text-white">
+                  Productos
+                </h1>
+                <p className="text-base mt-2 font-medium text-neutral-500 dark:text-neutral-400">
+                  Gestiona el inventario de tu Ecommerce
+                </p>
+            </div>
+        </CustomFiltered>
 
         <div className="flex items-center justify-between mb-4 px-2">
            <div className="text-sm text-neutral-500 font-medium">
@@ -212,7 +283,7 @@ export const TableProduct = () => {
                                 status={product.tag || "Sin etiqueta"}
                                 variant={
                                    product.tag === "Nuevo" ? "info" :
-                                   product.tag === "Promoción" ? "success" :
+                                   product.tag === "Promoción" ? "warning" :
                                    "neutral"
                                 }
                             />

@@ -2,12 +2,19 @@ import { useState, useEffect } from "react";
 import { CustomSelect } from "./CustomSelect";
 import { CustomButton } from "./CustomButton";
 import { CustomDivider } from "./CustomDivider";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 
 interface CalendarProps {
   value: { start: string; end: string } | null;
   onChange: (value: { start: string; end: string } | null) => void;
   className?: string;
 }
+
+// Helper to format date as YYYY-MM-DD using local time
+const toLocalISOString = (date: Date): string => {
+  const pad = (num: number) => num.toString().padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+};
 
 export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => {
   // State for navigation (what month we are looking at)
@@ -25,8 +32,15 @@ export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => 
       setInternalSelection(value);
   }, [value]);
 
-  const startDate = internalSelection?.start ? new Date(internalSelection.start + 'T00:00:00') : null;
-  const endDate = internalSelection?.end ? new Date(internalSelection.end + 'T00:00:00') : null;
+  // Parse YYYY-MM-DD explicitly to avoid timezone issues
+  const parseDate = (str: string | undefined) => {
+      if (!str) return null;
+      const [y, m, d] = str.split('-').map(Number);
+      return new Date(y, m - 1, d);
+  };
+
+  const startDate = parseDate(internalSelection?.start);
+  const endDate = parseDate(internalSelection?.end);
 
   const [hoverDate, setHoverDate] = useState<Date | null>(null);
 
@@ -42,21 +56,38 @@ export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => 
   
   const handleDateClick = (day: number) => {
     const clickedDate = new Date(year, month, day);
-    clickedDate.setHours(0, 0, 0, 0);
+    // clickedDate.setHours(0, 0, 0, 0); // Not strictly necessary if we use toLocalISOString correctly
 
-    const isReset = !startDate || (startDate && endDate) || (startDate && clickedDate < startDate);
+    // Convert existing start/end to Date objects for comparison
+    const currentStart = startDate ? new Date(startDate.getTime()) : null;
+    const currentEnd = endDate ? new Date(endDate.getTime()) : null;
+    
+    // Check if we should reset (start new range)
+    // Reset if: 
+    // 1. No start date yet
+    // 2. Range is already complete (start and end exist) -> user clicking starts new range
+    const isReset = !currentStart || (currentStart && currentEnd);
 
     let newSelection;
     if (isReset) {
       newSelection = { 
-          start: clickedDate.toISOString().split('T')[0], 
+          start: toLocalISOString(clickedDate), 
           end: "" 
       };
     } else {
-      newSelection = { 
-          start: startDate!.toISOString().split('T')[0], 
-          end: clickedDate.toISOString().split('T')[0] 
-      };
+      // Range completion logic
+      // If clicked date is BEFORE current start, we swap them to ensure Start < End
+      if (clickedDate < currentStart) {
+          newSelection = {
+              start: toLocalISOString(clickedDate),
+              end: toLocalISOString(currentStart)
+          };
+      } else {
+          newSelection = { 
+              start: toLocalISOString(currentStart), 
+              end: toLocalISOString(clickedDate) 
+          };
+      }
     }
     setInternalSelection(newSelection);
   };
@@ -67,7 +98,17 @@ export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => 
   };
 
   const handleAccept = () => {
-      onChange(internalSelection);
+      if (internalSelection && internalSelection.start && !internalSelection.end) {
+          // If only start is selected, treat as single day range (start = end)
+          const singleDaySelection = {
+              start: internalSelection.start,
+              end: internalSelection.start
+          };
+          onChange(singleDaySelection);
+          setInternalSelection(singleDaySelection); // Update internal state too
+      } else {
+          onChange(internalSelection);
+      }
   };
 
   const isSelected = (day: number) => {
@@ -97,17 +138,28 @@ export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => 
     if (endDate) {
         return current.getTime() === endDate.getTime();
     }
-    if (hoverDate && hoverDate > startDate!) {
+    // If selecting (no end date yet), hover date acts as potential end
+    if (hoverDate) {
         return current.getTime() === hoverDate.getTime();
     }
     return false; 
   };
 
+  // Check if a day is within the hover range (dynamic selection preview)
   const isInRangeHover = (day: number) => {
+      // Logic: Start Date is set, End Date is NOT set, and we are hovering
       if (!startDate || endDate || !hoverDate) return false;
+      
       const current = new Date(year, month, day);
       current.setHours(0,0,0,0);
-      return current > startDate && current < hoverDate;
+
+      // Forward hover: Start < Current < Hover
+      if (current > startDate && current < hoverDate) return true;
+      
+      // Backward hover: Hover < Current < Start
+      if (current < startDate && current > hoverDate) return true;
+      
+      return false;
   };
   
   const shouldShowConnector = (day: number) => {
@@ -115,13 +167,22 @@ export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => 
       const current = new Date(year, month, day);
       current.setHours(0,0,0,0);
 
+      // Case 1: Range is finalized (Start & End exist)
       if (endDate) {
           if (startDate.getTime() === endDate.getTime()) return false;
           return current >= startDate && current <= endDate;
       }
       
-      if (hoverDate && hoverDate > startDate) {
-          return current >= startDate && current <= hoverDate;
+      // Case 2: Range is in progress (Only Start, hovering for End)
+      if (hoverDate) {
+          // Forward selection visualization
+          if (hoverDate > startDate) {
+            return current >= startDate && current <= hoverDate;
+          }
+          // Backward selection visualization
+          if (hoverDate < startDate) {
+             return current <= startDate && current >= hoverDate;
+          }
       }
       
       return false;
@@ -148,20 +209,50 @@ export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => 
 
 
   return (
-    <div className={`relative p-6 rounded-3xl bg-white/80 dark:bg-black/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] overflow-visible w-[340px] select-none ${className}`}>
+    <div className={`relative p-6 rounded-3xl bg-white/80 dark:bg-black/90 backdrop-blur-2xl border border-black/40 dark:border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] overflow-visible w-[340px] select-none ${className}`}>
         
         {/* Decorative Backgrounds */}
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Header with Custom Selects */}
+        {/* Navigation Buttons Row */}
+        <div className="relative flex items-center justify-between mb-4 z-20">
+            <CustomButton
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 text-neutral-600 dark:text-neutral-300 bg-black/5 hover:bg-black/40 hover:text-white dark:bg-white/10 dark:hover:bg-white/40 dark:hover:text-white"
+                onClick={() => setCurrentDate(new Date(year, month - 1, 1))}
+            >
+                <IoChevronBack size={18} />
+            </CustomButton>
+
+            <span className="text-sm font-bold text-neutral-700 dark:text-white capitalize">
+                {monthNames[month]} {year}
+            </span>
+
+            <CustomButton
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 text-neutral-600 dark:text-neutral-300 bg-black/5 hover:bg-black/40 hover:text-white dark:bg-white/10 dark:hover:bg-white/40 dark:hover:text-white"
+                onClick={() => setCurrentDate(new Date(year, month + 1, 1))}
+            >
+                <IoChevronForward size={18} />
+            </CustomButton>
+        </div>
+
+        {/* Header with Custom Selects - Hidden if buttons are sufficient, or kept as requested "buttons above selects" */}
+        {/* User asked for buttons "above" the selects, implying they want both or maybe wants easier nav. 
+            The selects are useful for big jumps. I will keep them but possibly remove the title I added above if it's redundant.
+            Actually, user said "above the selects", so keeping selects is correct. 
+            I will keep the selects below the buttons.
+        */}
         <div className="relative flex items-center justify-between mb-6 z-20 gap-2">
            <div className="w-1/2">
                 <CustomSelect 
                     options={monthOptions}
                     value={month.toString()}
                     onChange={handleMonthChange}
-                    className="h-9 text-sm bg-transparent border-neutral-200 dark:border-white/10"
+                    className="h-9 text-sm bg-transparent border-black/40 dark:border-white/10"
                 />
            </div>
            <div className="w-1/2">
@@ -169,7 +260,7 @@ export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => 
                     options={yearOptions}
                     value={year.toString()}
                     onChange={handleYearChange}
-                    className="h-9 text-sm bg-transparent border-neutral-200 dark:border-white/10"
+                    className="h-9 text-sm bg-transparent border-black/40 dark:border-white/10"
                 />
            </div>
         </div>
@@ -237,12 +328,12 @@ export const Calendar = ({ value, onChange, className = "" }: CalendarProps) => 
         </div>
 
         {/* Footer Actions */}
-        <CustomDivider className="mt-6 mb-4 bg-black/40 dark:bg-white/70" variant="glass" />
+        <CustomDivider className="mt-6 mb-4 bg-black/40 dark:bg-white/40" variant="glass" />
         <div className="flex gap-2 z-20 relative">
             <CustomButton
                 variant="outline"
                 size="sm"
-                className="w-1/2 border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-neutral-300 hover:bg-primary hover:text-white dark:hover:bg-white/5"
+                className="w-1/2 border-black/40 dark:border-white/10 text-black dark:text-neutral-300 hover:bg-primary hover:text-white dark:hover:bg-white/5"
                 onClick={handleClear}
             >
                 Limpiar

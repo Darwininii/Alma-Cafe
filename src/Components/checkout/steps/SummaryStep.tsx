@@ -90,7 +90,7 @@ export const SummaryStep = () => {
                     <div className="space-y-4">
                         <h3 className="font-bold text-lg px-2">Productos ({items.length})</h3>
                         {items.map((item, index) => (
-                            <div key={`${item.id}-${index}`} className="opacity-90 hover:opacity-100 transition-opacity">
+                            <div key={`${item.productId}-${index}`} className="opacity-90 hover:opacity-100 transition-opacity">
                                 <CartItem item={item} />
                             </div>
                         ))}

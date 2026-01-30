@@ -24,7 +24,7 @@ export interface OrderInput {
 // Representa una orden individual básica (por ejemplo en un historial)
 export interface OrderItemSingle {
   created_at: string;
-  id: string; // UUID
+  id: number; // UUID
   status: string;
   total_amount: number;
 }

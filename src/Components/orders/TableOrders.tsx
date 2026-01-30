@@ -3,13 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { formatDate, formatPrice } from "@/helpers";
 import type { OrderItemSingle } from "@/interfaces";
 import { Pagination } from "../shared/Pagination";
-import { OrderStatusBadge } from "../shared/OrderStatusBadge";
+import { StatusBadge } from "../shared/StatusBadge";
+import type { StatusType } from "../shared/StatusBadge";
 
 interface Props {
   orders: OrderItemSingle[];
 }
 
 const tableHeaders = ["ID", "Fecha", "Estado", "Total"];
+
+const getStatusVariant = (status: string): StatusType => {
+  switch (status) {
+    case 'Paid': return 'success';
+    case 'Delivered': return 'success';
+    case 'Shipped': return 'info';
+    case 'Pending': return 'warning';
+    case 'Cancelled': return 'error';
+    default: return 'neutral';
+  }
+};
 
 export const TableOrders = ({ orders }: Props) => {
   const navigate = useNavigate();
@@ -51,7 +63,7 @@ export const TableOrders = ({ orders }: Props) => {
                   {formatDate(order.created_at)}
                 </td>
                 <td className="p-4">
-                  <OrderStatusBadge status={order.status} />
+                  <StatusBadge status={order.status} variant={getStatusVariant(order.status)} />
                 </td>
                 <td className="p-4 pr-8 font-bold text-black dark:text-white">
                   {formatPrice(order.total_amount)}

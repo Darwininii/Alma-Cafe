@@ -31,7 +31,7 @@ export type ButtonEffect =
 
 export interface ButtonProps extends MotionButtonBaseProps {
   size?: ButtonSize;
-  variant?: "solid" | "outline" | "ghost" | "link"; // New variant prop
+  variant?: "solid" | "outline" | "ghost" | "link" | "primary"; // New variant prop
   isLoading?: boolean; // New isLoading prop
   leftIcon?: LucideIcon | IconType;
   rightIcon?: LucideIcon | IconType;
@@ -84,6 +84,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Variants
     const variantStyles = {
       solid: "bg-primary text-white hover:bg-primary/90",
+      primary: "bg-primary text-white hover:bg-primary/90",
       outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
       ghost: "hover:bg-accent hover:text-accent-foreground",
       link: "text-primary underline-offset-4 hover:underline",

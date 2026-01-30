@@ -138,7 +138,7 @@ export const paymentMethodSchema = z.discriminatedUnion("type", [
   cardPaymentSchema,
   nequiPaymentSchema,
   psePaymentSchema,
-  // asyncPaymentSchema // Dejamos esto pendiente si usa inputs adicionales, por ahora solo type
+  asyncPaymentSchema // Dejamos esto pendiente si usa inputs adicionales, por ahora solo type
 ]);
 
 export type PaymentMethodFormValues = z.infer<typeof paymentMethodSchema>;

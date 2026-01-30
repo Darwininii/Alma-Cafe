@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { formatDate, formatPrice } from "@/helpers";
 import Fuse from "fuse.js";
 import { useChangeStatusOrder, useUser, useRoleUser, useAllOrders } from "@/hooks";
@@ -7,9 +7,9 @@ import { Pagination } from "@/Components/shared/Pagination";
 import { Loader } from "@/Components/shared/Loader";
 import { CustomButton } from "@/Components/shared/CustomButton";
 import { StatusBadge } from "@/Components/shared/StatusBadge";
-import { CustomInput } from "@/Components/shared/CustomInput";
-import { Search, Filter } from "lucide-react";
-import { Calendar } from "@/Components/shared/Calendar";
+import { CustomSelect } from "@/Components/shared/CustomSelect";
+import { TbReceiptOff } from "react-icons/tb";
+import { CustomFiltered } from "@/Components/shared/CustomFiltered";
 
 
 
@@ -19,7 +19,6 @@ const statusOptions = [
   { value: "Pending", label: "Pendiente", variant: "warning" },
   { value: "Paid", label: "Pagado", variant: "success" },
   { value: "Shipped", label: "Enviado", variant: "info" },
-  { value: "Delivered", label: "Entregado", variant: "success" },
   { value: "Cancelled", label: "Cancelado", variant: "error" },
 ];
 
@@ -30,7 +29,7 @@ export const TableOrdersAdmin = () => {
   
   // Advanced Filters State
   const [showFilters, setShowFilters] = useState(false);
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState<string[]>(["all"]);
   const [dateRange, setDateRange] = useState<{ start: string; end: string } | null>(null);
   
   // Fetch ALL orders for client-side search
@@ -46,47 +45,96 @@ export const TableOrdersAdmin = () => {
     mutate({ id, status });
   };
 
-  const handleToggleFilters = () => {
-    setShowFilters(!showFilters);
-    // User requested explicit "Accept/Clear" buttons in calendar, so we don't auto-set or auto-clear date here anymore.
-    // However, if we want to be nice, we could clear when closing, but let's stick to explicit control for now as implied.
-    // Actually, if I close filters, I probably want to see "All" again?
-    // The previous request said: "only view current day data provided filters are opened".
-    // "Accept" button applies filter. "Clear" button clears filter.
-    // So logic: Open Filters -> No filter applied yet (or previous filter). User selects -> Accept -> Filter Applied.
-    // If user closes filters -> Filter persists? Or clears?
-    // "only view current day data... provided filters are opened" suggested a transient state.
-    // With explicit buttons, likely the user wants standard behavior: Filters apply when I say so.
-    // I will just toggle visibility.
+
+
+  const handleClearAllFilters = () => {
+      setStatusFilter(["all"]);
+      setDateRange(null);
+      setPage(1);
+  };
+
+  const toggleStatusFilter = (status: string) => {
+      setPage(1);
+      if (status === "all") {
+          setStatusFilter(["all"]);
+          return;
+      }
+
+      setStatusFilter(prev => {
+          // If purely switching from "all" to something else, clear "all" first
+          let newFilters = prev.includes("all") ? [] : [...prev];
+
+          if (newFilters.includes(status)) {
+              newFilters = newFilters.filter(s => s !== status);
+          } else {
+              newFilters.push(status);
+          }
+
+          // If no filters left, or if all options are selected, revert to "all"
+          if (newFilters.length === 0 || newFilters.length === statusOptions.length) {
+              return ["all"];
+          }
+
+          return newFilters;
+      });
+  };
+
+  const getStatusStyles = (status: string) => {
+      const opt = statusOptions.find(o => o.value === status);
+      const variant = opt?.variant;
+      switch(variant) {
+          case 'success': return "bg-green-500 text-white dark:bg-green-500/20 dark:text-green-300 dark:border-green-500/30 shadow-lg shadow-green-500/20 border-transparent ring-green-500";
+          case 'warning': return "bg-yellow-500 text-white dark:bg-yellow-500/20 dark:text-yellow-300 dark:border-yellow-500/30 shadow-lg shadow-yellow-500/20 border-transparent ring-yellow-500";
+          case 'error': return "bg-red-500 text-white dark:bg-red-500/20 dark:text-red-300 dark:border-red-500/30 shadow-lg shadow-red-500/20 border-transparent ring-red-500";
+          case 'info': return "bg-blue-500 text-white dark:bg-blue-500/20 dark:text-blue-300 dark:border-blue-500/30 shadow-lg shadow-blue-500/20 border-transparent ring-blue-500";
+          default: return "";
+      }
   };
   
-  // 1. First, apply strict filters (Status + Date)
-  const preFilteredOrders = allOrders?.filter(order => {
-      // Status Filter
-      if (statusFilter !== "all" && order.status !== statusFilter) return false;
+  // 1. Filter Logic (Memoized for performance and stability)
+  const filteredOrders = useMemo(() => {
+    if (!allOrders) return [];
 
-      // Date Filter
-      if (dateRange?.start) {
-          const orderDate = new Date(order.created_at).toISOString().split('T')[0];
-          if (orderDate < dateRange.start) return false;
-      }
-      if (dateRange?.end) {
-          const orderDate = new Date(order.created_at).toISOString().split('T')[0];
-          if (orderDate > dateRange.end) return false;
-      }
+    return allOrders.filter(order => {
+        // Status Filter
+        if (!statusFilter.includes("all") && !statusFilter.includes(order.status)) {
+            return false;
+        }
 
-      return true;
-  }) || [];
+        // Date Filter
+        if (dateRange) {
+            // Use local date string comparison to match the Calendar's generic YYYY-MM-DD
+            const orderDate = new Date(order.created_at).toLocaleDateString('en-CA');
+            
+            if (dateRange.start && orderDate < dateRange.start) return false;
+            if (dateRange.end && orderDate > dateRange.end) return false;
+        }
 
-  // 2. Then apply Fuzzy Search on the filtered results
-  const fuse = new Fuse(preFilteredOrders, {
-      keys: ["id", "customers.full_name", "customers.email", "status", "total_amount"],
-      threshold: 0.3,
-  });
+        return true;
+    });
+  }, [allOrders, statusFilter, dateRange]);
 
-  const finalOrders = searchTerm 
-      ? fuse.search(searchTerm).map(result => result.item)
-      : preFilteredOrders;
+  // 2. Fuzzy Search (Memoized)
+  const fuse = useMemo(() => {
+    // Transform data to include localized status
+    const ordersForSearch = filteredOrders.map(order => {
+        const statusOption = statusOptions.find(opt => opt.value === order.status);
+        return {
+            ...order,
+            searchableStatus: statusOption ? statusOption.label : order.status
+        };
+    });
+
+      return new Fuse(ordersForSearch, {
+          keys: ["id", "customers.full_name", "customers.email", "status", "searchableStatus", "total_amount"],
+          threshold: 0.3,
+      });
+  }, [filteredOrders]);
+
+  const finalOrders = useMemo(() => {
+      if (!searchTerm) return filteredOrders;
+      return fuse.search(searchTerm).map(result => result.item);
+  }, [searchTerm, filteredOrders, fuse]);
 
   // Client-side Pagination
   const itemsPerPage = 10;
@@ -95,124 +143,62 @@ export const TableOrdersAdmin = () => {
 
 
   if (isLoading && !displayedOrders) return <Loader />;
-  if (!allOrders) return <div className="p-4 text-center">No hay órdenes disponibles.</div>;
+  if (!allOrders) return (
+      <div className="flex flex-col items-center justify-center flex-1 min-h-[60vh] p-8 border border-white/20 rounded-3xl bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-2xl">
+          <div className="flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-neutral-100 dark:bg-white/5 shadow-inner">
+              <TbReceiptOff className="w-10 h-10 text-neutral-400 dark:text-neutral-500 opacity-80" />
+          </div>
+          <h2 className="text-2xl font-black tracking-tight text-neutral-900 dark:text-white mb-2">
+              No hay órdenes disponibles
+          </h2>
+          <p className="text-neutral-500 dark:text-neutral-400 font-medium text-center max-w-md">
+              No se han encontrado registros de órdenes en este momento.
+          </p>
+      </div>
+  );
 
   return (
     <div className="flex flex-col flex-1 border border-white/20 rounded-3xl p-6 sm:p-8 bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-2xl relative overflow-hidden min-h-[70vh]">
       {/* Glow Effect */}
       <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-cyan-500/50 to-transparent opacity-50" />
 
-      <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
-        <div>
-          <h1 className="font-black text-3xl tracking-tight text-neutral-900 dark:text-white">
-            Órdenes
-          </h1>
-          <p className="text-base mt-2 font-medium text-neutral-500 dark:text-neutral-400">
-            Gestiona el estado y seguimiento de los pedidos
-          </p>
-        </div>
-
-        {/* Search & Filter Toggle */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-end">
-             <div className="relative w-full md:w-72">
-                <CustomInput
-                    icon={<Search className="h-5 w-5" />}
-                    placeholder="Buscar pedido, cliente, total..."
-                    value={searchTerm}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setSearchTerm(e.target.value);
-                        setPage(1);
-                    }}
-                />
+        {/* Search & Filter Component with Title as Children */}
+        <CustomFiltered 
+            searchTerm={searchTerm}
+            setSearchTerm={(term) => {
+                setSearchTerm(term);
+                setPage(1);
+            }}
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+            statusFilter={statusFilter}
+            toggleStatusFilter={toggleStatusFilter}
+            dateRange={dateRange}
+            setDateRange={(range) => {
+                setDateRange(range);
+                setPage(1);
+            }}
+            handleClearAllFilters={handleClearAllFilters}
+            statusOptions={statusOptions}
+            title="Estado de la orden"
+            showDateFilter={true}
+        >
+            <div>
+              <h1 className="font-black text-3xl tracking-tight text-neutral-900 dark:text-white">
+                Órdenes
+              </h1>
+              <p className="text-base mt-2 font-medium text-neutral-500 dark:text-neutral-400">
+                Gestiona el estado y seguimiento de los pedidos
+              </p>
             </div>
-            <CustomButton 
-                onClick={handleToggleFilters}
-                variant={showFilters ? "solid" : "outline"}
-                className={showFilters ? "bg-neutral-800 text-white border-neutral-800" : "border-neutral-300 dark:border-white/20"}
-                leftIcon={Filter} 
-            >
-                Filtros
-            </CustomButton>
-        </div>
-      </div>
-
-      {/* Advanced Filters Section */}
-      {showFilters && (
-          <div className="mb-6 p-4 rounded-2xl bg-white/5 border border-white/10 animate-in slide-in-from-top-2 fade-in duration-200">
-              <div className="flex flex-col gap-4">
-                  
-                  {/* Status Tabs */}
-                  <div>
-                      <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2 block">Estado</label>
-                      <div className="flex flex-wrap gap-2">
-                        <button
-                            onClick={() => { setStatusFilter("all"); setPage(1); }}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                statusFilter === "all" 
-                                ? "bg-neutral-900 text-white dark:bg-white dark:text-black shadow-lg" 
-                                : "bg-white dark:bg-white/5 hover:bg-neutral-100 dark:hover:bg-white/10 border border-neutral-200 dark:border-white/10"
-                            }`}
-                        >
-                            Todos
-                        </button>
-                        {statusOptions.map(opt => (
-                            <button
-                                key={opt.value}
-                                onClick={() => { setStatusFilter(opt.value); setPage(1); }}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                    statusFilter === opt.value
-                                    ? `ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ${
-                                        opt.variant === 'success' ? 'bg-green-500 text-white ring-green-500' :
-                                        opt.variant === 'warning' ? 'bg-yellow-500 text-white ring-yellow-500' :
-                                        opt.variant === 'error' ? 'bg-red-500 text-white ring-red-500' :
-                                        'bg-blue-500 text-white ring-blue-500'
-                                    }`
-                                    : "bg-white dark:bg-white/5 hover:bg-neutral-100 dark:hover:bg-white/10 border border-neutral-200 dark:border-white/10"
-                                }`}
-                            >
-                                {opt.label}
-                            </button>
-                        ))}
-                      </div>
-                  </div>
-
-                  {/* Date Range using HeroUI */}
-                  <div className="flex flex-col gap-2 w-full sm:w-auto animate-in fade-in zoom-in duration-300 items-center sm:items-start">
-                      <div className="flex items-center justify-between w-full">
-                          <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider block text-left">Fecha</label>
-                          {(dateRange) && (
-                              <button 
-                                 onClick={() => {
-                                     setDateRange(null);
-                                     setPage(1);
-                                 }}
-                                 className="text-[10px] font-bold text-red-500 hover:text-red-600 transition-colors uppercase tracking-wide"
-                              >
-                                 Limpiar Filtros
-                              </button>
-                          )}
-                      </div>
-                      <div className="w-fit mx-auto">
-                        <Calendar 
-                            value={dateRange}
-                            onChange={(value) => {
-                                setDateRange(value);
-                                setPage(1);
-                            }}
-                        />
-                      </div>
-                  </div>
-
-              </div>
-          </div>
-      )}
+        </CustomFiltered>
 
       <div className="relative w-full overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
         <table className="text-sm w-full caption-bottom">
           <thead className="bg-neutral-900/5 dark:bg-white/5 border-b border-white/10">
             <tr className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
               {tableHeaders.map((header, index) => (
-                <th key={index} className="h-12 px-6 text-left first:pl-8 last:pr-8 whitespace-nowrap">
+                <th key={index} className="h-12 px-6 text-center first:pl-8 last:pr-8 whitespace-nowrap">
                   {header}
                 </th>
               ))}
@@ -229,12 +215,12 @@ export const TableOrdersAdmin = () => {
                 className="group hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
               >
                 {/* Referencia (ID) */}
-                <td className="p-4 pl-8 font-mono text-xs text-neutral-500">
+                <td className="p-4 pl-8 font-mono text-xs text-neutral-500 text-center">
                     {order.id.toString().slice(0, 8)}...
                 </td>
 
                 {/* Cliente */}
-                <td className="p-4 px-6 font-medium tracking-tighter flex flex-col gap-1">
+                <td className="p-4 px-6 font-medium tracking-tighter flex flex-col gap-1 items-center text-center">
                   <span className="font-bold text-neutral-800 dark:text-neutral-200 text-base">
                     {order.customers?.full_name}
                   </span>
@@ -242,30 +228,30 @@ export const TableOrdersAdmin = () => {
                 </td>
 
                 {/* Fecha */}
-                <td className="p-4 px-6 font-medium text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
+                <td className="p-4 px-6 font-medium text-neutral-600 dark:text-neutral-400 whitespace-nowrap text-center">
                   {formatDate(order.created_at)}
                 </td>
 
                 {/* Estado con Select */}
-                <td className="p-4 px-6">
+                <td className="p-4 px-6 text-center">
                   <div className="relative inline-block">
-                    {canEdit ? (
-                        <select
-                        value={order.status}
-                        className={`appearance-none rounded-full py-1.5 px-3 pr-8 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer transition-all border bg-white dark:bg-black/20 ${
-                             currentStatusConfig?.variant === 'success' ? 'border-green-200 text-green-700' :
-                             currentStatusConfig?.variant === 'warning' ? 'border-yellow-200 text-yellow-700' :
-                             currentStatusConfig?.variant === 'error' ? 'border-red-200 text-red-700' :
-                             'border-blue-200 text-blue-700'
-                        }`}
-                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                        >
-                        {statusOptions.map((option) => (
-                            <option value={option.value} key={option.value}>
-                            {option.label}
-                            </option>
-                        ))}
-                        </select>
+                    {canEdit && order.status !== 'Pending' && order.status !== 'Cancelled' ? (
+                        <div className="w-36">
+                            <CustomSelect
+                                options={statusOptions.filter(opt => {
+                                    // If Paid, allow moving to Shipped. 
+                                    // If Shipped, maybe allow reverting to Paid? Or just stay Shipped.
+                                    // User said "only leave Shipped".
+                                    // We show the current status + target statuses.
+                                    if (order.status === 'Paid') return opt.value === 'Paid' || opt.value === 'Shipped';
+                                    if (order.status === 'Shipped') return opt.value === 'Shipped' || opt.value === 'Paid';
+                                    return true; 
+                                })}
+                                value={order.status}
+                                onChange={(val) => handleStatusChange(order.id, val)}
+                                className={getStatusStyles(order.status)}
+                            />
+                        </div>
                     ) : (
                          <StatusBadge status={currentStatusConfig?.label || order.status} variant={currentStatusConfig?.variant as any || "neutral"} />
                     )}
@@ -273,12 +259,12 @@ export const TableOrdersAdmin = () => {
                 </td>
 
                 {/* Total */}
-                <td className="p-4 px-6 font-bold text-neutral-900 dark:text-white whitespace-nowrap">
+                <td className="p-4 px-6 font-bold text-neutral-900 dark:text-white whitespace-nowrap text-center">
                   {formatPrice(order.total_amount)}
                 </td>
                 
                 {/* Acciones */}
-                <td className="p-4 pr-8">
+                <td className="p-4 pr-8 text-center">
                      <CustomButton
                         size="sm"
                          variant="ghost"

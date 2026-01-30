@@ -9,7 +9,7 @@ export interface ShippingData {
     state: string;
     postalCode?: string;
     country: string;
-    phone?: string;
+    phone: string;
 }
 
 export interface CheckoutState {

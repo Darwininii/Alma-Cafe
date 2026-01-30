@@ -11,9 +11,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CustomButton } from "../Components/shared/CustomButton";
 import { CustomClose } from "../Components/shared/CustomClose";
 import { CustomPlusMinus } from "../Components/shared/CustomPlusMinus";
-import { OrderStatusBadge } from "../Components/shared/OrderStatusBadge";
+import { StatusBadge } from "../Components/shared/StatusBadge";
+import type { StatusType } from "../Components/shared/StatusBadge";
 import { CustomBack } from "../Components/shared/CustomBack";
 
+
+
+const getStatusVariant = (status: string): StatusType => {
+  switch (status) {
+    case 'Paid': return 'success';
+    case 'Delivered': return 'success';
+    case 'Shipped': return 'info';
+    case 'Pending': return 'warning';
+    case 'Cancelled': return 'error';
+    default: return 'neutral';
+  }
+};
 
 export const OrderUserPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -111,7 +124,7 @@ export const OrderUserPage = () => {
               <p className="text-sm text-black/70 dark:text-white/70">{formatDate(order.created_at)}</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 items-end sm:items-center">
-              <OrderStatusBadge status={order.status} className="px-4 py-1 text-sm" />
+              <StatusBadge status={order.status} variant={getStatusVariant(order.status)} className="px-4 py-1 text-sm border-black/80 dark:border-white/80" />
             </div>
           </div>
         </div>
@@ -152,7 +165,7 @@ export const OrderUserPage = () => {
                         >
                           <div className="flex gap-4 items-center">
                             {/* Product Image */}
-                            <div className="flex-shrink-0">
+                            <div className="shrink-0">
                               <img
                                 src={product.productImage?.[0] || "/placeholder.png"}
                                 alt={product.productName}
@@ -174,7 +187,7 @@ export const OrderUserPage = () => {
                             </div>
 
                             {/* Product Subtotal */}
-                            <div className="flex-shrink-0 text-right">
+                            <div className="shrink-0 text-right">
                               <p className="text-sm text-black/60 dark:text-white/60 mb-1">Subtotal</p>
                               <p className="text-lg font-black text-black/80 dark:text-white">
                                 {formatPrice(product.price * product.quantity)}
@@ -252,15 +265,15 @@ export const OrderUserPage = () => {
                 <div className="space-y-3 text-sm text-black/80 dark:text-white/80">
                   <div className="flex justify-between">
                     <span>Estado:</span>
-                    <OrderStatusBadge status={order.status} className="px-2 py-0.5 text-xs" />
+                    <StatusBadge status={order.status} variant={getStatusVariant(order.status)} className="px-2 py-0.5 text-sm border-black/80 dark:border-white/80" />
                   </div>
-                  {order.transactionId && (
+                  {order.transactionId && !['Cancelled', 'Cancelado', 'Pending', 'Pendiente'].includes(order.status) && (
                     <div className="flex flex-col">
                       <span className="text-xs opacity-70">ID Transacción</span>
                       <span className="font-mono font-medium">{order.transactionId}</span>
                     </div>
                   )}
-                  {order.reference && (
+                  {order.reference && !['Cancelled', 'Cancelado', 'Pending', 'Pendiente'].includes(order.status) && (
                     <div className="flex flex-col">
                       <span className="text-xs opacity-70">Referencia de Pago</span>
                       <span className="font-mono font-medium">{order.reference}</span>
@@ -268,12 +281,14 @@ export const OrderUserPage = () => {
                   )}
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10">
-                  <CustomPrint
-                    className="w-full"
-                    label="Comprobante"
-                  />
-                </div>
+                {!['Cancelled', 'Cancelado', 'Pending', 'Pendiente'].includes(order.status) && (
+                    <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10">
+                      <CustomPrint
+                        className="w-full"
+                        label="Comprobante"
+                      />
+                    </div>
+                )}
               </div>
             )}
 
