@@ -55,7 +55,7 @@ export const ContainerFilter = ({
       <div className="col-span-2 lg:hidden flex gap-2 items-center h-10">
         <CustomButton
           onClick={() => setIsOpen(true)}
-          className="bg-black dark:bg-white/80 text-white dark:text-black shrink-0"
+          className="bg-black dark:bg-white/90 text-white dark:text-black shrink-0"
           size="icon"
           title="Filtrar Productos"
           effect="shine"
@@ -72,7 +72,7 @@ export const ContainerFilter = ({
           onChange={(e) => setSearchTerm(e.target.value)}
           icon={<FaSearch size={16} className="text-black/50 dark:text-white/50" />}
           containerClassName="flex-1"
-          wrapperClassName="bg-white/5 dark:bg-white/5 border border-black/10 dark:border-white/10 h-10"
+          wrapperClassName="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 h-10"
           className="text-black dark:text-white text-sm"
         />
 
@@ -156,7 +156,7 @@ export const ContainerFilter = ({
               onChange={(e) => setSearchTerm(e.target.value)}
               icon={<FaSearch size={16} className="text-black/50 dark:text-white/50" />}
               containerClassName="w-full"
-              wrapperClassName="bg-white/5 dark:bg-white/5 border-none h-10"
+              wrapperClassName="bg-white dark:bg-white/5 border-none h-10"
               className="text-sm"
             />
           </div>

@@ -97,7 +97,7 @@ export const LoginPage = () => {
               <Link to="/registro" className="w-full">
                 <CustomButton
                     variant="ghost"
-                    className="w-full font-semibold border text-black bg-black/80 border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-white/5"
+                    className="w-full font-semibold border text-white hover:text-black bg-black/80 border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-white/5"
                     effect="wobble"
                 >
                     Registrarme
