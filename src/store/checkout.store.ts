@@ -7,8 +7,8 @@ export interface ShippingData {
     addressLine: string;
     city: string;
     state: string;
-    postalCode?: string;
-    country: string;
+    postalCode: string;
+    country?: string;
     phone: string;
 }
 

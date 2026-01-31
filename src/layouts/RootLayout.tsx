@@ -5,10 +5,15 @@ import { Banner, Newsletter } from "../Components/home";
 import { Sheet } from "../Components/shared/Sheet";
 import { useGlobalStore } from "@/store/global.store";
 import { FloatingCart } from "../Components/shared/FloatingCart";
+import { useEffect } from "react";
 
 export const RootLayout = () => {
   const { pathname } = useLocation();
-  const isSheetOpen = useGlobalStore((state) => state.isSheetOpen);
+  const { isSheetOpen, closeSheet } = useGlobalStore((state) => state);
+
+  useEffect(() => {
+    closeSheet();
+  }, [pathname, closeSheet]);
 
   return (
     <div className="min-h-screen flex flex-col">

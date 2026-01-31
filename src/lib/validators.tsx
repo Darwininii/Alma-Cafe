@@ -23,10 +23,10 @@ export const addressSchema = z.object({
     .max(50, "El Barrio no debe exceder los 50 carácteres"),
   postalCode: z
     .string()
-    .max(10, "El código postal no debe exceder los 10 carácteres")
-    .optional(),
-  country: z.string().min(1, "El país es requerido"),
-  phone: z.string().min(10, "El teléfono es requerido (min 10 dígitos)"),
+    .min(1, "El código postal es requerido")
+    .max(10, "El código postal no debe exceder los 10 carácteres"),
+  country: z.string().optional(),
+  phone: z.string().optional(),
 });
 
 export type UserRegisterFormValues = z.infer<typeof userRegisterSchema>;

@@ -1,5 +1,7 @@
 import { CustomButton } from "../../shared/CustomButton";
 import { FaLeftLong } from "react-icons/fa6";
+import { cn } from "../../../lib/utils";
+
 interface CheckoutNavigationProps {
     onBack?: () => void;
     onNext?: () => void;
@@ -7,6 +9,7 @@ interface CheckoutNavigationProps {
     isProcessing?: boolean;
     disabled?: boolean;
     orientation?: 'horizontal' | 'vertical';
+    className?: string;
 }
 
 export const CheckoutNavigation = ({
@@ -15,15 +18,18 @@ export const CheckoutNavigation = ({
     nextLabel = "Continuar",
     isProcessing,
     disabled,
-    orientation = 'horizontal'
+    orientation = 'horizontal',
+    className
 }: CheckoutNavigationProps) => {
     const isVertical = orientation === 'vertical';
 
-    const containerClasses = isVertical
+    const baseClasses = isVertical
         ? "mt-4 flex flex-col-reverse gap-3 w-full"
         : onBack
             ? "mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center"
             : "mt-8 pt-6 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800";
+
+    const containerClasses = cn(baseClasses, className);
 
     return (
         <div className={containerClasses}>

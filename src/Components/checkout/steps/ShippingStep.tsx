@@ -1,22 +1,25 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCheckoutStore } from "../../../store/checkout.store";
-import type { ShippingData } from "../../../store/checkout.store";
 import { InputAddress } from "../InputAddres";
 import { addressSchema } from "../../../lib/validators";
 import { CustomCard } from "../../shared/CustomCard";
 import { CheckoutNavigation } from "./CheckoutNavigation";
 
 export const ShippingStep = () => {
-    const { setActiveStep, setShippingData, shippingData } = useCheckoutStore();
+    const { setActiveStep, setShippingData, shippingData, payer } = useCheckoutStore();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<ShippingData>({
+    const { register, handleSubmit, formState: { errors } } = useForm<any>({
         resolver: zodResolver(addressSchema),
         defaultValues: shippingData || undefined
     });
 
-    const onSubmit = (data: ShippingData) => {
-        setShippingData(data);
+    const onSubmit = (data: any) => {
+        setShippingData({
+            ...data,
+            phone: payer?.phone || "0000000000", // Fallback if missing, though it should be captured in AuthStep
+            country: "Colombia" // Default as requested
+        });
         setActiveStep('SUMMARY');
     };
 
@@ -31,11 +34,7 @@ export const ShippingStep = () => {
                         <InputAddress register={register} errors={errors} name="city" placeholder="Ciudad" />
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <InputAddress register={register} errors={errors} name="state" placeholder="Barrio / Localidad" />
-                            <InputAddress register={register} errors={errors} name="postalCode" placeholder="C. Postal (Opc)" />
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <InputAddress register={register} errors={errors} name="country" placeholder="País" />
-                            <InputAddress register={register} errors={errors} name="phone" placeholder="Teléfono" />
+                            <InputAddress register={register} errors={errors} name="postalCode" placeholder="C. Postal" />
                         </div>
                     </div>
 
