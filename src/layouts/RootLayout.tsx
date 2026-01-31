@@ -13,6 +13,7 @@ export const RootLayout = () => {
 
   useEffect(() => {
     closeSheet();
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname, closeSheet]);
 
   return (
