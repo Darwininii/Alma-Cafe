@@ -5,6 +5,7 @@ import { CartItem } from "../../shared/CartItem";
 import { CustomCard } from "../../shared/CustomCard";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckoutNavigation } from "./CheckoutNavigation";
+import { CustomDivider } from "../../shared/CustomDivider";
 
 // Helper to format currency
 const COP = new Intl.NumberFormat('es-CO', {
@@ -71,7 +72,8 @@ export const CartStep = () => {
                                     <span className="text-zinc-600 dark:text-zinc-400">Envío</span>
                                     <span className="text-green-500 font-medium">Gratis</span>
                                 </div>
-                                <div className="border-t border-zinc-200 dark:border-zinc-700 pt-3 flex justify-between items-center">
+                                <CustomDivider className="my-2 bg-black/40 dark:bg-white/40" />
+                                <div className="flex justify-between items-center">
                                     <span className="text-lg font-bold text-zinc-900 dark:text-white">Total</span>
                                     <span className="text-2xl font-black text-zinc-900 dark:text-white">{COP.format(totalAmount)}</span>
                                 </div>

@@ -99,7 +99,7 @@ export const FormProduct = ({ titleForm }: Props) => {
         <div className="flex items-center gap-4">
           <CustomBack 
             iconOnly 
-            effect="magnetic"
+            effect="shine"
             className="bg-white/50 hover:bg-black text-black dark:text-white dark:bg-black/30 dark:hover:bg-black hover:text-primary border border-white/20 shadow-sm"
           />
           <div>

@@ -12,6 +12,7 @@ import { MdEmail, MdPerson, MdPhone } from "react-icons/md";
 import { CheckoutNavigation } from "./CheckoutNavigation";
 import { useUser } from "../../../hooks/auth/useUser"; // Import useUser
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { InfoUserCheckout } from "../InfoUserCheckout";
 
 // Schema for Guest Form
 const guestSchema = z.object({
@@ -77,24 +78,19 @@ export const AuthStep = () => {
         return (
             <div className="space-y-6 animate-fadeIn">
                 <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">2. Datos del Comprador</h2>
-                <CustomCard className="p-6 border border-zinc-200 dark:border-zinc-700">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-200">
-                            <MdPerson size={24} />
-                        </div>
-                        <div>
-                            <p className="text-sm font-bold text-black dark:text-zinc-400">Comprando como:</p>
-                            {user.full_name && <p className="font-bold text-sm text-black dark:text-zinc-300">Nombre: {user.full_name}</p>}
-                            <p className="font-bold text-sm text-black dark:text-white">Email: {user.email}</p>
-                            {user.phone && <p className="font-bold text-sm text-black dark:text-gray-400">Celular: {user.phone}</p>}
-                        </div>
-                    </div>
-                </CustomCard>
-                <CheckoutNavigation
-                    onBack={() => setActiveStep('CART')}
-                    onNext={handleContinueLoggedIn}
-                    nextLabel="Continuar"
-                />
+                
+                <InfoUserCheckout
+                    fullName={user.full_name}
+                    email={user.email}
+                    phone={user.phone}
+                    className="max-w-sm mx-auto"
+                >
+                    <CheckoutNavigation
+                        onBack={() => setActiveStep('CART')}
+                        onNext={handleContinueLoggedIn}
+                        nextLabel="Continuar"
+                    />
+                </InfoUserCheckout>
             </div>
         );
     }

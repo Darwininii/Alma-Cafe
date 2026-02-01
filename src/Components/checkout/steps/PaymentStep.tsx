@@ -14,6 +14,7 @@ import { CustomCard } from "../../shared/CustomCard";
 import { TransactionModal } from "../TransactionModal";
 import { CustomButton } from "../../shared/CustomButton";
 import { TbSquareLetterNFilled } from "react-icons/tb";
+import { CustomDivider } from "../../shared/CustomDivider";
 
 const COP = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
 
@@ -403,6 +404,8 @@ export const PaymentStep = () => {
                             />
                         </div>
                     )}
+
+                    <CustomDivider className="my-6" />
 
                     <CheckoutNavigation
                         onBack={() => setActiveStep('SUMMARY')}

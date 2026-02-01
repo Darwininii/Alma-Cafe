@@ -3,9 +3,12 @@ import { useCartStore } from "../../../store/cart.store";
 import { CustomCard } from "../../shared/CustomCard";
 import { CustomButton } from "../../shared/CustomButton";
 import { CartItem } from "../../shared/CartItem";
-import { MdEdit, MdPerson } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
+import { InfoUserCheckout } from "../InfoUserCheckout"; // Import component
 import { CheckoutNavigation } from "./CheckoutNavigation";
 import { LuMapPinHouse } from "react-icons/lu";
+import { CustomDivider } from "../../shared/CustomDivider";
+import { useUser } from "@/hooks"; // Import useUser
 
 // Helper to format currency
 const COP = new Intl.NumberFormat('es-CO', {
@@ -17,6 +20,7 @@ const COP = new Intl.NumberFormat('es-CO', {
 export const SummaryStep = () => {
     const { setActiveStep, shippingData, payer } = useCheckoutStore();
     const { items, totalAmount } = useCartStore();
+    const { session } = useUser(); // Get session
 
     if (!shippingData) {
         setActiveStep('SHIPPING'); // Fallback safety
@@ -33,31 +37,14 @@ export const SummaryStep = () => {
                 <div className="md:col-span-2 space-y-6">
 
                     {/* Payer Info */}
-                    <CustomCard className="p-6 border border-zinc-200 dark:border-zinc-700">
-                        <div className="flex items-start justify-between">
-                            <div className="space-y-1">
-                                <div className="flex items-center gap-2 text-primary font-bold text-sm mb-2">
-                                    <MdPerson className="rotate-0" size={18} />
-                                    <span>Datos del Comprador</span>
-                                </div>
-                                <div className="font-medium text-lg leading-snug text-black/80 dark:text-white">
-                                    {payer?.fullName}
-                                </div>
-                                <div className="text-black/80 dark:text-white/80 text-sm">
-                                    {payer?.email}
-                                </div>
-                            </div>
-                            <CustomButton
-                                variant="ghost"
-                                effect="magnetic"
-                                size="sm"
-                                className="text-black dark:text-white hover:text-primary bg-transparent hover:bg-transparent"
-                                onClick={() => setActiveStep('AUTH')}
-                            >
-                                <MdEdit size={20} />
-                            </CustomButton>
-                        </div>
-                    </CustomCard>
+                    <InfoUserCheckout
+                        fullName={payer?.fullName}
+                        email={payer?.email}
+                        phone={payer?.phone}
+                        isGuest={!session}
+                        onEdit={() => setActiveStep('AUTH')}
+                        className="w-full"
+                    />
 
                     {/* Shipping Info */}
                     <CustomCard className="p-6 border border-zinc-200 dark:border-zinc-700">
@@ -94,14 +81,6 @@ export const SummaryStep = () => {
                                 <CartItem item={item} />
                             </div>
                         ))}
-                        <CustomButton
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setActiveStep('CART')}
-                            className="text-black font-semibold dark:text-white dark:font-bold hover:font-black hover:text-white text-sm px-2 bg-transparent"
-                        >
-                            Editar productos
-                        </CustomButton>
                     </div>
                 </div>
 
@@ -113,7 +92,7 @@ export const SummaryStep = () => {
                         <div className="space-y-3 text-sm font-semibold mb-6">
                             <div className="flex justify-between">
                                 <span className="text-black/60 dark:text-white">Subtotal</span>
-                                <span>{COP.format(totalAmount)}</span>
+                                <span className="text-black/60 dark:text-white">{COP.format(totalAmount)}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-black/60 dark:text-white/60">Envío</span>
@@ -121,7 +100,9 @@ export const SummaryStep = () => {
                             </div>
                         </div>
 
-                        <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4 flex justify-between items-center mb-6">
+                        <CustomDivider className="mb-4 bg-black/40 dark:bg-white/40" />
+
+                        <div className="flex justify-between items-center mb-6">
                             <span className="font-bold text-lg text-black/80 dark:text-white/80">Total</span>
                             <span className="font-black text-xl text-black/80 dark:text-white/80">{COP.format(totalAmount)}</span>
                         </div>

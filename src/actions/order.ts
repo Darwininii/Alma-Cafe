@@ -180,7 +180,7 @@ export const getOrderById = async (orderId: string) => {
   const { data: order, error } = await supabase
     .from("orders")
     .select(
-      `*,  address(*), customers(full_name, email), orders_item(cantidad, price, product_snapshot, productos!left(name, images))`
+      `*,  address(*), customers(full_name, email, phone), orders_item(cantidad, price, product_snapshot, productos!left(name, images))`
     )
     .eq("customer_id", customer.id)
     .eq("id", Number(orderId))
@@ -193,6 +193,7 @@ export const getOrderById = async (orderId: string) => {
     customer: {
       email: order?.customers?.email,
       full_name: order?.customers?.full_name,
+      phone: order?.customers?.phone,
     },
     totalAmount: order.total_amount,
     status: order.status,
@@ -233,7 +234,7 @@ export const getAllOrders = async ({
   let query = supabase
     .from("orders")
     .select(
-      "id, total_amount, status, created_at, customers!inner(full_name, email)",
+      "id, total_amount, status, created_at, customers!inner(full_name, email, phone), address(address_line, city, state, postal_code, country)",
       { count: "exact" }
     )
     .order("created_at", { ascending: false });
@@ -288,7 +289,7 @@ export const getOrderByIdAdmin = async (id: string) => {
       `
       *,
       address(*),
-      customers(full_name, email),
+      customers(full_name, email, phone),
       orders_item(cantidad, price, product_snapshot, productos!left(name, images))
     `
     )
@@ -302,6 +303,7 @@ export const getOrderByIdAdmin = async (id: string) => {
     customer: {
       email: order?.customers?.email,
       full_name: order?.customers?.full_name,
+      phone: order?.customers?.phone,
     },
     totalAmount: order.total_amount,
     status: order.status,

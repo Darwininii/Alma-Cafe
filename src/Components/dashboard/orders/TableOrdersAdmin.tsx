@@ -13,7 +13,7 @@ import { CustomFiltered } from "@/Components/shared/CustomFiltered";
 
 
 
-const tableHeaders = ["Referencia", "Cliente", "Fecha", "Estado", "Total", "Acciones"];
+const tableHeaders = ["Referencia", "Cliente", "Envío", "Fecha", "Estado", "Total", "Acciones"];
 
 const statusOptions = [
   { value: "Pending", label: "Pendiente", variant: "warning" },
@@ -224,7 +224,22 @@ export const TableOrdersAdmin = () => {
                   <span className="font-bold text-neutral-800 dark:text-neutral-200 text-base">
                     {order.customers?.full_name}
                   </span>
-                  <span className="text-neutral-500 text-xs">{order.customers?.email}</span>
+                  <span className="text-neutral-500 text-xs break-all max-w-[150px]">{order.customers?.email}</span>
+                   {order.customers?.phone && (
+                      <span className="text-neutral-400 text-xs font-mono">{order.customers?.phone}</span>
+                   )}
+                </td>
+
+                {/* Envío */}
+                <td className="p-4 px-6 text-xs text-neutral-600 dark:text-neutral-400 text-center min-w-[180px]">
+                     {order.address && (
+                         <div className="flex flex-col gap-0.5 items-center">
+                             <span className="font-semibold text-neutral-800 dark:text-white truncate max-w-[170px]" title={order.address.address_line}>{order.address.address_line}</span>
+                             <span>{order.address.city} - {order.address.state}</span>
+                             {order.address.postal_code && <span>CP: {order.address.postal_code}</span>}
+                             <span className="uppercase text-[10px] font-bold text-neutral-400">{order.address.country}</span>
+                         </div>
+                     )}
                 </td>
 
                 {/* Fecha */}

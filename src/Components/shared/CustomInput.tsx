@@ -35,7 +35,7 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                 <div
                     ref={containerRef}
                     onMouseMove={handleMouseMove}
-                    className="group relative rounded-xl p-[1px] overflow-hidden transition-all duration-300"
+                    className="group relative rounded-xl p-px overflow-hidden transition-all duration-300"
                     style={
                         {
                             background: `radial-gradient(120px circle at ${mouse.x}px ${mouse.y}px, rgba(168, 114, 87, 0.4), transparent 40%)`,
@@ -43,7 +43,7 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                     }
                 >
                     {/* Fondo y Borde con efecto */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-neutral-200 to-neutral-100 dark:from-stone-800 dark:to-stone-900 opacity-90 rounded-xl pointer-events-none" />
+                    <div className="absolute inset-0 bg-linear-to-r from-neutral-200 to-neutral-100 dark:from-stone-800 dark:to-stone-900 opacity-90 rounded-xl pointer-events-none" />
 
                     <div
                         className={cn(
@@ -62,40 +62,54 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                         )}
 
                         <div className="relative w-full">
-                            <input
-                                ref={ref}
-                                {...props}
-                                placeholder={props.placeholder || " "}
-                                onFocus={(e) => {
-                                    setIsFocused(true);
-                                    props.onFocus?.(e);
-                                }}
-                                onBlur={(e) => {
-                                    setIsFocused(false);
-                                    props.onBlur?.(e);
-                                }}
-                                className={cn(
-                                    "peer w-full bg-transparent border-none outline-none text-sm text-neutral-900 dark:text-neutral-100 py-2.5 h-10 placeholder:text-transparent focus:placeholder:text-zinc-400",
-                                    className
-                                )}
-                            />
+                            {(() => {
+                                const hasRealPlaceholder = props.placeholder && props.placeholder.trim().length > 0;
+                                
+                                return (
+                                    <>
+                                        <input
+                                            ref={ref}
+                                            {...props}
+                                            placeholder={props.placeholder || " "}
+                                            onFocus={(e) => {
+                                                setIsFocused(true);
+                                                props.onFocus?.(e);
+                                            }}
+                                            onBlur={(e) => {
+                                                setIsFocused(false);
+                                                props.onBlur?.(e);
+                                            }}
+                                            className={cn(
+                                                "peer w-full bg-transparent border-none outline-none text-sm text-neutral-900 dark:text-neutral-100 py-2.5 h-10",
+                                                // If real placeholder, make it visible. Else hide it until focus.
+                                                hasRealPlaceholder 
+                                                    ? "placeholder:text-neutral-400" 
+                                                    : "placeholder:text-transparent focus:placeholder:text-zinc-400",
+                                                className
+                                            )}
+                                        />
 
-                            {/* Etiqueta flotante */}
-                            {label && (
-                                <label
-                                    className={cn(
-                                        "absolute left-0 pointer-events-none transition-all duration-200 font-medium truncate max-w-full z-10",
-                                        // Default (Floating / Has Value)
-                                        "-top-1 text-[10px] text-primary",
-                                        // Placeholder Shown (Empty) - Push to Middle
-                                        "peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-neutral-400",
-                                        // Focus (Active) - Pull to Top (Overrides Placeholder Shown)
-                                        "peer-focus:-top-1 peer-focus:translate-y-0 peer-focus:text-[10px] peer-focus:text-primary"
-                                    )}
-                                >
-                                    {label}
-                                </label>
-                            )}
+                                        {/* Etiqueta flotante */}
+                                        {label && (
+                                            <label
+                                                className={cn(
+                                                    "absolute left-0 pointer-events-none transition-all duration-200 font-medium truncate max-w-full z-10",
+                                                    // Base state (Top / Active)
+                                                    "-top-1 text-[10px] text-primary",
+                                                    
+                                                    // Only move down if NO real placeholder exists and field is empty
+                                                    !hasRealPlaceholder && "peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-neutral-400",
+                                                    
+                                                    // Check focus behavior
+                                                    "peer-focus:-top-1 peer-focus:translate-y-0 peer-focus:text-[10px] peer-focus:text-primary"
+                                                )}
+                                            >
+                                                {label}
+                                            </label>
+                                        )}
+                                    </>
+                                );
+                            })()}
                         </div>
 
                         {/* Right Element (e.g. Toggle Password) */}

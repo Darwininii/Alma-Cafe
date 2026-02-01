@@ -1,16 +1,17 @@
-import { IoChevronBack } from "react-icons/io5";
-import { useNavigate, useParams } from "react-router-dom";
+// IoChevronBack removed as it was only used in CustomButton
+import { useParams } from "react-router-dom";
 import { Loader } from "../../Components/shared/Loader";
 import { formatPrice, formatDate } from "../../helpers";
 import { useOrderAdmin } from "@/hooks";
-import { CustomButton } from "../../Components/shared/CustomButton";
+import { CustomBack } from "../../Components/shared/CustomBack";
+import { CustomCard } from "../../Components/shared/CustomCard";
 import { StatusBadge } from "../../Components/shared/StatusBadge";
 import { User, MapPin, Package } from "lucide-react";
 import { BiSolidBadgeDollar } from "react-icons/bi";
 
 export const DashboardOrderPage = () => {
-  const navigate = useNavigate();
-
+  // const navigate = useNavigate(); // Removed unused
+  
   const { id } = useParams<{ id: string }>();
   const { data: order, isLoading } = useOrderAdmin(id!);
 
@@ -21,14 +22,11 @@ export const DashboardOrderPage = () => {
       {/* Header with Back Button */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/40 dark:bg-black/40 backdrop-blur-xl p-6 rounded-3xl border border-white/20 shadow-lg">
         <div className="flex items-center gap-4">
-          <CustomButton
-            size="icon"
-            effect="magnetic"
-            className="bg-white/50 hover:bg-white text-neutral-600 hover:text-black border border-white/20 shadow-sm"
-            onClick={() => navigate(-1)}
-          >
-            <IoChevronBack size={20} />
-          </CustomButton>
+          <CustomBack 
+            iconOnly 
+            effect="shine"
+            className="bg-white/50 hover:bg-black text-black dark:text-white dark:bg-black/30 dark:hover:bg-black hover:text-primary border border-white/20 shadow-sm"
+          />
           <div>
             <div className="flex items-center gap-3">
                  <h1 className="font-black tracking-tight text-3xl text-neutral-900 dark:text-white">
@@ -71,13 +69,18 @@ export const DashboardOrderPage = () => {
                                 <tr key={index} className="hover:bg-white/50 dark:hover:bg-white/5 transition-colors">
                                     <td className="p-4 pl-6 align-middle">
                                         <div className="flex items-center gap-4">
-                                            <div className="h-16 w-16 rounded-xl border border-white/20 bg-white shadow-sm overflow-hidden shrink-0">
+                                            <CustomCard 
+                                                variant="solid"
+                                                padding="none"
+                                                rounded="2xl"
+                                                className="h-16 w-16 shrink-0 border-white/20 shadow-sm"
+                                            >
                                                 <img
                                                     src={item.productImage ? item.productImage[0] : ""}
                                                     alt={item.productName}
                                                     className="h-full w-full object-contain p-1"
                                                 />
-                                            </div>
+                                            </CustomCard>
                                             <span className="font-bold text-neutral-700 dark:text-gray-200 line-clamp-2">
                                                 {item.productName}
                                             </span>
@@ -121,9 +124,20 @@ export const DashboardOrderPage = () => {
                         <User className="text-primary w-5 h-5" />
                         <h2 className="font-bold text-lg text-neutral-800 dark:text-gray-100">Cliente</h2>
                     </div>
-                     <div className="space-y-1">
+                     <div className="space-y-3">
                         <p className="font-bold text-base text-neutral-900 dark:text-white">{order.customer.full_name}</p>
-                        <p className="text-sm text-neutral-500">{order.customer.email}</p>
+                        
+                        <div>
+                            <span className="font-bold text-xs uppercase opacity-70 block mb-1">Correo</span>
+                            <p className="text-sm text-neutral-500 break-all">{order.customer.email}</p>
+                        </div>
+
+                        {order.customer.phone && (
+                            <div>
+                                <span className="font-bold text-xs uppercase opacity-70 block mb-1">Celular</span>
+                                <p className="text-sm text-neutral-400 font-mono">{order.customer.phone}</p>
+                            </div>
+                        )}
                     </div>
                </div>
 
@@ -133,11 +147,33 @@ export const DashboardOrderPage = () => {
                         <MapPin className="text-primary w-5 h-5" />
                         <h2 className="font-bold text-lg text-neutral-800 dark:text-gray-100">Envío</h2>
                     </div>
-                     <div className="space-y-1 text-sm text-neutral-600 dark:text-neutral-300">
-                        <p>{order.address.addressLine}</p>
-                         <p>{order.address.city}, {order.address.state}</p>
-                        <p>{order.address.postalCode}</p>
-                        <p className="font-bold">{order.address.country}</p>
+                     <div className="space-y-3 text-sm text-neutral-600 dark:text-neutral-300">
+                        <div>
+                             <span className="font-bold text-xs uppercase opacity-70 block mb-1">Dirección</span>
+                             <p>{order.address.addressLine}</p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                             <div>
+                                 <span className="font-bold text-xs uppercase opacity-70 block mb-1">Ciudad</span>
+                                 <p>{order.address.city}</p>
+                             </div>
+                             <div>
+                                 <span className="font-bold text-xs uppercase opacity-70 block mb-1">Barrio</span>
+                                 <p>{order.address.state}</p>
+                             </div>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            {order.address.postalCode && (
+                                <div>
+                                    <span className="font-bold text-xs uppercase opacity-70 block mb-1">C. Postal</span>
+                                    <p>{order.address.postalCode}</p>
+                                </div>
+                            )}
+                             <div>
+                                <span className="font-bold text-xs uppercase opacity-70 block mb-1">País</span>
+                                <p className="font-bold">{order.address.country}</p>
+                             </div>
+                        </div>
                     </div>
                </div>
 
@@ -162,7 +198,7 @@ export const DashboardOrderPage = () => {
                         {order.reference && order.status !== 'Cancelled' && (
                              <div className="pt-2">
                                 <span className="text-xs text-neutral-400 block mb-1">Referencia</span>
-                                <code className="bg-neutral-100 dark:bg-white/10 px-2 py-1 rounded text-xs text-white font-mono block w-full truncate">
+                                <code className="bg-neutral-100 dark:bg-white/10 px-2 py-1 rounded text-xs text-black font-mono block w-full truncate">
                                     {order.reference}
                                 </code>
                             </div>

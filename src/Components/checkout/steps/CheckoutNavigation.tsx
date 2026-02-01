@@ -26,8 +26,8 @@ export const CheckoutNavigation = ({
     const baseClasses = isVertical
         ? "mt-4 flex flex-col-reverse gap-3 w-full"
         : onBack
-            ? "mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center"
-            : "mt-8 pt-6 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800";
+            ? "mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center"
+            : "mt-4 flex items-center justify-between";
 
     const containerClasses = cn(baseClasses, className);
 

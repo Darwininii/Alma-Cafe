@@ -5,6 +5,7 @@ import { InputAddress } from "../InputAddres";
 import { addressSchema } from "../../../lib/validators";
 import { CustomCard } from "../../shared/CustomCard";
 import { CheckoutNavigation } from "./CheckoutNavigation";
+import { CustomDivider } from "../../shared/CustomDivider";
 
 export const ShippingStep = () => {
     const { setActiveStep, setShippingData, shippingData, payer } = useCheckoutStore();
@@ -37,6 +38,8 @@ export const ShippingStep = () => {
                             <InputAddress register={register} errors={errors} name="postalCode" placeholder="C. Postal" />
                         </div>
                     </div>
+
+                    <CustomDivider className="my-6" />
 
                     <CheckoutNavigation
                         onBack={() => setActiveStep('AUTH')}

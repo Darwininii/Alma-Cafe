@@ -318,7 +318,10 @@ export const OrderUserPage = () => {
                   <div>
                     <p className="text-xs font-bold text-black/80 dark:text-white/80 uppercase tracking-wider mb-1">Cliente</p>
                     <p className="text-sm font-semibold text-black/80 dark:text-white">{order.customer.full_name}</p>
-                    <p className="text-sm text-black/80 dark:text-white">{order.customer.email}</p>
+                    <p className="text-sm text-black/80 dark:text-white break-all">{order.customer.email}</p>
+                    {order.customer.phone && (
+                        <p className="text-sm text-black/60 dark:text-white/60">{order.customer.phone}</p>
+                    )}
                   </div>
                 </div>
 
@@ -334,11 +337,33 @@ export const OrderUserPage = () => {
                   </div>
                   <div>
                     <p className="text-xs font-bold text-black/80 dark:text-white/80 uppercase tracking-wider mb-1">Dirección de entrega</p>
-                    <div className="text-sm text-black/80 dark:text-white/80 leading-relaxed">
-                      <p className="font-medium text-black/80 dark:text-white">{order.address.addressLine}</p>
-                      <p>{order.address.city}, {order.address.state}</p>
-                      {order.address.postalCode && <p>{order.address.postalCode}</p>}
-                      <p>{order.address.country}</p>
+                    <div className="text-sm text-black/80 dark:text-white/80 leading-relaxed space-y-1">
+                      <div>
+                          <span className="font-bold text-xs uppercase opacity-70 block">Dirección</span>
+                          <p>{order.address.addressLine}</p>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-2">
+                           <div>
+                              <span className="font-bold text-xs uppercase opacity-70 block">Ciudad</span>
+                              <p>{order.address.city}</p>
+                           </div>
+                           <div>
+                              <span className="font-bold text-xs uppercase opacity-70 block">Barrio</span>
+                              <p>{order.address.state}</p>
+                           </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-2">
+                          {order.address.postalCode && (
+                              <div>
+                                  <span className="font-bold text-xs uppercase opacity-70 block">C. Postal</span>
+                                  <p>{order.address.postalCode}</p>
+                              </div>
+                          )}
+                           <div>
+                              <span className="font-bold text-xs uppercase opacity-70 block">País</span>
+                              <p>{order.address.country}</p>
+                           </div>
+                      </div>
                     </div>
                   </div>
                 </div>
