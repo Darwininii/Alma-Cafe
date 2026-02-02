@@ -129,7 +129,7 @@ export const PruebasPage: React.FC = () => {
 
                     {/* ============ USER REQUESTED EFFECTS ============ */}
                     <div className="my-16 border-t border-black/10 dark:border-white/10 pt-16">
-                        <h2 className="text-4xl font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-600">
+                        <h2 className="text-4xl font-bold text-center mb-12 text-transparent bg-clip-text bg-linear-to-r from-red-600 to-amber-600">
                             ✨ Special Requested Effects
                         </h2>
 
@@ -186,7 +186,7 @@ export const PruebasPage: React.FC = () => {
 
                     {/* ============ EFECTOS SORPRENDENTES E INNOVADORES ============ */}
                     <div className="my-16 border-t border-black/10 dark:border-white/10 pt-16">
-                        <h2 className="text-5xl font-bold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 animate-pulse">
+                        <h2 className="text-5xl font-bold text-center mb-6 text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-pink-500 to-violet-600 animate-pulse">
                             ✨ Efectos Innovadores y Sorprendentes ✨
                         </h2>
                         <p className="text-center text-black/70 dark:text-white/70 mb-16 max-w-3xl mx-auto text-lg font-medium">
@@ -194,7 +194,7 @@ export const PruebasPage: React.FC = () => {
                         </p>
 
                         {/* 1. Magnetic Pull */}
-                        <div className="mb-16 p-10 bg-gradient-to-br from-blue-900/40 via-indigo-900/40 to-violet-900/40 border border-blue-500/30 rounded-2xl shadow-2xl">
+                        <div className="mb-16 p-10 bg-linear-to-br from-blue-900/40 via-indigo-900/40 to-violet-900/40 border border-blue-500/30 rounded-2xl shadow-2xl">
                             <div className="mb-6 flex items-center gap-3">
                                 <span className="text-4xl">🧲</span>
                                 <h3 className="text-3xl font-bold text-white">
@@ -218,7 +218,7 @@ export const PruebasPage: React.FC = () => {
                         </div>
 
                         {/* 2. Text Scramble */}
-                        <div className="mb-16 p-10 bg-gradient-to-br from-green-900/30 via-emerald-900/30 to-teal-900/30 border border-emerald-500/30 rounded-2xl shadow-2xl">
+                        <div className="mb-16 p-10 bg-linear-to-br from-green-900/30 via-emerald-900/30 to-teal-900/30 border border-emerald-500/30 rounded-2xl shadow-2xl">
                             <div className="mb-6 flex items-center gap-3">
                                 <span className="text-4xl">🔤</span>
                                 <h3 className="text-3xl font-bold text-white">
@@ -242,7 +242,7 @@ export const PruebasPage: React.FC = () => {
                         </div>
 
                         {/* 3. Liquid Metal */}
-                        <div className="mb-16 p-10 bg-gradient-to-br from-gray-900/50 via-slate-900/50 to-zinc-900/50 border border-gray-400/30 rounded-2xl shadow-2xl">
+                        <div className="mb-16 p-10 bg-linear-to-br from-gray-900/50 via-slate-900/50 to-zinc-900/50 border border-gray-400/30 rounded-2xl shadow-2xl">
                             <div className="mb-6 flex items-center gap-3">
                                 <span className="text-4xl">🌊</span>
                                 <h3 className="text-3xl font-bold text-white">
@@ -266,7 +266,7 @@ export const PruebasPage: React.FC = () => {
                         </div>
 
                         {/* 4. Pixel Dissolve */}
-                        <div className="mb-16 p-10 bg-gradient-to-br from-red-900/40 via-rose-900/40 to-pink-900/40 border border-red-500/30 rounded-2xl shadow-2xl">
+                        <div className="mb-16 p-10 bg-linear-to-br from-red-900/40 via-rose-900/40 to-pink-900/40 border border-red-500/30 rounded-2xl shadow-2xl">
                             <div className="mb-6 flex items-center gap-3">
                                 <span className="text-4xl">🎭</span>
                                 <h3 className="text-3xl font-bold text-white">
@@ -290,7 +290,7 @@ export const PruebasPage: React.FC = () => {
                         </div>
 
                         {/* 5. Cosmic Ripple */}
-                        <div className="mb-16 p-10 bg-gradient-to-br from-pink-900/40 via-fuchsia-900/40 to-purple-900/40 border border-pink-500/30 rounded-2xl shadow-2xl">
+                        <div className="mb-16 p-10 bg-linear-to-br from-pink-900/40 via-fuchsia-900/40 to-purple-900/40 border border-pink-500/30 rounded-2xl shadow-2xl">
                             <div className="mb-6 flex items-center gap-3">
                                 <span className="text-4xl">🌌</span>
                                 <h3 className="text-3xl font-bold text-white">
@@ -317,12 +317,12 @@ export const PruebasPage: React.FC = () => {
 
                     {/* ============ GOOEY MENU SECTION ============ */}
                     <div className="my-16 border-t border-black/10 dark:border-white/10 pt-16">
-                        <h2 className="text-4xl font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">
+                        <h2 className="text-4xl font-bold text-center mb-12 text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-purple-600">
                             🎨 Gooey Hamburger Menu
                         </h2>
 
                         {/* Gooey Menu Demo */}
-                        <div className="mb-12 p-20 bg-gradient-to-br from-green-400 to-blue-500 rounded-xl flex flex-col items-center">
+                        <div className="mb-12 p-20 bg-linear-to-br from-green-400 to-blue-500 rounded-xl flex flex-col items-center">
                             <h3 className="text-2xl font-semibold mb-8 text-white">
                                 Interactive Radial Menu with Gooey Effect
                             </h3>
@@ -345,7 +345,7 @@ export const PruebasPage: React.FC = () => {
                         </div>
 
                         {/* Variation with different colors */}
-                        <div className="mb-12 p-20 bg-gradient-to-br from-purple-600 to-pink-500 rounded-xl flex flex-col items-center">
+                        <div className="mb-12 p-20 bg-linear-to-br from-purple-600 to-pink-500 rounded-xl flex flex-col items-center">
                             <h3 className="text-2xl font-semibold mb-8 text-white">
                                 Different Color Variation
                             </h3>

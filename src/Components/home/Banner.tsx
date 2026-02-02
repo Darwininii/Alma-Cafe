@@ -116,7 +116,7 @@ export const Banner = () => {
 
         {/* Título */}
         <h1 className="text-4xl font-bold dark:text-white/70 lg:text-6xl mb-2">
-          Bienvenido a <CustomTitle className="text-amber-800/80 dark:text-amber-700 text-4xl lg:text-6xl" />
+          Bienvenido a <CustomTitle className="text-amber-700/80 dark:text-amber-600 text-4xl lg:text-6xl" />
         </h1>
 
         {/* Descripción */}
@@ -144,8 +144,8 @@ export const Banner = () => {
             effect="expandIcon"
             filledIcon
             rightIcon={PiShoppingBagOpenFill}
-            effectColor="dark:bg-yellow-600 bg-amber-600"
-            className="group bg-black/80 dark:bg-white/70 text-slate-300 dark:text-black px-6 py-3 font-semibold hover:text-black dark:hover:text-black shadow-black/40 hover:shadow-lg dark:shadow-white/20 dark:hover:shadow-lg  transition-all duration-300 ease-in-out flex items-center gap-2 ring-black dark:ring-white/80 ring-[1.5px] hover:ring-2 rounded-2xl hover:scale-105 active:scale-95"
+            effectColor="dark:bg-yellow-600/80 bg-amber-600"
+            className="group bg-black/80 dark:bg-white/90 text-slate-300 dark:text-black px-6 py-3 font-semibold hover:text-black dark:hover:text-black shadow-black/40 hover:shadow-lg dark:shadow-white/20 dark:hover:shadow-lg  transition-all duration-300 ease-in-out flex items-center gap-2 ring-black dark:ring-white/80 ring-[1.5px] hover:ring-2 rounded-2xl hover:scale-105 active:scale-95"
           >
             Explorar Productos
           </CustomButton>

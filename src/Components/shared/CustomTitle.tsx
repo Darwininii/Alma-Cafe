@@ -15,11 +15,11 @@ export const CustomTitle = ({
     const Content = () => (
         <span
             className={cn(
-                "font-bold tracking-tighter text-2xl bg-gradient-to-r from-amber-500 to-amber-700 bg-clip-text text-transparent",
+                "font-bold tracking-tighter text-2xl bg-linear-to-r from-amber-500 to-amber-700 bg-clip-text text-transparent pr-2 pb-1",
                 className
             )}
         >
-            Alma Café
+            Darwinini Ecommerce
         </span>
     );
 
