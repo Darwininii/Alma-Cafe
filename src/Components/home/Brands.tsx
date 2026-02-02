@@ -1,101 +1,121 @@
+import { useState } from "react";
 import { FlipCard } from "@/Components/shared/FlipCard";
 import { useScrollReveal } from "../shared/Scroll";
 import { CardFeature } from "../shared/CardFeature";
-import { GiCoffeeMug, GiChipsBag, GiPieSlice } from "react-icons/gi";
-import { LiaHotdogSolid } from "react-icons/lia";
-import { MdEmojiFoodBeverage } from "react-icons/md";
-import { RiDrinks2Fill } from "react-icons/ri";
+import { GiChipsBag, GiCoffeeBeans } from "react-icons/gi";
+import { SiCocacola, SiDatadog, SiHuawei, SiSamsung } from "react-icons/si";
 
-const brands = [
+const categories = [
   {
-    name: "Café",
-    image: "/img/brands/Apple-Logo.webp",
-    alt: "Apple Logo",
-    icon: (
-      <GiCoffeeMug className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
-    ),
+    name: "Coca Cola",
+    image: "/img/brands/cocacola-log.png",
+    alt: "Coca Cola Logo",
+    icon: <SiCocacola className="w-12 h-12 md:w-16 md:h-16" />,
+    description: "Bebida Refrescante"
   },
   {
-    name: "Torta",
+    name: "Samsung",
     image: "/img/brands/Samsung_Logo.webp",
     alt: "Samsung Logo",
-    icon: (
-      <GiPieSlice className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
-    ),
+    icon: <SiSamsung className="w-12 h-12 md:w-16 md:h-16" />,
+    description: "Tecnología a tus manos"
   },
   {
-    name: "Frappé",
-    image: "/img/brands/granizado-intenso-de-limon.webp",
-    alt: "Frappé",
-    icon: (
-      <RiDrinks2Fill className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
-    ),
+    name: "Juan Valdez",
+    image: "/img/brands/juanValdez-logo.png",
+    alt: "Juan Valdez Logo",
+    icon: <GiCoffeeBeans className="w-12 h-12 md:w-16 md:h-16" />,
+    description: "Café Colombiano"
   },
   {
-    name: "Perro Caliente",
+    name: "Huawei",
     image: "/img/brands/huawei-logo.png",
     alt: "Huawei Logo",
-    icon: (
-      <LiaHotdogSolid className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
-    ),
+    icon: <SiHuawei className="w-12 h-12 md:w-16 md:h-16" />,
+    description: "Tecnología de Vanguardia"
   },
   {
-    name: "Mecatos",
-    image: "/img/brands/realme-logo.webp",
-    alt: "Realme Logo",
-    icon: (
-      <GiChipsBag className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
-    ),
+    name: "Datadog",
+    image: "/img/brands/Datadog_logo.svg",
+    alt: "Datadog Logo",
+    icon: <SiDatadog className="w-12 h-12 md:w-16 md:h-16" />,
+    description: "Monitoreo & Observabilidad"
   },
   {
-    name: "Té",
-    image: "/img/brands/xiaomi-logo.webp",
-    alt: "Xiaomi Logo",
-    icon: (
-      <MdEmojiFoodBeverage className="text-6xl text-zinc-800 dark:text-white/70 transition-colors" />
-    ),
+    name: "Papas Margarita",
+    image: "/img/brands/PapasMargarita-logo.webp",
+    alt: "Papas Margarita Logo",
+    icon: <GiChipsBag className="w-12 h-12 md:w-16 md:h-16" />,
+    description: "Crujiente & Rico"
   },
 ];
 
+const BrandCard = ({ item }: { item: typeof categories[0] }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  return (
+    <div 
+      className="cursor-pointer w-full h-[220px] md:h-[280px]"
+      onClick={() => setIsFlipped(!isFlipped)}
+    >
+      <FlipCard
+        isFlipped={isFlipped}
+        className="w-full h-full"
+        containerClassName="w-full h-full"
+        frontClassName="!bg-transparent dark:!bg-transparent !backdrop-blur-md !border-white/20 dark:!border-white/10 shadow-lg"
+        backClassName="border-none shadow-lg !bg-transparent dark:!bg-transparent backdrop-blur-md"
+        front={
+          <div className="flex flex-col items-center justify-center gap-2 text-center h-full w-full p-4">
+            <div className="w-24 h-24 md:w-32 md:h-32 relative flex items-center justify-center bg-black/10 dark:bg-white/10 rounded-full p-4 mb-2 backdrop-blur-sm border-2 border-black/20 dark:border-white/20 text-black dark:text-neutral-200 transition-colors duration-300">
+              {item.icon}
+            </div>
+            <div className="space-y-0.5">
+              <h3 className="text-lg md:text-xl font-bold text-black dark:text-white leading-tight">
+                {item.name}
+              </h3>
+              <p className="text-xs md:text-sm text-black/60 dark:text-neutral-400 font-medium leading-tight">
+                {item.description}
+              </p>
+            </div>
+            <div className="absolute bottom-3 justify-center opacity-70 text-[10px] uppercase tracking-widest text-black/80 dark:text-white/80">
+              Ver Marca
+            </div>
+          </div>
+        }
+        back={
+          <div className="h-full w-full flex flex-col items-center justify-center p-6 relative">
+            <div className="w-24 h-24 md:w-32 md:h-32 relative flex items-center justify-center bg-black/10 dark:bg-white/10 rounded-full p-4 mb-4 backdrop-blur-sm border-2 border-black/20 dark:border-white/20">
+               <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-contain drop-shadow-md"
+                />
+            </div>
+          </div>
+        }
+      />
+    </div>
+  );
+}
+
 export const Brands = () => {
   useScrollReveal();
+
   return (
-    <div className="scroll-reveal delay">
+    <div className="py-20 bg-transparent scroll-reveal">
       <div className="container mx-auto px-4">
         <CardFeature
-          className="bg-transparent border-0 shadow-black/20 dark:shadow-white/10 shadow-lg mb-16 text-center justify-center"
+          className="bg-transparent border-0 shadow-none mb-16 text-center max-w-3xl mx-auto p-0"
           title="Nuestras Marcas"
-          description="Descubre nuestras marcas de café, seleccionadas cuidadosamente para ofrecerte la mejor calidad y sabor."
-          titleClassName="text-4xl text-black/70 mb-4"
-          descriptionClassName="text-lg text-black/70"
+          description="Explora nuestra selección de sabores únicos."
+          titleClassName="text-4xl md:text-5xl font-black text-black/90 dark:text-white mb-4 tracking-tight"
+          descriptionClassName="text-lg text-black/60 dark:text-white/60 font-medium"
         />
 
-        <div className="flex justify-center">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-8 sm:gap-6 lg:gap-50 place-items-center justify-items-center max-w-5xl w-full">
-            {brands.map((brand, index) => (
-              <FlipCard
-                key={index}
-                containerClassName="shadow-black/20 dark:shadow-white/10 shadow-lg hover:shadow-2xl w-42 h-full sm:w-42 sm:h-full md:w-full md:h-full transition-all"
-                frontClassName="bg-transparent backdrop-blur-sm border-none flex items-center justify-center"
-                backClassName="bg-transparent border-0 backdrop-blur-sm border-none p-0"
-                front={
-                  <div className="flex flex-col items-center justify-center h-full w-full">
-                    {brand.icon}
-                    <span className="font-black mt-2 text-sm text-zinc-800 dark:text-white/70">
-                      {brand.name}
-                    </span>
-                  </div>
-                }
-                back={
-                  <img
-                    src={brand.image}
-                    alt={brand.alt}
-                    className="h-full w-full object-cover filter contrast-125 rounded-xl"
-                  />
-                }
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 lg:gap-4 max-w-7xl mx-auto justify-items-center">
+          {categories.map((item, index) => (
+            <BrandCard key={index} item={item} />
+          ))}
         </div>
       </div>
     </div>

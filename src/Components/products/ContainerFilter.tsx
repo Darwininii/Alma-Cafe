@@ -139,7 +139,7 @@ export const ContainerFilter = ({
             centerIcon={MdOutlineFilterListOff}
             iconSize={22}
             disabled={selectedBrands.length === 0 && !searchTerm}
-            className="w-8 h-8 min-w-[2rem] p-0"
+            className="w-8 h-8 min-w-8 p-0"
           />
         </div>
 
