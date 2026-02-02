@@ -1,5 +1,3 @@
-// pages/TiendaPage.tsx
-
 import { CardProduct } from "@/Components/products/CardProduct";
 import { ContainerFilter } from "@/Components/products/ContainerFilter";
 import { useFilteredProducts } from "@/hooks";
@@ -7,9 +5,20 @@ import { Pagination } from "@/Components/shared/Pagination";
 import type { Product } from "@/interfaces";
 import { useState } from "react";
 import { Loader } from "@/Components/shared/Loader";
+import { useSearchParams } from "react-router-dom";
 
 export const TiendaPage = () => {
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page") || "1");
+  
+  // Custom setPage to sync with URL
+  const setPage = (newPage: number) => {
+    setSearchParams((prev) => {
+      prev.set("page", newPage.toString());
+      return prev;
+    });
+  };
+
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 

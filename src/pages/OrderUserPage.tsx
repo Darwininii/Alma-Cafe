@@ -87,7 +87,7 @@ export const OrderUserPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:hidden">
         {/* Header */}
         <div className="mb-8">
-          <CustomBack onClick={() => navigate("/account/pedidos")} className="mb-6" />
+          <CustomBack className="mb-6" />
 
           {/* Navigation Buttons */}
           <div className="flex items-center gap-2 mb-4">
@@ -255,7 +255,7 @@ export const OrderUserPage = () => {
               </div>
 
               {/* Receipt Zigzag Bottom Effect (CSS Trick or SVG) - Optional, simpler solid line for now */}
-              <div className="h-2 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-black/5 to-transparent bg-size-[10px_10px] bg-repeat-x"></div>
+              <div className="h-2 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-black/5 to-transparent bg-size-[10px_10px] bg-repeat-x"></div>
             </div>
 
             {/* Payment Information (Wompi Details) */}
@@ -282,11 +282,11 @@ export const OrderUserPage = () => {
                 </div>
 
                 {!['Cancelled', 'Cancelado', 'Pending', 'Pendiente'].includes(order.status) && (
-                    <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10">
-                      <CustomPrint
-                        className="w-full"
-                        label="Comprobante"
-                      />
+                  <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10">
+                    <CustomPrint
+                      className="w-full"
+                      label="Comprobante"
+                    />
                     </div>
                 )}
               </div>
@@ -302,7 +302,7 @@ export const OrderUserPage = () => {
               <div className="p-6 space-y-6">
                 {/* Customer Section */}
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 mt-1">
+                  <div className="shrink-0 mt-1">
                     {userAvatar ? (
                       <img
                         src={userAvatar}
@@ -330,7 +330,7 @@ export const OrderUserPage = () => {
 
                 {/* Address Section */}
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 mt-1">
+                  <div className="shrink-0 mt-1">
                     <div className="w-8 h-8 rounded-full bg-black/10 dark:bg-white/50 flex items-center justify-center text-black/80 border border-black/30 dark:border-white/30">
                       <MapPinHouse size={18} />
                     </div>

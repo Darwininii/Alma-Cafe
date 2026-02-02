@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { formatDate, formatPrice } from "@/helpers";
 import type { OrderItemSingle } from "@/interfaces";
 import { Pagination } from "../shared/Pagination";
@@ -25,7 +25,15 @@ const getStatusVariant = (status: string): StatusType => {
 
 export const TableOrders = ({ orders }: Props) => {
   const navigate = useNavigate();
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page") || "1");
+
+  const setPage = (newPage: number) => {
+     setSearchParams(prev => {
+         prev.set("page", newPage.toString());
+         return prev;
+     });
+  };
   const itemsPerPage = 12;
 
   // Pagination Logic
@@ -37,12 +45,18 @@ export const TableOrders = ({ orders }: Props) => {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="relative w-full overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-black/20 backdrop-blur-sm shadow-sm">
+      <div className="relative w-full overflow-x-auto rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-black/20 backdrop-blur-sm shadow-sm">
         <table className="text-sm w-full caption-bottom text-black dark:text-white/80">
           <thead className="bg-black/5 dark:bg-white/5 border-b border-black/10 dark:border-white/10">
             <tr className="text-sm font-bold text-black/70 dark:text-white/70">
               {tableHeaders.map((header, index) => (
-                <th key={index} className="h-12 px-6 text-left first:pl-8 last:pr-8">
+                <th 
+                  key={index} 
+                  className={cn(
+                    "h-12 px-6 first:pl-8 last:pr-8",
+                    header === "Estado" || header === "Total" || header === "Fecha" ? "text-center" : "text-left"
+                  )}
+                >
                   {header}
                 </th>
               ))}
@@ -59,13 +73,15 @@ export const TableOrders = ({ orders }: Props) => {
                 <td className="p-4 pl-8 font-medium font-mono text-black/60 dark:text-white/60">
                   #{order.id}
                 </td>
-                <td className="p-4 font-medium">
+                <td className="p-4 font-medium text-center">
                   {formatDate(order.created_at)}
                 </td>
-                <td className="p-4">
-                  <StatusBadge status={order.status} variant={getStatusVariant(order.status)} />
+                <td className="p-4 text-center">
+                  <div className="flex justify-center">
+                    <StatusBadge status={order.status} variant={getStatusVariant(order.status)} />
+                  </div>
                 </td>
-                <td className="p-4 pr-8 font-bold text-black dark:text-white">
+                <td className="p-4 pr-8 font-bold text-black dark:text-white text-center">
                   {formatPrice(order.total_amount)}
                 </td>
               </tr>

@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { formatDate, formatPrice } from "@/helpers";
 import Fuse from "fuse.js";
 import { useChangeStatusOrder, useUser, useRoleUser, useAllOrders } from "@/hooks";
-import { useNavigate} from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Pagination } from "@/Components/shared/Pagination";
 import { Loader } from "@/Components/shared/Loader";
 import { CustomButton } from "@/Components/shared/CustomButton";
@@ -10,8 +10,6 @@ import { StatusBadge } from "@/Components/shared/StatusBadge";
 import { CustomSelect } from "@/Components/shared/CustomSelect";
 import { TbReceiptOff } from "react-icons/tb";
 import { CustomFiltered } from "@/Components/shared/CustomFiltered";
-
-
 
 const tableHeaders = ["Referencia", "Cliente", "Envío", "Fecha", "Estado", "Total", "Acciones"];
 
@@ -24,7 +22,16 @@ const statusOptions = [
 
 export const TableOrdersAdmin = () => {
   const navigate = useNavigate();
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page") || "1");
+
+  const setPage = (newPage: number) => {
+     setSearchParams(prev => {
+         prev.set("page", newPage.toString());
+         return prev;
+     });
+  };
+   
   const [searchTerm, setSearchTerm] = useState("");
   
   // Advanced Filters State

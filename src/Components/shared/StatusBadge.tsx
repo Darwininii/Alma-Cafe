@@ -30,7 +30,7 @@ export const StatusBadge = ({ status, variant = "neutral", className }: StatusBa
   return (
     <span
       className={cn(
-        "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border shadow-md transition-all",
+        "inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold border shadow-md transition-all",
         variantStyles[variant],
         className
       )}

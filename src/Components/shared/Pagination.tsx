@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 interface Props {
   totalItems: number;
   page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setPage: (page: number) => void;
   itemsPerPage?: number;
 }
 
@@ -37,11 +37,11 @@ export const Pagination = ({ totalItems, page, setPage, itemsPerPage = 12 }: Pro
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
 
   const handleNextPage = () => {
-    setPage((p) => Math.min(p + 1, totalPages));
+    setPage(Math.min(page + 1, totalPages));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const handlePrevPage = () => {
-    setPage((p) => Math.max(p - 1, 1));
+    setPage(Math.max(page - 1, 1));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const goToPage = (p: number) => {
