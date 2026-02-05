@@ -1,13 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Home, Store, User, Search } from "lucide-react";
-import { GrGroup } from "react-icons/gr";
+import { Icons } from "./Icons";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useGlobalStore } from "@/store/global.store";
 import { useCartStore } from "@/store";
 import { useUser, useCustomer } from "@/hooks";
-import { RiShoppingBag3Line, RiShoppingBag3Fill } from "react-icons/ri";
-import { FaMoon, FaSun } from "react-icons/fa";
 import { useThemeStore } from "@/store/theme.store";
 import { Loader } from "./Loader";
 import { CustomBadge } from "./CustomBadge";
@@ -32,16 +28,21 @@ export const DockNavbar = () => {
     }
   });
 
-  const baseItemClass =
-    "flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-black/20 dark:hover:bg-white/20 transition-all";
+  // const baseItemClass =
+  //   "flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-black/20 dark:hover:bg-white/20 transition-all";
+  
+  // New class for Text-Below items
+  const navItemClass = 
+    "flex flex-col items-center justify-center px-2 sm:px-3 py-1.5 rounded-xl hover:bg-black/20 dark:hover:bg-white/20 transition-all gap-0.5 group";
+    
   const baseIconClass = "transition-transform duration-300";
-  const tooltipClass =
-    "absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm bg-black/80 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap hidden sm:block";
+  // const tooltipClass =
+  //   "absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-bold bg-black/90 dark:bg-white/90 text-white dark:text-black px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap pointer-events-none z-50 shadow-lg";
 
   const navLinks = [
-    { label: "Inicio", icon: Home, href: "/" },
-    { label: "Productos", icon: Store, href: "/productos" },
-    { label: "Sobre Nosotros", icon: GrGroup, href: "/nosotros" },
+    { label: "Inicio", icon: Icons.Home, href: "/" },
+    { label: "Productos", icon: Icons.Store, href: "/productos" },
+    { label: "Nosotros", icon: Icons.About, href: "/nosotros" },
   ];
 
   const { session, isLoading } = useUser();
@@ -58,9 +59,9 @@ export const DockNavbar = () => {
         initial="hidden"
         animate={showNavbar ? "visible" : "hidden"}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="fixed top-3 left-1/2 -translate-x-1/2 bg-white/20 dark:bg-black/20 backdrop-blur-md backdrop-saturate-150 border border-black/30 dark:border-white/20 rounded-2xl shadow-md shadow-black/10 dark:shadow-white/10 flex items-center justify-center gap-1 sm:gap-3 px-2 py-1.5 sm:px-4 sm:py-2 z-50 w-fit max-w-[95vw] pointer-events-auto"
+        className="fixed top-3 left-1/2 -translate-x-1/2 bg-white/20 dark:bg-black/20 backdrop-blur-md backdrop-saturate-150 border border-black/30 dark:border-white/20 rounded-2xl shadow-md shadow-black/10 dark:shadow-white/10 flex items-center justify-center gap-0.5 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 z-50 w-fit max-w-[95vw] pointer-events-auto"
       >
-        {/* 🔹 Enlaces principales */}
+        {/* 🔹 Enlaces principales (Texto debajo) */}
         {navLinks.map((link, index) => {
           const Icon = link.icon;
           return (
@@ -68,24 +69,27 @@ export const DockNavbar = () => {
               key={link.label}
               onMouseEnter={() => setHovered(index)}
               onMouseLeave={() => setHovered(null)}
-              className="relative group"
+              className="relative"
             >
-              <Link to={link.href} className={baseItemClass}>
+              <CustomButton
+                to={link.href}
+                className={`${navItemClass} border-none bg-transparent h-auto w-auto`}
+                size="icon"
+                effect="none"
+              >
                 <Icon
-                  size={22}
+                  size={20}
                   className={`${baseIconClass} ${hovered === index
-                    ? "scale-125 text-black dark:text-yellow-400/80"
+                    ? "scale-110 text-black dark:text-yellow-400"
                     : "text-slate-800 dark:text-white/70"
                     }`}
                 />
-              </Link>
-              <span className={tooltipClass}>{link.label}</span>
+                <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">{link.label}</span>
+              </CustomButton>
             </div>
           );
         })}
 
-        {/* 🔹 Separador
-          <div className="hidden sm:block ring ring-slate-800 dark:ring-white w-px h-8 bg-slate-800 dark:bg-white mx-2"></div> */}
         {/* Theme Toggle */}
         <div
           className="relative group"
@@ -94,7 +98,7 @@ export const DockNavbar = () => {
         >
           <CustomButton
             onClick={toggleTheme}
-            className={`${baseItemClass} relative cursor-pointer border-none bg-transparent hover:bg-black/20 dark:hover:bg-white/20`}
+            className={`${navItemClass} border-none bg-transparent h-auto w-auto`}
             size="icon"
             effect="none"
           >
@@ -107,10 +111,10 @@ export const DockNavbar = () => {
                   exit={{ scale: 0, rotate: 120 }}
                   transition={{ duration: 0.7 }}
                 >
-                  <FaSun
-                    size={22}
+                  <Icons.Sun
+                    size={20}
                     className={`${baseIconClass} ${hovered === 12
-                      ? "scale-125 text-black dark:text-yellow-400/80"
+                      ? "scale-110 text-black dark:text-yellow-400/80"
                       : "text-slate-800 dark:text-white/70"
                       }`}
                   />
@@ -123,18 +127,18 @@ export const DockNavbar = () => {
                   exit={{ scale: 0, rotate: 120 }}
                   transition={{ duration: 0.7 }}
                 >
-                  <FaMoon
-                    size={20}
+                  <Icons.Moon
+                    size={18}
                     className={`${baseIconClass} ${hovered === 12
-                      ? "scale-125 text-yellow-600 dark:text-yellow-400/80"
+                      ? "scale-110 text-yellow-600 dark:text-yellow-400/80"
                       : "text-slate-800 dark:text-white/70"
                       }`}
                   />
                 </motion.div>
               )}
             </AnimatePresence>
+            <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Tema</span>
           </CustomButton>
-          <span className={tooltipClass}>Tema</span>
         </div>
 
         {/* 🔹 Acciones */}
@@ -147,20 +151,20 @@ export const DockNavbar = () => {
         >
           <CustomButton
             onClick={() => openSheet("search")}
-            className={`${baseItemClass} relative cursor-pointer border-none bg-transparent hover:bg-black/20 dark:hover:bg-white/20`}
+            className={`${navItemClass} border-none bg-transparent h-auto w-auto`}
             size="icon"
             effect="none"
-            centerIcon={Search}
+            centerIcon={Icons.Search}
           >
-            <Search
-              size={20}
+             <Icons.Search
+              size={18}
               className={`${baseIconClass} ${hovered === 10
-                ? "scale-125 text-black dark:text-yellow-400/80"
+                ? "scale-110 text-black dark:text-yellow-400/80"
                 : "text-slate-800 dark:text-white/70"
                 }`}
             />
+            <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Buscar</span>
           </CustomButton>
-          <span className={tooltipClass}>Buscar</span>
         </div>
 
         {/* Carrito */}
@@ -171,63 +175,65 @@ export const DockNavbar = () => {
         >
           <CustomButton
             onClick={() => openSheet("cart")}
-            className={`${baseItemClass} relative cursor-pointer border-none bg-transparent hover:bg-black/20 dark:hover:bg-white/20`}
+            className={`${navItemClass} border-none bg-transparent h-auto w-auto`}
             size="icon"
             effect="none"
           >
-
-
             {totalItemsInCart > 0 ? (
-               <RiShoppingBag3Fill
-                 size={20}
+               <Icons.CartFilled
+                 size={18}
                  className={`${baseIconClass} ${hovered === 11
-                   ? "scale-125 text-black dark:text-yellow-400/80"
+                   ? "scale-110 text-black dark:text-yellow-400/80"
                    : "text-slate-800 dark:text-white/70"
                    }`}
                />
             ) : (
-               <RiShoppingBag3Line
-                 size={20}
+               <Icons.Cart
+                 size={18}
                  className={`${baseIconClass} ${hovered === 11
-                   ? "scale-125 text-black dark:text-yellow-400/80"
+                   ? "scale-110 text-black dark:text-yellow-400/80"
                    : "text-slate-800 dark:text-white/70"
                    }`}
                />
             )}
-
+            <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Carrito</span>
             {/* 🔹 Contador animado */}
             <CustomBadge
               count={totalItemsInCart}
-              className="absolute -top-1 -right-1 w-5 h-5 bg-black/80 dark:bg-yellow-600 text-white dark:text-black"
+              className="absolute -top-1 right-2 w-4 h-4 bg-rose-600 text-white border-2 border-white dark:border-black text-[9px] font-bold dark:font-bold shadow-sm flex items-center justify-center p-0"
             />
           </CustomButton>
-          <span className={tooltipClass}>Carrito</span>
         </div>
 
         {/* Usuario */}
         <div className="relative group">
           {isLoading ? (
             <div className="flex items-center justify-center w-9 h-9">
-              <Loader size={22} className="flex items-center justify-center" />
+              <Loader size={18} className="flex items-center justify-center" />
             </div>
           ) : session ? (
-            <Link
+             <CustomButton
               to="/account"
-              className="border-3 dark:text-white border-black/70 dark:border-white/70 dark:hover:border-yellow-600/80 dark:hover:text-white/80 w-9 h-9 rounded-2xl grid place-items-center font-black text-black bg-white/20 dark:bg-black/50 hover:bg-black/10 hover:text-white/80 dark:hover:bg-yellow-600/50 transition"
+              className={`${navItemClass} border-none bg-transparent h-auto w-auto`}
+              size="icon"
+              effect="none"
             >
-              {customer && customer.full_name
-                ? customer.full_name[0].toUpperCase()
-                : "U"}
-            </Link>
+              <div className="w-6 h-6 rounded-full border-2 border-slate-800 dark:border-white flex items-center justify-center bg-transparent">
+                 <span className="text-[10px] font-bold text-slate-800 dark:text-white">
+                  {customer && customer.full_name ? customer.full_name[0].toUpperCase() : "U"}
+                 </span>
+              </div>
+              <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Perfil</span>
+            </CustomButton>
           ) : (
-            <Link to="/login" className={baseItemClass}>
-              <User
-                size={20}
-                className={`${baseIconClass} text-slate-800 dark:text-white group-hover:scale-125 group-hover:text-yellow-800 dark:group-hover:text-yellow-400`}
+            <CustomButton to="/login" className={`${navItemClass} border-none bg-transparent h-auto w-auto`} size="icon" effect="none">
+              <Icons.User
+                size={18}
+                className={`${baseIconClass} text-slate-800 dark:text-white/70 group-hover:scale-110 group-hover:text-black dark:group-hover:text-yellow-400`}
               />
-            </Link>
+              <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Login</span>
+            </CustomButton>
           )}
-          <span className={tooltipClass}>Usuario</span>
         </div>
       </motion.nav>
     </AnimatePresence>

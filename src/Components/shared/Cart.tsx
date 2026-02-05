@@ -1,9 +1,8 @@
-import { MdDeleteForever, MdPayments } from "react-icons/md";
+import { Icons } from "./Icons";
 import { CartItem } from "./CartItem";
 import { useCartStore, useGlobalStore } from "@/store";
 import { formatPrice } from "@/helpers";
 import { CustomButton } from "./CustomButton";
-import { FaCartFlatbed } from "react-icons/fa6";
 import { CustomBadge } from "./CustomBadge";
 
 export const Cart = () => {
@@ -18,7 +17,11 @@ export const Cart = () => {
     <div className="flex flex-col h-full">
       <div className="px-5 py-7 flex justify-between items-center border-b border-white/20 dark:border-white/10">
         <span className="flex gap-3 items-center font-black text-black dark:text-white/70">
-          <FaCartFlatbed size={24} />
+          {totalItemsInCart > 0 ? (
+            <Icons.CartFilled size={24} />
+          ) : (
+            <Icons.Cart size={24} />
+          )}
           <CustomBadge
             count={totalItemsInCart}
             className="w-5 h-5 bg-black dark:bg-yellow-600 text-white dark:text-black font-bold"
@@ -52,7 +55,7 @@ export const Cart = () => {
               to="/checkout"
               className="w-full bg-black dark:bg-white/80 font-black text-white dark:text-black py-3.5 hover:bg-linear-to-r from-black/80 dark:from-white/50 to-rose-600 rounded-full shadow-md hover:shadow-black/40 transition-all duration-300"
               size="lg"
-              leftIcon={MdPayments}
+              leftIcon={Icons.Payment}
               effect="shine"
               effectColor="black"
             >
@@ -62,7 +65,7 @@ export const Cart = () => {
               className="mt-3 w-full font-black text-black dark:text-red-400 border border-black/70 dark:border-red-600 rounded-full py-3 hover:bg-red-300/80 dark:bg-red-900/40 dark:hover:bg-primary/80 dark:hover:text-white/80 hover:text-red-800/80 hover:border-red-800/80 dark:hover:border-white/70 transition-all duration-300"
               onClick={cleanCart}
               size="lg"
-              leftIcon={MdDeleteForever}
+              leftIcon={Icons.Delete}
               effect="shine"
             >
               Limpiar Carrito
@@ -76,7 +79,7 @@ export const Cart = () => {
           </p>
           <CustomButton
             to="/productos"
-            className="py-4 bg-black dark:bg-white/70 font-black rounded-full hover:bg-gradient-to-r from-black/80 to-rose-600 dark:hover:from-white/80 dark:hover:to-rose-600 text-white dark:text-black px-7 text-xs uppercase tracking-widest"
+            className="py-4 bg-black dark:bg-white/70 font-black rounded-full hover:bg-linear-to-r from-black/80 to-rose-600 dark:hover:from-white/80 dark:hover:to-rose-600 text-white dark:text-black px-7 text-xs uppercase tracking-widest"
             onClick={closeSheet}
             effect="shine"
             effectColor="white"

@@ -1,6 +1,6 @@
 import { useGlobalStore } from "@/store/global.store";
 import { useCartStore } from "@/store";
-import { RiShoppingBag3Line, RiShoppingBag3Fill } from "react-icons/ri";
+import { Icons } from "./Icons";
 import { CustomButton } from "./CustomButton";
 import { CustomBadge } from "./CustomBadge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,7 +53,7 @@ export const FloatingCart = () => {
                     exit={{ scale: 0.5, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <RiShoppingBag3Fill size={24} />
+                    <Icons.CartAlternate size={24} />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -63,9 +63,9 @@ export const FloatingCart = () => {
                     exit={{ scale: 0.5, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <RiShoppingBag3Line size={24} />
+                    <Icons.Cart size={24} />
                   </motion.div>
-                 )}
+                )}
               </AnimatePresence>
             </CustomButton>
 

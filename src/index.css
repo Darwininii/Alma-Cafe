@@ -10,40 +10,67 @@
 @variant dark (&:where(.dark, .dark *));
 
 @layer base {
+  :root {
+    --bg-gradient-light: radial-gradient(125% 125% at 50% 10%, #c69c6d 20%, #ab7061 50%, #3c1053 100%);
+    --bg-gradient-dark: radial-gradient(125% 125% at 50% 10%, #1a0a1f 20%, #0f0515 50%, #000000 100%);
+    
+    /* Variable activa que cambiará dinámicamente vía ThemeListener */
+    --active-bg-gradient: var(--bg-gradient-light);
+  }
+
+  .dark {
+    --active-bg-gradient: var(--bg-gradient-dark);
+  }
+
   * {
     box-sizing: border-box;
   }
 
   html {
     font-family: "Montserrat", sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease;
     overflow-y: scroll;
+    min-height: 100vh;
+    background: transparent !important;
   }
 
   body {
     /* Utilidades de Tailwind */
     @apply text-white min-h-screen;
 
-    /* Propiedades CSS nativas - Light mode */
-    background-image: radial-gradient(125% 125% at 50% 10%,
-        #c69c6d 20%,
-        #ab7061 50%,
-        #3c1053 100%);
-    background-attachment: fixed;
-    background-size: cover;
-    background-repeat: no-repeat;
+    /* Propiedades CSS nativas */
     overflow-x: hidden;
     max-width: 100vw;
     width: 100%;
     position: relative;
+    background-color: transparent !important;
+    background-image: none !important;
   }
 
-  /* Dark mode gradient */
-  .dark body {
-    background-image: radial-gradient(125% 125% at 50% 10%,
-        #1a0a1f 20%,
-        #0f0515 50%,
-        #000000 100%);
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -50; /* Ensure it stays behind everything */
+    background: var(--active-bg-gradient);
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: background 0.3s ease;
+    pointer-events: none;
+  }
+
+  /* Asegurar que el root y todos sus hijos sean transparentes */
+  #root {
+    background-color: transparent !important;
+    background-image: none !important;
+    min-height: 100vh;
+  }
+
+  #root > * {
+    background-color: transparent !important;
   }
 
   .container {

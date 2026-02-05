@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./Components/shared/ThemeProvider";
 import { Loader } from "./Components/shared/Loader";
 import { ToastController } from "./Components/shared/ToastController";
+import { ThemeListener } from "./Components/shared/ThemeListener";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
+        <ThemeListener />
         <RouterProvider router={router} />
         <ToastController />
         <Toaster 

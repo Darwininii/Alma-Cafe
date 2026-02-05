@@ -17,6 +17,8 @@ import {
   DashboardOrderPage,
   PruebasPage,
   BrandsPage,
+  IconTestPage,
+  ThemeTestPage,
 } from "../pages";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 
@@ -28,6 +30,14 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: "test-icons",
+        element: <IconTestPage />,
+      },
+      {
+        path: "test-theme",
+        element: <ThemeTestPage />,
       },
       {
         path: "productos",

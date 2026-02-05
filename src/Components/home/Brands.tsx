@@ -7,7 +7,7 @@ import { SiCocacola, SiDatadog, SiHuawei, SiSamsung } from "react-icons/si";
 
 const categories = [
   {
-    name: "Coca Cola",
+    name: "Coca-Cola",
     image: "/img/brands/cocacola-log.png",
     alt: "Coca Cola Logo",
     icon: <SiCocacola className="w-12 h-12 md:w-16 md:h-16" />,
@@ -66,6 +66,9 @@ const BrandCard = ({ item }: { item: typeof categories[0] }) => {
         backClassName="border-none shadow-lg !bg-transparent dark:!bg-transparent backdrop-blur-md"
         front={
           <div className="flex flex-col items-center justify-center gap-2 text-center h-full w-full p-4">
+            <div className="absolute top-2 justify-center opacity-70 text-[10px] uppercase tracking-widest text-black/80 dark:text-white/80">
+              Ver Marca
+            </div>
             <div className="w-24 h-24 md:w-32 md:h-32 relative flex items-center justify-center bg-black/10 dark:bg-white/10 rounded-full p-4 mb-2 backdrop-blur-sm border-2 border-black/20 dark:border-white/20 text-black dark:text-neutral-200 transition-colors duration-300">
               {item.icon}
             </div>
@@ -73,23 +76,25 @@ const BrandCard = ({ item }: { item: typeof categories[0] }) => {
               <h3 className="text-lg md:text-xl font-bold text-black dark:text-white leading-tight">
                 {item.name}
               </h3>
-              <p className="text-xs md:text-sm text-black/60 dark:text-neutral-400 font-medium leading-tight">
+              {/* <p className="text-xs md:text-sm text-black/60 dark:text-neutral-400 font-medium leading-tight">
                 {item.description}
-              </p>
-            </div>
-            <div className="absolute bottom-3 justify-center opacity-70 text-[10px] uppercase tracking-widest text-black/80 dark:text-white/80">
-              Ver Marca
+              </p> */}
             </div>
           </div>
         }
         back={
-          <div className="h-full w-full flex flex-col items-center justify-center p-6 relative">
+          <div className="flex flex-col items-center justify-center gap-2 text-center h-full w-full p-4 relative">
             <div className="w-24 h-24 md:w-32 md:h-32 relative flex items-center justify-center bg-black/10 dark:bg-white/10 rounded-full p-4 mb-4 backdrop-blur-sm border-2 border-black/20 dark:border-white/20">
                <img
                   src={item.image}
                   alt={item.name}
                   className="w-full h-full object-contain drop-shadow-md"
                 />
+            </div>
+            <div className="space-y-0.5 w-full">
+              <h3 className="text-lg md:text-xl font-bold text-black dark:text-white leading-tight">
+                {item.name}
+              </h3>
             </div>
           </div>
         }

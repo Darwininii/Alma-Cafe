@@ -6,6 +6,7 @@ import type { IconType } from "react-icons";
 import { motion, type MotionProps } from "framer-motion";
 import { TbArrowBigRightLines, TbArrowBigRightFilled } from "react-icons/tb";
 import { Link } from "react-router-dom";
+import { Icons } from "./Icons";
 
 type MotionButtonBaseProps = Omit<
   React.ComponentPropsWithoutRef<typeof motion.button>,
@@ -29,13 +30,16 @@ export type ButtonEffect =
   | "pixelDissolve"
   | "cosmicRipple";
 
+// Helper type for Icon strings based on the Icons dictionary keys
+export type IconName = keyof typeof Icons;
+
 export interface ButtonProps extends MotionButtonBaseProps {
   size?: ButtonSize;
   variant?: "solid" | "outline" | "ghost" | "link" | "primary"; // New variant prop
   isLoading?: boolean; // New isLoading prop
-  leftIcon?: LucideIcon | IconType;
-  rightIcon?: LucideIcon | IconType;
-  centerIcon?: LucideIcon | IconType;
+  leftIcon?: LucideIcon | IconType | IconName | string;
+  rightIcon?: LucideIcon | IconType | IconName | string;
+  centerIcon?: LucideIcon | IconType | IconName | string;
   effect?: ButtonEffect;
   filledIcon?: boolean;
   effectColor?: string;
@@ -100,10 +104,21 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       icon: "h-10 w-10",
     };
 
+    // Helper to resolve icon: Component, String Name, or null
+    const resolveIcon = (icon: any) => {
+      if (!icon) return null;
+      if (typeof icon === "string") {
+        // Try to find in dictionary, fallback to null/warning if not found? 
+        // For now, if string not in Icons, it returns undefined -> null
+        return Icons[icon as keyof typeof Icons] || null;
+      }
+      return icon;
+    };
+
     // Icons
-    const FinalLeftIcon = LeftIcon;
-    const FinalRightIcon = RightIcon;
-    const FinalCenterIcon = CenterIcon;
+    const FinalLeftIcon = resolveIcon(LeftIcon);
+    const FinalRightIcon = resolveIcon(RightIcon);
+    const FinalCenterIcon = resolveIcon(CenterIcon);
 
     const isTailwindClass = (color?: string): boolean => {
       if (!color) return false;
@@ -250,7 +265,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ];
 
       const Inner = (
-        <div className="w-full h-full transition-transform duration-[400ms] ease-in-out group-hover:[transform:rotateX(360deg)]" style={{ transformStyle: 'preserve-3d' }}>
+        <div className="w-full h-full transition-transform duration-400 ease-in-out roup-hover:transform-[rotateX(360deg)]" style={{ transformStyle: 'preserve-3d' }}>
           {faces.map((face, i) => (
             <span key={i} className={cn(
               "absolute inset-0 flex items-center justify-center border-2 border-black font-bold uppercase tracking-wider",

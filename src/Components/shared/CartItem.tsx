@@ -2,7 +2,7 @@ import { formatPrice } from "@/helpers";
 import { useCartStore } from "@/store";
 import { CustomDeleteButton } from "./CustomDeleteButton";
 import { CustomPlusMinus } from "./CustomPlusMinus";
-import { MdDeleteForever } from "react-icons/md";
+import { Icons } from "./Icons";
 
 export interface ICartItem {
   productId: string;
@@ -60,7 +60,7 @@ export const CartItem = ({ item }: Props) => {
           <CustomDeleteButton
             onClick={() => removeItem(item.productId)}
             title="Eliminar producto"
-            centerIcon={MdDeleteForever}
+            centerIcon={Icons.Delete}
             iconSize={22}
             className="w-9 h-9 border border-red-500/20"
           />
