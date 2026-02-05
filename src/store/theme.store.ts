@@ -18,6 +18,7 @@ interface ThemeState extends ThemeSettings {
   
   // Actions
   toggleTheme: () => void;
+  setTheme: (theme: ThemeMode) => void;
   setColors: (colors: string[]) => void;
   setType: (type: GradientType) => void;
   setDirection: (direction: Direction) => void;
@@ -51,6 +52,17 @@ export const useThemeStore = create<ThemeState>()(
          }
          
          set({ theme: newTheme });
+      },
+
+      setTheme: (theme) => {
+         // Side Effect: Toggle DOM class
+         if (theme === "dark") {
+           document.documentElement.classList.add("dark");
+         } else {
+           document.documentElement.classList.remove("dark");
+         }
+         
+         set({ theme });
       },
 
       setColors: (colors) => set({ colors }),
