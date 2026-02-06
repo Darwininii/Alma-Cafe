@@ -70,6 +70,12 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag }: Props) =
 
              <img
                src={getOptimizedImageUrl(img, 300)}
+               srcSet={`
+                 ${getOptimizedImageUrl(img, 200)} 200w,
+                 ${getOptimizedImageUrl(img, 300)} 300w,
+                 ${getOptimizedImageUrl(img, 500)} 500w
+               `}
+               sizes="(max-width: 640px) 180px, (max-width: 1024px) 250px, 300px"
                alt={name}
                width="300"
                height="300"
