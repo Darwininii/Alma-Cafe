@@ -293,14 +293,14 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       if (to) {
         return (
-          <Link to={to} className={containerClasses} style={{ perspective: '1000px' }}>
+          <Link to={to} className={containerClasses} style={{ perspective: '1000px' }} aria-label={effectiveAriaLabel}>
             {Inner}
           </Link>
         )
       }
 
       return (
-        <button ref={ref} className={containerClasses} style={{ perspective: '1000px' }} {...(restProps as any)}>
+        <button ref={ref} className={containerClasses} style={{ perspective: '1000px' }} aria-label={effectiveAriaLabel} {...(restProps as any)}>
           {Inner}
         </button>
       );
@@ -350,7 +350,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       const buttonClassName = cn(baseStyles, defaultStyle, sizes[size], "relative", className);
 
-      if (to) return <Link to={to} className={buttonClassName}>{content}</Link>;
+      if (to) return <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>{content}</Link>;
 
       return (
         <button
@@ -359,6 +359,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
             if (typeof ref === "function") ref(node);
             else if (ref) ref.current = node;
           }}
+          aria-label={effectiveAriaLabel}
           {...(restProps as any)}
           className={buttonClassName}
           onMouseMove={handleMouseMove}
@@ -415,11 +416,12 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       const buttonClassName = cn(baseStyles, defaultStyle, sizes[size], className);
 
-      if (to) return <Link to={to} className={buttonClassName}>{content}</Link>;
+      if (to) return <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>{content}</Link>;
 
       return (
         <button
           ref={ref}
+          aria-label={effectiveAriaLabel}
           {...(restProps as any)}
           className={buttonClassName}
           onMouseEnter={scrambleText}
@@ -516,6 +518,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
             to={to}
             className={buttonClassName}
             onMouseMove={handleMouseMove as any}
+            aria-label={effectiveAriaLabel}
           >
             {content}
           </Link>
@@ -527,6 +530,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           ref={ref}
           {...restProps}
           className={buttonClassName}
+          aria-label={effectiveAriaLabel}
           onMouseMove={handleMouseMove}
           whileHover={{ scale: 1.02 }}
         >
@@ -604,13 +608,14 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       const buttonClassName = cn(baseStyles, defaultStyle, sizes[size], "relative overflow-visible", className);
 
-      if (to) return <Link to={to} className={buttonClassName}>{content}</Link>;
+      if (to) return <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>{content}</Link>;
 
       return (
         <motion.button
           ref={ref}
           {...restProps}
           className={buttonClassName}
+          aria-label={effectiveAriaLabel}
           onMouseEnter={dissolve}
           whileHover={{ scale: 1.02 }}
         >
@@ -688,13 +693,14 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       const buttonClassName = cn(baseStyles, defaultStyle, sizes[size], "relative overflow-visible bg-gradient-to-r from-purple-600 to-pink-600", className);
 
-      if (to) return <Link to={to} className={buttonClassName}>{content}</Link>;
+      if (to) return <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>{content}</Link>;
 
       return (
         <motion.button
           ref={ref}
           {...restProps}
           className={buttonClassName}
+          aria-label={effectiveAriaLabel}
           onMouseEnter={createRipple}
           whileHover={{ scale: 1.05 }}
         >
@@ -732,9 +738,9 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className
       );
 
-      if (to) return <Link to={to} className={buttonClassName}>{content}</Link>;
-      if (restProps.href) return <a className={buttonClassName} {...(restProps as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>{content}</a>;
-      return <button ref={ref} {...(restProps as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={buttonClassName}>{content}</button>;
+      if (to) return <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>{content}</Link>;
+      if (restProps.href) return <a className={buttonClassName} aria-label={effectiveAriaLabel} {...(restProps as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>{content}</a>;
+      return <button ref={ref} aria-label={effectiveAriaLabel} {...(restProps as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={buttonClassName}>{content}</button>;
     }
 
     // ========== EFECTO: magnetic (Original) ==========
@@ -762,14 +768,14 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       const buttonClassName = cn(baseStyles, defaultStyle, sizes[size], "transition-transform duration-200 ease-out", className);
 
-      if (to) return <Link to={to} className={buttonClassName}>{content}</Link>;
+      if (to) return <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>{content}</Link>;
       if (restProps.href) {
         return (
-          <a ref={(node) => { buttonRef.current = node; }} className={buttonClassName} style={{ transform: `translate(${position.x}px, ${position.y}px)`, display: 'inline-flex' }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} {...(restProps as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>{content}</a>
+          <a ref={(node) => { buttonRef.current = node; }} className={buttonClassName} style={{ transform: `translate(${position.x}px, ${position.y}px)`, display: 'inline-flex' }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} aria-label={effectiveAriaLabel} {...(restProps as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>{content}</a>
         );
       }
       return (
-        <button ref={(node) => { buttonRef.current = node; if (typeof ref === "function") ref(node); else if (ref) ref.current = node; }} {...(restProps as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={buttonClassName} style={{ transform: `translate(${position.x}px, ${position.y}px)` }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>{content}</button>
+        <button ref={(node) => { buttonRef.current = node; if (typeof ref === "function") ref(node); else if (ref) ref.current = node; }} aria-label={effectiveAriaLabel} {...(restProps as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={buttonClassName} style={{ transform: `translate(${position.x}px, ${position.y}px)` }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>{content}</button>
       );
     }
 
@@ -790,9 +796,9 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         </>
       );
       const buttonClassName = cn(baseStyles, defaultStyle, sizes[size], "group relative overflow-hidden", className);
-      if (to) return <Link to={to} className={buttonClassName}>{content}</Link>;
-      if (restProps.href) return <a className={buttonClassName} {...(restProps as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>{content}</a>;
-      return <button ref={ref} {...(restProps as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={buttonClassName}>{content}</button>;
+      if (to) return <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>{content}</Link>;
+      if (restProps.href) return <a className={buttonClassName} aria-label={effectiveAriaLabel} {...(restProps as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>{content}</a>;
+      return <button ref={ref} aria-label={effectiveAriaLabel} {...(restProps as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={buttonClassName}>{content}</button>;
     }
 
     // ========== EFECTO: bounce (Original) ==========
@@ -805,9 +811,9 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         </>
       );
       const buttonClassName = cn(baseStyles, sizes[size], className);
-      if (to) return <Link to={to} className={buttonClassName}>{content}</Link>;
-      if (restProps.href) return <motion.a className={buttonClassName} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} transition={{ type: "spring", stiffness: 400, damping: 10 }} {...(restProps as any)}>{content}</motion.a>;
-      return <motion.button ref={ref} {...restProps} className={buttonClassName} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>{content}</motion.button>;
+      if (to) return <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>{content}</Link>;
+      if (restProps.href) return <motion.a className={buttonClassName} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} transition={{ type: "spring", stiffness: 400, damping: 10 }} aria-label={effectiveAriaLabel} {...(restProps as any)}>{content}</motion.a>;
+      return <motion.button ref={ref} aria-label={effectiveAriaLabel} {...restProps} className={buttonClassName} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>{content}</motion.button>;
     }
 
     // ========== EFECTO: none (Default) ==========
