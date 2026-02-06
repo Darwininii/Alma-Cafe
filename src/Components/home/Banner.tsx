@@ -120,7 +120,7 @@ export const Banner = () => {
         </h1>
 
         {/* Descripción */}
-        <p className="text-lg lg:text-2xl text-gray-200 dark:text-white/70">
+        <p className="text-lg lg:text-2xl text-white dark:text-white/90">
           Disfruta del mejor café de la ciudad
         </p>
 

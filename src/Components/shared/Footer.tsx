@@ -36,7 +36,7 @@ export const Footer = () => {
                   <MapPin className="w-5 h-5 text-amber-500" />
                 </div>
                 <div>
-                  <h4 className="text-white font-medium text-sm">Visítanos</h4>
+                  <p className="text-white font-medium text-sm">Visítanos</p>
                   <p className="text-sm text-slate-400">Calle Principal #123, Ciudad</p>
                 </div>
               </div>
@@ -45,7 +45,7 @@ export const Footer = () => {
                   <Phone className="w-5 h-5 text-amber-500" />
                 </div>
                 <div>
-                  <h4 className="text-white font-medium text-sm">Llámanos</h4>
+                  <p className="text-white font-medium text-sm">Llámanos</p>
                   <p className="text-sm text-slate-400">+1 (555) 123-4567</p>
                 </div>
               </div>
