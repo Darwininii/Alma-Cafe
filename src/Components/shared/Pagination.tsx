@@ -157,8 +157,8 @@ export const Pagination = ({ totalItems, page, setPage, itemsPerPage = 12 }: Pro
 
       {/* Info Section - Now subtle and clean below controls */}
       <div className="text-center animate-in fade-in slide-in-from-bottom-2 duration-500 delay-150">
-        <p className="text-sm font-semibold uppercase tracking-wider text-black/40 dark:text-white/30">
-          Mostrando <span className="font-bold text-black/80 dark:text-white/80">{Math.min(startItem, totalItems)}</span> - <span className="font-black text-black/80 dark:text-white/80">{endItem}</span> de <span className="font-bold text-black/80 dark:text-white/80">{totalItems}</span>
+        <p className="text-sm font-semibold uppercase tracking-wider text-black/70 dark:text-white/70">
+          Mostrando <span className="font-bold text-black dark:text-white">{Math.min(startItem, totalItems)}</span> - <span className="font-black text-black dark:text-white">{endItem}</span> de <span className="font-bold text-black dark:text-white">{totalItems}</span>
         </p>
       </div>
     </div>

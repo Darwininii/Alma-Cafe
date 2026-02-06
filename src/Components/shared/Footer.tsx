@@ -65,10 +65,10 @@ export const Footer = () => {
             <nav className="grid grid-cols-1 gap-4">
               {[
                 { label: "Inicio", href: "/" },
-                { label: "Nuestra Historia", href: "/nosotros" },
-                { label: "Menú & Productos", href: "/productos" },
-                { label: "Reservaciones", href: "#" },
-                { label: "Blog", href: "#" },
+                { label: "Productos", href: "/productos" },
+                { label: "Nosotros", href: "/nosotros" },
+                // { label: "Reservaciones", href: "#" },
+                // { label: "Blog", href: "#" },
               ].map((item) => (
                 <Link
                   key={item.label}
