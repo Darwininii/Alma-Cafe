@@ -37,7 +37,7 @@ export const Footer = () => {
                 </div>
                 <div>
                   <h4 className="text-white font-medium text-sm">Visítanos</h4>
-                  <p className="text-sm text-slate-500">Calle Principal #123, Ciudad</p>
+                  <p className="text-sm text-slate-400">Calle Principal #123, Ciudad</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 group">
@@ -46,7 +46,7 @@ export const Footer = () => {
                 </div>
                 <div>
                   <h4 className="text-white font-medium text-sm">Llámanos</h4>
-                  <p className="text-sm text-slate-500">+1 (555) 123-4567</p>
+                  <p className="text-sm text-slate-400">+1 (555) 123-4567</p>
                 </div>
               </div>
             </div>
@@ -82,8 +82,8 @@ export const Footer = () => {
             </nav>
 
             <div className="pt-8">
-              <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Legal</h3>
-              <nav className="flex flex-col gap-2 text-xs text-slate-600">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Legal</h3>
+              <nav className="flex flex-col gap-2 text-xs text-slate-400">
                 <Link to="#" className="hover:text-amber-500 transition-colors">Política de Privacidad</Link>
                 <Link to="#" className="hover:text-amber-500 transition-colors">Términos de Servicio</Link>
               </nav>
@@ -129,11 +129,11 @@ export const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
+        <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
           <p className="flex items-center gap-1">© {new Date().getFullYear()} <CustomTitle className="text-xs" />. Todos los derechos reservados.</p>
           <div className="flex gap-6">
             <div className="flex items-center gap-2" title="Seguridad Garantizada">
-              <ShieldCheck className="w-4 h-4 text-slate-700" />
+              <ShieldCheck className="w-4 h-4 text-slate-400" />
               <span>Pago Seguro</span>
             </div>
           </div>

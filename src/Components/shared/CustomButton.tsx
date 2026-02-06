@@ -77,11 +77,19 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       to,
       iconSize,
       iconClass,
+      "aria-label": ariaLabel,
       ...restProps
     },
     ref
   ) => {
-    // Base styles
+    // Accessibility: Ensure button has a name
+    const effectiveAriaLabel = ariaLabel || (
+      // If no children (text) and no aria-label, try to use title or fallback
+      (!children && (restProps.title || "Interactive button")) 
+       ? restProps.title || "Interactive button" 
+       : undefined
+    );
+
     const baseStyles =
       "group inline-flex items-center justify-center font-medium transition-all rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none cursor-pointer relative";
 
@@ -189,8 +197,8 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         </>
       );
 
-      if (to) return <Link to={to} className={buttonClassName} style={buttonStyle}>{Wrapper}</Link>;
-      return <button ref={ref} className={buttonClassName} style={buttonStyle} {...(restProps as any)}>{Wrapper}</button>;
+      if (to) return <Link to={to} className={buttonClassName} style={buttonStyle} aria-label={effectiveAriaLabel} {...(restProps as any)}>{Wrapper}</Link>;
+      return <button ref={ref} className={buttonClassName} style={buttonStyle} aria-label={effectiveAriaLabel} {...(restProps as any)}>{Wrapper}</button>;
     }
 
     // ============================================
@@ -222,7 +230,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       if (to) {
         return (
-          <Link to={to} className={buttonClassName}>
+          <Link to={to} className={buttonClassName} aria-label={effectiveAriaLabel}>
             <motion.div className="flex items-center justify-center w-full h-full" whileHover="hover" variants={wobbleVariants}>
               {content}
             </motion.div>
@@ -236,6 +244,7 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className={buttonClassName}
           whileHover="hover"
           variants={wobbleVariants}
+          aria-label={effectiveAriaLabel}
           {...(restProps as any)}
         >
           {content}
@@ -823,18 +832,13 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       </>
     );
 
-    if (to) {
-      return (
-        <Link to={to} className={buttonClass}>
-          {content}
-        </Link>
-      );
-    }
+    if (to) return <Link to={to} className={buttonClass} aria-label={effectiveAriaLabel}>{content}</Link>;
 
     if (restProps.href) {
       return (
         <motion.a
           className={buttonClass}
+          aria-label={effectiveAriaLabel}
           {...(iconAnimation as any)}
           {...(restProps as any)}
         >
@@ -849,6 +853,8 @@ export const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...iconAnimation}
         {...restProps}
         className={buttonClass}
+        aria-label={effectiveAriaLabel}
+        disabled={isLoading || restProps.disabled}
       >
         {content}
       </motion.button>
