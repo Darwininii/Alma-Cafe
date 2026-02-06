@@ -16,20 +16,18 @@ export const ThemeListener = () => {
     }, [fetchTheme, theme]);
 
     useEffect(() => {
-        // Solo actualizar el gradiente light con los colores dinámicos
-        const gradient = generateGradientCSS();
-        document.documentElement.style.setProperty('--bg-gradient-light', gradient);
+        // Wrap style updates in requestAnimationFrame to avoid forced reflows
+        requestAnimationFrame(() => {
+            const gradient = generateGradientCSS();
+            document.documentElement.style.setProperty('--bg-gradient-light', gradient);
 
-        // Actualizar el gradiente activo según el tema actual
-        if (theme === "dark") {
-            // En modo dark, usar el gradiente oscuro predefinido
-            const darkGradient = 'radial-gradient(125% 125% at 50% 10%, #1a0a1f 20%, #0f0515 50%, #000000 100%)';
-            document.documentElement.style.setProperty('--active-bg-gradient', darkGradient);
-        } else {
-            // En modo light, usar el gradiente generado dinámicamente
-            document.documentElement.style.setProperty('--active-bg-gradient', gradient);
-        }
-
+            if (theme === "dark") {
+                const darkGradient = 'radial-gradient(125% 125% at 50% 10%, #1a0a1f 20%, #0f0515 50%, #000000 100%)';
+                document.documentElement.style.setProperty('--active-bg-gradient', darkGradient);
+            } else {
+                document.documentElement.style.setProperty('--active-bg-gradient', gradient);
+            }
+        });
     }, [colors, type, direction, generateGradientCSS, theme]);
 
     return null; // This component doesn't render anything

@@ -71,7 +71,11 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag }: Props) =
              <img
                src={img}
                alt={name}
+               width="300"
+               height="300"
                itemProp="image"
+               loading="lazy"
+               decoding="async"
                className={`w-full h-full object-contain drop-shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3 z-10 ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
              />
 
