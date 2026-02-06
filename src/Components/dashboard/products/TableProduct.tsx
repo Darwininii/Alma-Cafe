@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDeleteProduct, useProducts, useAllProducts } from "../../../hooks";
 import { Loader } from "../../shared/Loader";
-import { formatPrice } from "../../../helpers";
+import { formatPrice, getOptimizedImageUrl } from "../../../helpers";
 import { Pagination } from "../../shared/Pagination";
 import { CustomFiltered } from "../../shared/CustomFiltered";
 import { CustomButton } from "../../shared/CustomButton";
@@ -245,7 +245,7 @@ export const TableProduct = () => {
                     <td className="p-4 pl-8 w-20">
                       <div className="relative w-14 h-14 rounded-lg overflow-hidden border border-neutral-200 dark:border-white/10 bg-white shadow-sm">
                         <img
-                          src={product.images?.[0] || "/placeholder.svg"}
+                          src={product.images?.[0] ? getOptimizedImageUrl(product.images[0], 100) : "/placeholder.svg"}
                           alt={product.name}
                           loading="lazy"
                           className="w-full h-full object-cover"

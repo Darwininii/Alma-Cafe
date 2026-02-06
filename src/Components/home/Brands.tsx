@@ -88,6 +88,10 @@ const BrandCard = ({ item }: { item: typeof categories[0] }) => {
                <img
                   src={item.image}
                   alt={item.name}
+                  width="150"
+                  height="150"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-contain drop-shadow-md"
                 />
             </div>

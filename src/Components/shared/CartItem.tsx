@@ -1,4 +1,4 @@
-import { formatPrice } from "@/helpers";
+import { formatPrice, getOptimizedImageUrl } from "@/helpers";
 import { useCartStore } from "@/store";
 import { CustomDeleteButton } from "./CustomDeleteButton";
 import { CustomPlusMinus } from "./CustomPlusMinus";
@@ -34,9 +34,10 @@ export const CartItem = ({ item }: Props) => {
     <li className="flex justify-between items-center gap-5">
       <div className="flex">
         <img
-          src={item.image}
+          src={getOptimizedImageUrl(item.image, 100)}
           alt={item.name}
           className="w-20 h-20 object-contain"
+          loading="lazy"
         />
       </div>
 

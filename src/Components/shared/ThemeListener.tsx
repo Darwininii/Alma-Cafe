@@ -7,13 +7,19 @@ export const ThemeListener = () => {
     // Hydrate from Supabase on mount & Sync Dark Mode
     useEffect(() => {
         fetchTheme();
-        // Sync class on mount/change
-        if (theme === "dark") {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-        }
+        fetchTheme();
     }, [fetchTheme, theme]);
+    
+    useEffect(() => {
+        // Sync class on mount/change with rAF to avoid reflows
+        requestAnimationFrame(() => {
+             if (theme === "dark") {
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+            }
+        });
+    }, [theme]);
 
     useEffect(() => {
         // Wrap style updates in requestAnimationFrame to avoid forced reflows

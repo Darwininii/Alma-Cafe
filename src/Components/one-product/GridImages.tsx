@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useImageZoom } from "@/hooks";
 import { ImageZoom } from "../shared/ImageZoom";
+import { getOptimizedImageUrl } from "@/helpers";
 import { CustomClose } from "../shared/CustomClose";
 import { CustomPlusMinus } from "../shared/CustomPlusMinus";
 import { CustomButton } from "../shared/CustomButton";
@@ -59,7 +60,7 @@ export const GridImages = ({ images }: Props) => {
         onClick={openModal}
       >
         <ImageZoom
-          img={activeImage}
+          img={getOptimizedImageUrl(activeImage, 800)}
           alt="Imagen del Producto"
           className="w-full h-full"
         />
@@ -72,7 +73,7 @@ export const GridImages = ({ images }: Props) => {
             key={index}
             onClick={() => handleImagesClick(image)}
             onMouseEnter={() => handleImagesClick(image)} // Hover functionality
-            className={`flex-shrink-0 w-20 h-20 p-2 border-2 ${activeImage === image ? "border-black/50 dark:border-white/50" : "border-transparent"
+            className={`shrink-0 w-20 h-20 p-2 border-2 ${activeImage === image ? "border-black/50 dark:border-white/50" : "border-transparent"
               } cursor-pointer bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 group-hover:border-black/20 backdrop-blur-sm rounded-xl hover:border-black/50 transition-all focus:outline-none`}
             size="icon"
             effect="shine"
@@ -80,9 +81,10 @@ export const GridImages = ({ images }: Props) => {
             centerIcon={ZoomIn}
           >
             <img
-              src={image}
+              src={getOptimizedImageUrl(image, 150)}
               alt={`Thumbnail ${index + 1}`}
               className="w-full h-full rounded-xl object-contain"
+              loading="lazy"
             />
           </CustomButton>
         ))}
