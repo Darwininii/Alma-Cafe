@@ -5,6 +5,7 @@ import { Banner, Newsletter } from "../Components/home";
 import { Sheet } from "../Components/shared/Sheet";
 import { useGlobalStore } from "@/store/global.store";
 import { FloatingCart } from "../Components/shared/FloatingCart";
+import { SEO } from "../Components/shared/SEO";
 import { useEffect } from "react";
 
 export const RootLayout = () => {
@@ -18,6 +19,7 @@ export const RootLayout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO />
       <DockNavbar />
       
       {/* Floating Cart Button - Visible everywhere */}

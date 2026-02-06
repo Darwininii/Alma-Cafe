@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { CustomButton } from "../Components/shared/CustomButton";
 import { useCartStore } from "@/store";
 import toast from "react-hot-toast";
+import { SEO } from "../Components/shared/SEO";
 
 // Helper simple para validar UUID
 const isUUID = (str: string) => {
@@ -67,6 +68,7 @@ export const ClientLayout = () => {
 
   return (
     <div className="min-h-screen bg-transparent flex flex-col">
+      <SEO title="Mi Cuenta" />
       {/* Navigation Bar */}
       <div className="top-20 z-30 bg-transparent backdrop-blur-md">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

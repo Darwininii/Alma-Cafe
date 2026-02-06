@@ -1,0 +1,27 @@
+Asegúrate de que haya un valor para user-agent
+Los nombres de usuarios-agentes para indicar a los rastreadores de motores de búsqueda qué directivas deben seguir Tú Debe proporcionar un valor para cada instancia de user-agent para que los motores de búsqueda sepan si se debe seguir el conjunto de directivas asociado.
+ejemplo correcto:
+user-agent: *
+disallow: /downloads/
+
+user-agent: magicsearchbot
+disallow: /uploads/
+
+Se definen un usuario-agente general y un usuario-agente magicsearchbot.
+
+Asegúrate de que no haya directivas allow o disallow antes del user-agent
+Los nombres de usuario-agente definen las secciones de tu archivo robots.txt. Motor de búsqueda los rastreadores usan esas secciones para determinar qué directivas seguir. Colocar un directiva antes del nombre del primer usuario-agente significa que ningún rastreador seguirá que la modifica.
+Ejemplo correcto:
+# start of file
+user-agent: *
+disallow: /downloads/
+Ningún motor de búsqueda puede rastrear la carpeta /downloads.
+Los rastreadores de motores de búsqueda solo siguen las directivas de la sección con la nombre de usuario-agente específico. Por ejemplo, si tienes directivas para user-agent: * y user-agent: Googlebot-Image, Googlebot para imágenes solo usará sigue las directivas de la sección user-agent: Googlebot-Image.
+
+Proporciona una URL absoluta para sitemap
+Los archivos de mapa del sitio es una excelente manera de informar a los motores de búsqueda sobre las páginas de tu sitio web. Un archivo de mapa del sitio generalmente incluye una lista de las URLs de tu sitio web, junto con información sobre cuándo fueron las últimas cambió.
+
+Si eliges enviar un archivo de mapa del sitio en robots.txt, asegúrate de enviar usan una URL absoluta.
+Ejemplo correcto:
+sitemap: https://example.com/sitemap-file.xml
+
