@@ -68,6 +68,7 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                                 return (
                                     <>
                                         <input
+                                            id={props.id || props.name}
                                             ref={ref}
                                             {...props}
                                             placeholder={props.placeholder || " "}
@@ -92,6 +93,7 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
                                         {/* Etiqueta flotante */}
                                         {label && (
                                             <label
+                                                htmlFor={props.id || props.name}
                                                 className={cn(
                                                     "absolute left-0 pointer-events-none transition-all duration-200 font-medium truncate max-w-full z-10",
                                                     // Base state (Top / Active)

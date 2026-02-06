@@ -99,6 +99,7 @@ export const RegisterPage = () => {
                                         size="icon"
                                         className="text-neutral-500 hover:text-primary dark:text-neutral-400"
                                         title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                                        aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
                                     >
                                         {showPassword ? <FaRegEyeSlash size={18} /> : <FaRegEye size={18} />}
                                     </CustomButton>
@@ -111,6 +112,7 @@ export const RegisterPage = () => {
                                 effect="shine"
                                 variant="primary"
                                 size="lg"
+                                aria-label="Registrarme"
                             >
                                 REGISTRARME
                             </CustomButton>
@@ -125,6 +127,7 @@ export const RegisterPage = () => {
                                     variant="ghost"
                                     className="w-full font-semibold border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-white/5"
                                     effect="wobble"
+                                    aria-label="Iniciar sesión"
                                 >
                                     Iniciar sesión
                                 </CustomButton>

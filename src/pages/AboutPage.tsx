@@ -17,15 +17,15 @@ export const AboutPage = () => {
     <div className="min-h-screen rounded-3xl transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <div className="rounded-3xl absolute inset-0 bg-gradient-to-b from-stone-500 to-white dark:from-stone-900 dark:to-black opacity-50" />
+        <div className="rounded-3xl absolute inset-0 bg-linear-to-b from-stone-500 to-white dark:from-stone-900 dark:to-black opacity-50" />
         {/* Abstract Background Pattern */}
-        <div className="absolute inset-0 opacity-20 dark:opacity-10 bg-[radial-gradient(#e11d48_1px,transparent_1px)] [background-size:16px_16px]" />
+        <div className="absolute inset-0 opacity-20 dark:opacity-10 bg-[radial-gradient(#e11d48_1px,transparent_1px)] bg-size-[16px_16px]" />
 
         <div className="relative container mx-auto px-4 text-center z-10 space-y-6">
           <motion.span
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="inline-block px-4 py-1.5 rounded-full border border-2 border-black/20 dark:border-white/10 bg-black/70 dark:bg-white/10 backdrop-blur-sm text-sm font-black tracking-wider text-rose-600 uppercase"
+            className="inline-block px-4 py-1.5 rounded-full border-2 border-black/20 dark:border-white/10 bg-black/70 dark:bg-white/10 backdrop-blur-sm text-sm font-black tracking-wider text-rose-600 uppercase"
           >
             Nuestra Esencia
           </motion.span>
@@ -36,7 +36,7 @@ export const AboutPage = () => {
             className="text-4xl md:text-6xl lg:text-7xl text-black/80 dark:text-white/80 font-black tracking-tighter"
           >
             Más que Café, <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 to-rose-600">
               Creamos Momentos
             </span>
           </motion.h1>
@@ -107,7 +107,7 @@ export const AboutPage = () => {
                 </div>
               </div>
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-60" />
             </CustomCard>
           </motion.div>
         </div>
@@ -122,7 +122,7 @@ export const AboutPage = () => {
             viewport={{ once: true }}
             className="text-center max-w-3xl mx-auto mb-16 space-y-4"
           >
-            <h2 className="text-4xl font-black text-black dark:text-white/80 font-bold tracking-tight">
+            <h2 className="text-4xl font-black text-black dark:text-white/80 tracking-tight">
               Nuestros Pilares
             </h2>
             <p className="text-black/80 dark:text-white/80 font-bold text-lg">
@@ -164,10 +164,10 @@ export const AboutPage = () => {
             rounded="3xl"
             className="bg-black/90 dark:bg-white/90 text-white dark:text-black shadow-2xl"
           >
-            <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(#ffffff_2px,transparent_2px)] dark:bg-[radial-gradient(#000000_2px,transparent_2px)] [background-size:20px_20px]" />
+            <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(#ffffff_2px,transparent_2px)] dark:bg-[radial-gradient(#000000_2px,transparent_2px)] bg-size-[20px_20px]" />
 
             <div className="relative z-10 space-y-6">
-              <h2 className="text-3xl md:text-5xl font-bold text-white/80 dark:text-black/80 font-black">
+              <h2 className="text-3xl md:text-5xl text-white/80 dark:text-black/80 font-black">
                 ¿Listo para vivir la experiencia?
               </h2>
               <p className="text-lg text-white/80 dark:text-black/80 max-w-2xl mx-auto font-bold">
@@ -178,21 +178,23 @@ export const AboutPage = () => {
               <div className="flex flex-col md:flex-row gap-6 justify-center pt-8">
                 <CustomButton
                   href="mailto:contacto@almacafe.com"
-                  className="px-8 py-4 rounded-2xl border border-4 border-black/70 dark:border-black bg-white text-black dark:bg-black/90 dark:text-white dark:hover:text-black font-bold hover:scale-105 transition-transform"
+                  className="px-8 py-4 rounded-2xl border-4 border-black/70 dark:border-black bg-white text-black dark:bg-black/90 dark:text-white dark:hover:text-black font-bold hover:scale-105 transition-transform"
                   size="lg"
                   leftIcon={MdOutgoingMail}
                   effect="shine"
                   effectColor="black"
+                  aria-label="Contactar por correo electrónico a contacto@almacafe.com"
                 >
                   contacto@almacafe.com
                 </CustomButton>
                 <CustomButton
                   href="https://wa.me/571234567890"
-                  className="px-8 py-4 rounded-2xl border border-4 border-green-500 dark:border-green-700 bg-transparent hover:bg-green-500/30 dark:hover:bg-green-700/30 font-bold transition-all duration-300 text-white dark:text-black hover:scale-105 transition-transform"
+                  className="px-8 py-4 rounded-2xl border-4 border-green-500 dark:border-green-700 bg-transparent hover:bg-green-500/30 dark:hover:bg-green-700/30 font-bold duration-300 text-white dark:text-black hover:scale-105 transition-transform"
                   size="lg"
                   leftIcon={PiWhatsappLogoBold}
                   effect="shine"
                   effectColor="green"
+                  aria-label="Contactar por WhatsApp al +57 123567890"
                 >
                   <span className="flex items-center gap-2">
                     +57 123567890
@@ -226,14 +228,14 @@ const ValueCard = ({
     <CustomCard
       variant="glass"
       hoverEffect="none"
-      className="h-full border border-4 border-black/10 dark:border-white/20 shadow-xl shadow-black/10 dark:shadow-white/10 hover:shadow-black/20 dark:hover:shadow-white/20"
+      className="h-full border-4 border-black/10 dark:border-white/20 shadow-xl shadow-black/10 dark:shadow-white/10 hover:shadow-black/20 dark:hover:shadow-white/20"
       padding="lg"
       rounded="3xl"
     >
       <div className="w-16 h-16 rounded-2xl bg-rose-200/50 dark:bg-rose-900/20 text-rose-600 flex items-center justify-center mb-6">
         {icon}
       </div>
-      <h3 className="text-xl font-bold mb-3 text-black dark:text-white font-black">{title}</h3>
+      <h3 className="text-xl mb-3 text-black dark:text-white font-black">{title}</h3>
       <p className="text-black/80 dark:text-white/80 leading-relaxed font-bold">
         {description}
       </p>

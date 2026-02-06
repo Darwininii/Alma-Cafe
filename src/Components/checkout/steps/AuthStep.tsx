@@ -105,7 +105,7 @@ export const AuthStep = () => {
                     <div className="absolute top-0 left-0 w-1 h-full bg-primary/50 scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
                     
                     <h3 className="font-bold text-xl mb-3 text-zinc-900 dark:text-white">¿Ya tienes cuenta?</h3>
-                    <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-6 leading-relaxed">
+                    <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-6 leading-relaxed">
                         Inicia sesión para usar tus direcciones guardadas, revisar tu historial y acumular puntos en cada compra.
                     </p>
                     <CustomButton
@@ -120,7 +120,7 @@ export const AuthStep = () => {
                 {/* Guest Option */}
                 <CustomCard className="p-8 border border-zinc-100 bg-white shadow-xl dark:bg-zinc-900/50 dark:border-white/10 dark:shadow-none transition-all relative">
                     <h3 className="font-bold text-xl mb-3 text-zinc-900 dark:text-white">Compra rápida</h3>
-                    <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-6">
+                    <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-6">
                         Continua como invitado. Solo necesitamos tus datos básicos para enviarte los detalles del pedido.
                     </p>
 

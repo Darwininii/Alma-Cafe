@@ -131,6 +131,7 @@ export const CustomSocials: React.FC<CustomSocialsProps> = ({
                                                 gooeyColor === "bg-primary" ? "bg-amber-600" : gooeyColor
                                             )}
                                             effect={effect}
+                                            aria-label={link.title}
                                         >
                                             {link.icon}
                                         </CustomButton>
@@ -149,6 +150,7 @@ export const CustomSocials: React.FC<CustomSocialsProps> = ({
                                 gooeyColor
                             )}
                             effect={effect} // Use passed effect
+                            aria-label="Toggle social menu"
                         >
                             <motion.div
                                 animate={{ rotate: isOpen ? 135 : 0 }}
@@ -179,7 +181,7 @@ export const CustomSocials: React.FC<CustomSocialsProps> = ({
                     aria-label={link.title}
                     className={cn(
                         "relative flex items-center justify-center rounded-full",
-                        "bg-gradient-to-br from-gray-800/50 via-gray-700/30 to-gray-900/10",
+                        "bg-linear-to-br from-gray-800/50 via-gray-700/30 to-gray-900/10",
                         "backdrop-blur-md border border-white/10",
                         "shadow-[0_0_15px_rgba(255,255,255,0.06)]",
                         "transition-all duration-300",

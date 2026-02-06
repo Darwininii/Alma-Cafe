@@ -35,13 +35,14 @@ export const CustomPlusMinus = ({
                 onClick={onDecrease}
                 disabled={disableDecrease}
                 size="icon"
-                className="w-8 h-8 rounded-full bg-transparent hover:bg-black/10 dark:hover:bg-white/10 text-black text-white hover:text-red-500 dark:hover:text-red-400 border-none shadow-none"
+                className="w-8 h-8 rounded-full bg-transparent hover:bg-black/10 dark:hover:bg-white/10 dark:text-white text-black hover:text-red-500 dark:hover:text-red-400 border-none shadow-none"
                 centerIcon={BadgeMinus}
                 iconSize={iconSize}
                 effect="none"
+                aria-label="Disminuir cantidad"
             />
 
-            <span className="font-bold text-white dark:text-white/80 min-w-[1.5ch] text-center select-none">
+            <span className="font-bold text-white dark:text-white min-w-[1.5ch] text-center select-none">
                 {value}
             </span>
 
@@ -49,10 +50,11 @@ export const CustomPlusMinus = ({
                 onClick={onIncrease}
                 disabled={disableIncrease}
                 size="icon"
-                className="w-8 h-8 rounded-full bg-transparent hover:bg-black/10 dark:hover:bg-white/10 text-black text-white hover:text-green-500 dark:hover:text-green-400 border-none shadow-none"
+                className="w-8 h-8 rounded-full bg-transparent hover:bg-black/10 dark:hover:bg-white/10 dark:text-white text-black hover:text-green-500 dark:hover:text-green-400 border-none shadow-none"
                 centerIcon={BadgePlus}
                 iconSize={iconSize}
                 effect="none"
+                aria-label="Aumentar cantidad"
             />
         </div>
     );

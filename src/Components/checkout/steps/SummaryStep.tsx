@@ -67,6 +67,7 @@ export const SummaryStep = () => {
                                 size="sm"
                                 className="text-black dark:text-white hover:text-primary bg-transparent hover:bg-transparent"
                                 onClick={() => setActiveStep('SHIPPING')}
+                                aria-label="Editar dirección de envío"
                             >
                                 <MdEdit size={20} />
                             </CustomButton>

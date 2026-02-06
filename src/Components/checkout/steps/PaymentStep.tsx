@@ -358,8 +358,9 @@ export const PaymentStep = () => {
                     {paymentMethod === 'PSE' && (
                         <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Banco</label>
+                                <label htmlFor="bank-select" className="block text-sm font-medium mb-1">Banco</label>
                                 <select
+                                    id="bank-select"
                                     {...register('payment.financialInstitutionCode')}
                                     className="w-full p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent"
                                 >
@@ -373,8 +374,9 @@ export const PaymentStep = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Tipo de Persona</label>
+                                    <label htmlFor="user-type-select" className="block text-sm font-medium mb-1">Tipo de Persona</label>
                                     <select
+                                        id="user-type-select"
                                         {...register('payment.userType')}
                                         className="w-full p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent"
                                     >
@@ -383,8 +385,9 @@ export const PaymentStep = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Tipo de Documento</label>
+                                    <label htmlFor="doc-type-select" className="block text-sm font-medium mb-1">Tipo de Documento</label>
                                     <select
+                                        id="doc-type-select"
                                         {...register('payment.userLegalIdType')}
                                         className="w-full p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent"
                                     >

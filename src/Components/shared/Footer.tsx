@@ -57,10 +57,10 @@ export const Footer = () => {
 
           {/* Links Column (Span 3) */}
           <div className="lg:col-span-3 space-y-8">
-            <h3 className="text-lg font-bold text-white uppercase tracking-[0.2em] relative inline-block">
+            <h2 className="text-lg font-bold text-white uppercase tracking-[0.2em] relative inline-block">
               Explorar
               <span className="absolute -bottom-2 left-0 w-12 h-1 bg-amber-600 rounded-full" />
-            </h3>
+            </h2>
 
             <nav className="grid grid-cols-1 gap-4">
               {[
@@ -93,7 +93,7 @@ export const Footer = () => {
           {/* Newsletter & Socials Column (Span 4) */}
           <div className="lg:col-span-4 space-y-8 bg-white/5 rounded-2xl p-8 border border-white/5 backdrop-blur-sm">
             <div>
-              <h3 className="text-xl font-bold text-white mb-2">Mantente al día</h3>
+              <h2 className="text-xl font-bold text-white mb-2">Mantente al día</h2>
               <p className="text-slate-400 text-sm mb-6">Recibe novedades, eventos especiales y descuentos exclusivos.</p>
               <CustomNews
                 buttonClassName="w-full justify-center"

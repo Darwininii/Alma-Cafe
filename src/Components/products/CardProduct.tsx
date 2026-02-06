@@ -98,17 +98,17 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag }: Props) =
           {/* Info Section */}
           <div className="p-4 flex flex-col justify-between grow bg-white dark:bg-transparent">
              <div className="mb-1">
-                <h3 
+                <h2 
                   itemProp="name" 
                   className="text-sm font-bold text-zinc-800 dark:text-zinc-100 leading-snug line-clamp-2 min-h-[2.5em] group-hover:text-primary transition-colors"
                 >
                   {name}
-                </h3>
+                </h2>
              </div>
              
              <div itemProp="offers" itemScope itemType="https://schema.org/Offer" className="flex items-center justify-between mt-2">
                 <meta itemProp="availability" content={isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock"} />
-                <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">Precio</span>
+                <span className="text-xs text-zinc-600 dark:text-zinc-400 font-bold uppercase tracking-wider">Precio</span>
                 <span itemProp="price" className="text-lg font-black text-zinc-900 dark:text-white">
                    {formatPrice(price)}
                 </span>
