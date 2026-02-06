@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { formatPrice } from "@/helpers";
+import { formatPrice, getOptimizedImageUrl } from "@/helpers";
 import { CustomButton } from "@/Components/shared/CustomButton";
 import { CustomCard } from "@/Components/shared/CustomCard";
 import { Tag } from "../shared/Tag";
@@ -69,7 +69,7 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag }: Props) =
              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
              <img
-               src={img}
+               src={getOptimizedImageUrl(img, 300)}
                alt={name}
                width="300"
                height="300"

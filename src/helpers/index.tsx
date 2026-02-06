@@ -95,3 +95,17 @@ export const sanitizeFileName = (fileName: string): string => {
 
   return `${sanitized}.${extension}`;
 };
+
+/**
+ * Generates an optimized URL for Supabase Storage images.
+ * appends ?width=w&format=webp to the URL.
+ * @param url Original image URL
+ * @param width Target width (default 500)
+ */
+export const getOptimizedImageUrl = (url: string, width: number = 500): string => {
+  if (!url) return "";
+  if (!url.includes("supabase.co")) return url; // Only optimize Supabase images
+  // If already has params, append
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}width=${width}&format=webp&resize=contain`;
+};

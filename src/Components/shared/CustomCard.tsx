@@ -30,7 +30,7 @@ export const CustomCard = ({
 
     const effects = {
         scale: "hover:scale-[1.02] active:scale-[0.98]",
-        lift: "hover:-translate-y-1 hover:shadow-xl",
+        lift: "hover:-translate-y-1 hover:shadow-xl will-change-transform",
         glow: "hover:shadow-xl hover:shadow-primary/20 hover:border-primary/30",
         none: "",
     };
@@ -56,13 +56,14 @@ export const CustomCard = ({
                 effects[hoverEffect],
                 paddings[padding],
                 roundings[rounded],
+                "transform-gpu", // Force GPU acceleration
                 className
             )}
             {...props}
         >
             {/* Optional decorative shine for glass cards */}
             {variant === "glass" && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             )}
             {children}
         </div>
