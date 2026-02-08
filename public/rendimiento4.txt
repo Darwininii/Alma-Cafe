@@ -1,0 +1,191 @@
+Ir al contenido principal
+web.dev
+Recursos
+
+Modelo de referencia
+Cómo usar Baseline
+Blog
+Casos de éxito
+Buscar
+/
+
+
+Español – América Latina
+Acceder
+Recursos
+Privacidad
+Accesibilidad
+HTML
+Images
+Un diseño responsivo
+Formularios
+AWP
+CSS
+Rendimiento
+Prueba
+JavaScript
+Filtrar
+
+Gracias por seguir Google I/O. Mira contenido a pedido.
+web.dev
+Recursos
+Rendimiento
+¿Te resultó útil?
+
+Comprende la ruta crítica
+
+
+
+La ruta de renderización crítica hace referencia a los pasos involucrados hasta que la página web comienza a renderizarse en el navegador. Para renderizar páginas, los navegadores necesitan el mismo documento HTML, así como todos los recursos críticos necesarios para renderizar ese documento.
+
+En el módulo Consideraciones generales de rendimiento de HTML anterior, se analizó cómo enviar el documento HTML al navegador. Sin embargo, en este módulo, veremos con más detalle lo que hace el navegador después de descargar el documento HTML para renderizar la página.
+
+Renderización progresiva
+La Web se distribuye de forma natural. A diferencia de las aplicaciones nativas que se instalan antes de su uso, los navegadores no pueden depender de que los sitios web tengan todos los recursos necesarios para renderizar la página. Por lo tanto, los navegadores son muy buenos para renderizar páginas de forma progresiva. Por lo general, las apps nativas tienen una fase de instalación y, luego, una fase de ejecución. Sin embargo, en el caso de las páginas web y las apps web, las líneas entre estas dos fases son mucho menos claras, y los navegadores se diseñaron específicamente teniendo eso en cuenta.
+
+Por lo general, una vez que el navegador tiene recursos para renderizar una página, comienza a hacerlo. Por lo tanto, la elección se convierte en cuándo renderizar: ¿cuándo es demasiado pronto?
+
+Si el navegador renderiza lo antes posible cuando solo tiene un poco de HTML, pero antes de tener CSS o JavaScript necesarios, la página se verá dañada por un momento y cambiará considerablemente para la renderización final. Esta es una experiencia peor que presentar inicialmente una pantalla en blanco durante un tiempo hasta que el navegador tenga más de estos recursos necesarios para una renderización inicial que ofrezca una mejor experiencia del usuario.
+
+Por otro lado, si el navegador espera a que todos los recursos estén disponibles en lugar de realizar una renderización secuencial, el usuario tendrá que esperar mucho tiempo, a menudo de forma innecesaria, si la página se podía usar en un momento anterior.
+
+El navegador debe saber cuál es la cantidad mínima de recursos que debe esperar para evitar presentar una experiencia claramente dañada. Por otro lado, el navegador tampoco debe esperar más de lo necesario antes de presentarle contenido al usuario. La secuencia de pasos que sigue el navegador antes de realizar esa renderización inicial se conoce como ruta de renderización crítica.
+
+Comprender la ruta de renderización crítica puede ayudar a mejorar el rendimiento web, ya que te garantiza que no bloquees la renderización inicial de la página más de lo necesario. Sin embargo, al mismo tiempo, es importante no permitir que la renderización se produzca demasiado pronto quitando los recursos necesarios para esa renderización inicial de la ruta de renderización crítica.
+
+La ruta de renderización (crítica)
+La ruta de renderización implica los siguientes pasos:
+
+Construye el modelo de objetos del documento (DOM) a partir del HTML.
+Construye el modelo de objetos CSS (CSSOM) a partir del CSS.
+Aplicar cualquier código JavaScript que altere el DOM o el CSSOM
+Construcción del árbol de renderización a partir del DOM y el CSSOM
+Realiza operaciones de diseño y estilo en la página para ver qué elementos se ajustan a cada lugar.
+Pinta los píxeles de los elementos en la memoria.
+Combina los píxeles si alguno de ellos se superpone.
+Dibuja físicamente todos los píxeles resultantes en la pantalla.
+Es el proceso de renderización de HTML y CSS hasta la visualización de píxeles.
+El proceso de renderización, como se detalla en la lista anterior.
+Solo después de completar todos estos pasos, el usuario verá contenido en la pantalla.
+
+Más información: Puedes encontrar más detalles sobre cada uno de estos pasos en este artículo sobre la ruta de renderización crítica y sus módulos vinculados. Además, puede complicarse aún más de lo que sugieren esos pasos. Sin embargo, para una comprensión inicial del rendimiento web, esta descripción general de alto nivel debería ser suficiente.
+Este proceso de renderización se realiza varias veces. La renderización inicial invoca este proceso, pero a medida que estén disponibles más recursos que afectan la renderización de la página, el navegador volverá a ejecutar este proceso, o tal vez solo partes de él, para actualizar lo que ve el usuario. La ruta de renderización crítica se enfoca en el proceso delineado anteriormente para la renderización inicial y depende de los recursos críticos necesarios para ello.
+
+¿Qué recursos están en la ruta de renderización crítica?
+El navegador debe esperar a que se descarguen algunos recursos esenciales para poder completar la renderización inicial. Entre estos recursos, se incluyen los siguientes:
+
+Es parte del código HTML.
+CSS que bloquea la renderización en el elemento <head>
+Código JavaScript que bloquea la renderización en el elemento <head>
+Un punto clave es que el navegador procesa el código HTML de forma continua. En cuanto el navegador recibe cualquier parte del código HTML de una página, comienza a procesarlo. Luego, el navegador puede decidir (y, a menudo, lo hace) renderizarlo mucho antes de recibir el resto del código HTML de una página.
+
+Es importante tener en cuenta que, para la renderización inicial, el navegador no suele esperar lo siguiente:
+
+Todo el código HTML.
+Fuentes
+Imágenes
+JavaScript que no bloquea la renderización fuera del elemento <head> (por ejemplo, elementos <script> ubicados al final del código HTML)
+CSS que no bloquea la renderización fuera del elemento <head> o CSS con un valor de atributo media que no se aplica al viewport actual
+A menudo, el navegador considera que las fuentes y las imágenes son contenido que se debe completar durante las renderizaciones posteriores de la página, por lo que no es necesario que detengan la renderización inicial. Sin embargo, esto puede significar que se dejan áreas de espacio en blanco en la renderización inicial mientras el texto está oculto a la espera de las fuentes o hasta que las imágenes estén disponibles. Peor aún, cuando no se reserva espacio suficiente para ciertos tipos de contenido, en particular, cuando no se proporcionan dimensiones de imagen en el código HTML, el diseño de la página puede cambiar cuando se carga este contenido más adelante. Este aspecto de la experiencia del usuario se mide con la métrica Cambio de diseño acumulado (CLS).
+
+El elemento <head> es clave para procesar la ruta de renderización crítica. Tanto así que la siguiente sección lo aborda con cierto detalle. Optimizar el contenido del elemento <head> es un aspecto clave del rendimiento web. Sin embargo, por ahora, para comprender la ruta de renderización crítica, solo debes saber que el elemento <head> contiene metadatos sobre la página y sus recursos, pero no el contenido real que el usuario puede ver. El contenido visible se encuentra dentro del elemento <body> que sigue al elemento <head>. Antes de que el navegador pueda renderizar cualquier contenido, necesita ambos: el contenido que se renderizará y los metadatos sobre cómo renderizarlo.
+
+Sin embargo, no todos los recursos a los que se hace referencia en el elemento <head> son estrictamente necesarios para la renderización inicial de la página, por lo que el navegador solo espera a los que sí lo son. Para identificar qué recursos se encuentran en la ruta de renderización crítica, debes comprender el CSS y el JavaScript que bloquean la renderización y el analizador.
+
+Recursos que bloquean la renderización
+Algunos recursos se consideran tan críticos que el navegador pausa la renderización de la página hasta que los procesa. El CSS entra en esta categoría de forma predeterminada.
+
+Cuando un navegador ve CSS, ya sea CSS intercalado en un elemento <style> o un recurso al que se hace referencia de forma externa especificado por un elemento <link rel=stylesheet href="...">, evita renderizar más contenido hasta que haya completado la descarga y el procesamiento de ese CSS.
+
+Nota: Aunque el CSS bloquea la renderización de forma predeterminada, se puede convertir en un recurso que no bloquea la renderización si se cambia el atributo media del elemento <link> para especificar un valor que no coincida con las condiciones actuales: <link rel=stylesheet href="..." media=print>. Esto se usó en el pasado para permitir que el CSS no crítico se cargue de una manera que no bloquee la renderización.
+El hecho de que un recurso bloquee la renderización no significa necesariamente que impida que el navegador haga algo más. Los navegadores intentan ser lo más eficientes posible, por lo que, cuando ven que necesitan descargar un recurso CSS, lo solicitan y detienen la renderización, pero siguen procesando el resto del código HTML y buscan otra tarea que realizar mientras tanto.
+
+Los recursos que bloquean el procesamiento, como CSS, solían bloquear toda la renderización de la página cuando se descubrían. Esto significa que si un CSS bloquea la renderización o no depende de si el navegador lo descubrió. Algunos navegadores (Firefox inicialmente y ahora también Chrome) solo bloquean la renderización de contenido debajo del recurso de bloqueo de renderización. Esto significa que, para la ruta crítica de bloqueo de renderización, por lo general, nos interesan los recursos que bloquean la renderización en <head>, ya que bloquean de manera eficaz la renderización de toda la página.
+
+Una innovación más reciente es el atributo blocking=render, que se agregó a Chrome 105. Esto permite a los desarrolladores marcar de forma explícita un elemento <link>, <script> o <style> como bloqueador de renderización hasta que se procese el elemento, pero aún permite que el analizador siga procesando el documento mientras tanto.
+
+Recursos que bloquean el analizador
+Los recursos que bloquean el analizador son aquellos que impiden que el navegador busque otra tarea que realizar y, en su lugar, continúa analizando el código HTML. De forma predeterminada, JavaScript bloquea el analizador (a menos que se marque específicamente como asíncrono o diferido), ya que puede cambiar el DOM o el CSSOM cuando se ejecuta. Por lo tanto, no es posible que el navegador continúe procesando otros recursos hasta que conozca el impacto total del código JavaScript solicitado en el HTML de una página. Por lo tanto, el JavaScript síncrono bloquea el analizador.
+
+Los recursos que bloquean el analizador también bloquean la renderización. Dado que el analizador no puede continuar después de un recurso que bloquea el análisis hasta que se haya procesado por completo, no puede acceder ni renderizar el contenido después de él. El navegador puede renderizar cualquier HTML recibido hasta el momento mientras espera, pero en lo que respecta a la ruta de renderización crítica, cualquier recurso que bloquee el analizador en <head> significa, en efecto, que se bloquea todo el contenido de la página para que no se renderice.
+
+Bloquear el analizador puede tener un costo de rendimiento enorme, mucho más que solo bloquear la renderización. Por este motivo, los navegadores intentarán reducir este costo con un analizador de HTML secundario conocido como escáner de precarga para descargar los próximos recursos mientras el analizador de HTML principal está bloqueado. Si bien no es tan bueno como analizar el HTML, al menos permite que las funciones de red del navegador funcionen antes que el analizador bloqueado, lo que significa que será menos probable que se bloquee de nuevo en el futuro.
+
+Identifica los recursos de bloqueo
+Muchas herramientas de auditoría de rendimiento identifican recursos de renderización y bloqueo del analizador. WebPageTest marca los recursos que bloquean la renderización con un círculo naranja a la izquierda de la URL del recurso:
+
+Diagrama de cascada de red generado por WebPageTest. Los recursos que bloquean el analizador se indican con un círculo naranja a la izquierda de la URL del recurso, y el tiempo de renderización inicial se identifica con una línea verde oscuro sólida.
+Diagrama de cascada de red generado por WebPageTest.
+Todos los recursos que bloquean la renderización deben descargarse y procesarse antes de que pueda comenzar la renderización, lo que se indica con la línea verde oscuro sólida en la cascada.
+
+Lighthouse también destaca los recursos que bloquean el procesamiento, pero de una manera más sutil y solo si el recurso realmente retrasa el procesamiento de la página. Esto puede ser útil para evitar falsos positivos cuando, de otro modo, minimizas el bloqueo de renderización. Ejecutar la misma URL de página que la figura anterior de WebPageTest a través de Lighthouse solo identifica uno de los diseños de página como un recurso que bloquea la renderización.
+
+Auditoría de Lighthouse para eliminar recursos que bloquean la renderización. La auditoría muestra los recursos que bloquean la renderización y la cantidad de tiempo que lo hacen.
+La auditoría de Lighthouse para eliminar recursos que bloquean la renderización.
+Optimiza la ruta de renderización crítica
+La optimización de la ruta de renderización crítica implica reducir el tiempo de recepción del HTML (representado por la métrica Tiempo hasta el primer byte (TTFB)), como se detalla en el módulo anterior, y reducir el impacto de los recursos que bloquean la renderización. Estos con conceptos se investigan en los siguientes módulos.
+
+La ruta de renderización de contenido crítica
+Durante mucho tiempo, la ruta de renderización crítica se preocupó por la representación inicial. Sin embargo, surgieron más métricas centradas en el usuario para el rendimiento web, lo que genera dudas sobre si el punto final de la ruta de renderización crítica debe ser la primera pintura o una de las pinturas más enriquecidas que la siguen.
+
+Una perspectiva alternativa es concentrarse en el tiempo hasta el procesamiento de imagen con contenido más grande (LCP), o incluso el primer procesamiento de imagen con contenido (FCP), como parte de una ruta de renderización con contenido (o la ruta de acceso a la clave, como otros podrían llamarla). En este caso, es posible que debas incluir recursos que no necesariamente bloqueen (como ha sido la definición típica de la ruta de renderización crítica), pero que sean necesarios para renderizar pinturas con contenido.
+
+Independientemente de la definición exacta de lo que consideras "fundamental", es importante comprender qué detiene la renderización inicial y tu contenido clave. El primer procesamiento de imagen mide la primera oportunidad posible para renderizar cualquier elemento para el usuario. Idealmente, esto debería ser algo significativo, no algo como un color de fondo, por ejemplo, pero, incluso si no tiene contenido, sigue siendo valioso presentarle algo al usuario, lo que es un argumento para medir la ruta de renderización crítica como se definió tradicionalmente. Al mismo tiempo, también es útil medir cuándo se presenta el contenido principal al usuario.
+
+Identifica la ruta de renderización con contenido
+Muchas herramientas pueden identificar los elementos de LCP y cuándo se renderizan. Además del elemento LCP, Lighthouse también te ayudará a identificar las fases del LCP y el tiempo que se dedica a cada una para que puedas comprender dónde enfocar mejor tus esfuerzos de optimización:
+
+La auditoría de LCP de Lighthouse, que muestra el elemento LCP de una página y la cantidad de tiempo que pasó en fases como el TTFB, el retraso en la carga, el tiempo de carga y el retraso en la renderización.
+Auditoría de LCP de Lighthouse.
+En el caso de los sitios más complejos, Lighthouse también destaca cadenas de solicitudes críticas en una auditoría independiente:
+
+Diagrama de cadena de solicitudes críticas de Lighthouse, que muestra qué recursos críticos están anidados debajo de otros recursos críticos, así como la latencia total involucrada en la cadena de solicitudes críticas.
+Diagrama de la cadena de solicitudes críticas de Lighthouse.
+Esta auditoría de Lighthouse observa todos los recursos cargados con una prioridad alta, por lo que incluye fuentes web y otro contenido que Chrome establece como un recurso de alta prioridad, incluso si no bloquea la renderización.
+
+Ponga a prueba sus conocimientos
+¿A qué se refiere la ruta de renderización crítica?
+
+Es la cantidad mínima de recursos necesarios para realizar una renderización inicial de la página.
+Es la cantidad mínima de recursos necesarios para renderizar una página por completo.
+¿Qué recursos están involucrados en la ruta de renderización crítica?
+
+CSS que bloquea la renderización en el elemento <head>
+JavaScript que bloquea la renderización en el elemento <head>
+Es parte del código HTML.
+¿Por qué el bloqueo de renderización es una parte necesaria de la renderización de páginas?
+
+Para evitar que los usuarios vean una página hasta que se renderice por completo.
+Para evitar que una página se renderice inicialmente en un estado inutilizable o aparentemente dañado.
+¿Por qué JavaScript bloquea el analizador de HTML (suponiendo que los atributos defer, async o module no se especifican en un elemento <script>)?
+
+Sin al menos uno de esos atributos, un <script> bloquea el analizador y la renderización.
+Todo JavaScript bloquea el analizador, independientemente de esos atributos.
+El código JavaScript síncrono se debe ejecutar cuando el analizador lo alcance, ya que podría cambiar el DOM.
+A continuación: Optimiza la carga de recursos
+En este módulo, se analizó parte de la teoría detrás de cómo el navegador renderiza una página web y, en particular, lo que es necesario para completar la renderización inicial de una página. En el siguiente módulo, se analiza cómo se puede optimizar esta ruta de renderización aprendiendo cómo optimizar la carga de recursos.
+
+¿Te resultó útil?
+
+Salvo que se indique lo contrario, el contenido de esta página está sujeto a la licencia Atribución 4.0 de Creative Commons, y los ejemplos de código están sujetos a la licencia Apache 2.0. Para obtener más información, consulta las políticas del sitio de Google Developers. Java es una marca registrada de Oracle o sus afiliados.
+
+Última actualización: 2023-11-27 (UTC)
+
+Queremos ayudarte a crear sitios web atractivos, accesibles, rápidos y seguros que funcionen en diferentes navegadores y para todos tus usuarios. En este sitio, encontrarás contenido escrito por miembros del equipo de Chrome y expertos externos para ayudarte en ese recorrido.
+Contribuir
+Informar un error
+Ver incidentes abiertos
+Contenido relacionado
+Chrome para desarrolladores
+Actualizaciones de Chromium
+Casos de éxito
+Podcasts y programas
+Seguir
+@ChromiumDev en X
+YouTube
+Chrome para desarrolladores en LinkedIn
+RSS
+Condiciones
+Privacidad
+
+Español – América Latina

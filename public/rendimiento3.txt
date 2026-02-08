@@ -1,0 +1,99 @@
+Ir al contenido principal
+Chrome for Developers
+Documentos
+
+Casos de éxito
+Blog
+Novedades de Chrome
+Buscar
+/
+
+
+Español – América Latina
+Acceder
+Lighthouse
+Página principal
+Docs
+Lighthouse
+¿Te resultó útil?
+
+Quita el código JavaScript sin usar
+
+
+
+El código JavaScript sin usar puede disminuir la velocidad de carga de tu página:
+
+Si el código JavaScript bloquea la renderización, el navegador debe descargar, analizar, compilar y evaluar la secuencia de comandos antes de poder continuar con todo el otro trabajo necesario para renderizar la página.
+Incluso si el código JavaScript es asíncrono (no bloquea la renderización), compite por el ancho de banda con otros recursos mientras se descarga, lo que tiene implicaciones significativas en el rendimiento. Enviar código no utilizado a través de la red también es un desperdicio para los usuarios de dispositivos móviles que no tienen planes de datos ilimitados.
+Cómo falla la auditoría de JavaScript sin usar
+Lighthouse marca todos los archivos JavaScript con más de 20 kibibytes de código sin usar:
+
+Una captura de pantalla de la auditoría.
+Haz clic en un valor de la columna URL para abrir el código fuente de la secuencia de comandos en una pestaña nueva.
+Nota: Consulta la publicación sobre la puntuación de rendimiento de Lighthouse para obtener información sobre cómo se calcula la puntuación general de rendimiento de tu página.
+Cómo quitar el código JavaScript sin usar
+Detecta el código JavaScript sin usar
+La pestaña Cobertura de las herramientas para desarrolladores de Chrome puede brindarte un desglose línea por línea del código que no se usa.
+
+La clase Coverage de Puppeteer puede ayudarte a automatizar el proceso de detectar código sin usar y extraer el código usado.
+
+Herramienta de compilación para admitir la eliminación de código sin usar
+Consulta las siguientes pruebas de Tooling.Report para saber si tu empaquetador admite funciones que faciliten evitar o quitar el código que no se usa:
+
+División de código
+Eliminación de código sin usar
+Código importado sin usar
+Orientación específica de la pila
+Angular
+Si utilizas Angular CLI, incluye mapas de origen en la compilación de producción para inspeccionar tus paquetes.
+
+Drupal
+Se recomienda quitar los elementos de JavaScript no utilizados y solo adjuntar las bibliotecas de Drupal necesarias al componente o a la página pertinentes. Consulta la documentación de Drupal para obtener más información. Para identificar las bibliotecas adjuntas que agregan instancias innecesarias de JavaScript, prueba ejecutar la cobertura de código en DevTools de Chrome. Puedes identificar el tema o módulo responsable desde la URL de la secuencia de comandos cuando la agregación de JavaScript está inhabilitada en tu sitio de Drupal. Presta atención a los temas o módulos que tengan muchas secuencias de comandos en la lista con muchos elementos en rojo en la cobertura de código. Los temas o módulos solo deberían adjuntar una biblioteca de secuencias de comandos si se usan en la página. Para obtener más información, consulta el artículo sobre el tema.
+
+Joomla
+Puedes reducir o cambiar la cantidad de extensiones de Joomla que cargan secuencias de JavaScript que tu página no usa.
+
+Magento
+Inhabilita el paquete de JavaScript integrado de Magento.
+
+React
+Si no estás procesando datos en el servidor, divide los paquetes de JavaScript con React.lazy(). De lo contrario, divide el código con una biblioteca de terceros como loadable-components.
+
+Vue
+Si no usas el Vue Router, pero no renderizas el servidor, divide los paquetes en rutas de carga diferida.
+
+WordPress
+Puedes reducir o cambiar la cantidad de complementos de WordPress que cargan JavaScript sin usar en tu página.
+
+Recursos
+Código fuente de la auditoría Quita el código sin usar
+Cómo quitar el código sin usar
+Cómo agregar interactividad con JavaScript
+División de código
+Eliminación de código muerto
+Código importado no autorizado
+Encuentra código JavaScript y CSS sin usar en la pestaña Cobertura de las Herramientas para desarrolladores de Chrome
+class: Coverage
+¿Te resultó útil?
+
+Salvo que se indique lo contrario, el contenido de esta página está sujeto a la licencia Atribución 4.0 de Creative Commons, y los ejemplos de código están sujetos a la licencia Apache 2.0. Para obtener más información, consulta las políticas del sitio de Google Developers. Java es una marca registrada de Oracle o sus afiliados.
+
+Última actualización: 2020-07-07 (UTC)
+
+Contribuir
+Informar un error
+Ver incidentes abiertos
+Contenido relacionado
+Actualizaciones de Chromium
+Casos de éxito
+Archivar
+Podcasts y programas
+Seguir
+@ChromiumDev en X
+YouTube
+Chrome para desarrolladores en LinkedIn
+RSS
+Condiciones
+Privacidad
+
+Español – América Latina

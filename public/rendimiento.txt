@@ -1,0 +1,113 @@
+Ir al contenido principal
+Chrome for Developers
+Documentos
+
+Casos de éxito
+Blog
+Novedades de Chrome
+Buscar
+/
+
+
+Español – América Latina
+Acceder
+Lighthouse
+Página principal
+Docs
+Lighthouse
+¿Te resultó útil?
+
+Entrega elementos estáticos con una política de caché eficiente
+
+
+
+El almacenamiento en caché HTTP puede acelerar el tiempo de carga de la página en visitas repetidas.
+
+Cuando un navegador solicita un recurso, el servidor que lo proporciona puede indicarle al navegador por cuánto tiempo debe almacenar o almacenar en caché el recurso de manera temporal. Para cualquier solicitud posterior de ese recurso, el navegador usa su copia local en lugar de obtenerla de la red.
+
+Cómo falla la auditoría de la política de caché de Lighthouse
+Lighthouse marca todos los recursos estáticos que no están almacenados en caché:
+
+Captura de pantalla de la auditoría Aloja elementos estáticos con una política de caché eficiente de Lighthouse
+
+Lighthouse considera que un recurso se puede almacenar en caché si se cumplen todas las siguientes condiciones:
+
+El recurso es una fuente, una imagen, un archivo multimedia, una secuencia de comandos o una hoja de estilo.
+El recurso tiene un código de estado HTTP 200, 203 o 206.
+El recurso no tiene una política explícita de no almacenar en caché.
+Cuando una página no aprueba la auditoría, Lighthouse enumera los resultados en una tabla con tres columnas:
+
+URL	La ubicación del recurso que puede almacenarse en caché
+TTL de caché	La duración actual de la caché del recurso
+Tamaño de transferencia	Una estimación de los datos que ahorrarían tus usuarios si el recurso marcado se hubiera almacenado en caché
+Nota: Consulta la publicación sobre la puntuación de rendimiento de Lighthouse para obtener información sobre cómo se calcula la puntuación de rendimiento general de tu página.
+Cómo almacenar en caché recursos estáticos con el almacenamiento en caché de HTTP
+Configura tu servidor para que muestre el encabezado de respuesta HTTP Cache-Control:
+
+
+Cache-Control: max-age=31536000
+La directiva max-age le indica al navegador durante cuánto tiempo debe almacenar en caché el recurso en segundos. En este ejemplo, se establece la duración en 31536000, que corresponde a 1 año: 60 segundos × 60 minutos × 24 horas × 365 días = 31536000 segundos.
+
+Debes almacenar en caché los recursos estáticos inmutables durante un período prolongado, como un año o más.
+
+Nota: Uno de los riesgos de tener una larga duración de la caché es que los usuarios no verán actualizaciones de los archivos estáticos. Para evitar este problema, configura tu herramienta de compilación para que incorpore un hash en los nombres de archivo de los recursos estáticos, de modo que cada versión sea única y se le solicite al navegador que recupere la versión nueva del servidor. (Para aprender a incorporar hashes con webpack, consulta la guía de caché de webpack).
+Usa no-cache si el recurso cambia y la actualidad es importante, pero aún deseas obtener algunos de los beneficios de velocidad del almacenamiento en caché. El navegador aún almacena en caché un recurso configurado como no-cache, pero primero verifica con el servidor para asegurarse de que el recurso siga siendo actual.
+
+Una duración de caché más larga no siempre es mejor. En última instancia, depende de ti decidir cuál es la duración óptima de la caché para tus recursos.
+
+Existen muchas directivas para personalizar el modo en que el navegador almacena en caché los diferentes recursos. Obtén más información sobre los recursos de almacenamiento en caché en La caché HTTP: tu primera línea de defensa y en el codelab Configuración del comportamiento de almacenamiento en caché HTTP.
+
+Cómo verificar las respuestas almacenadas en caché en las Herramientas para desarrolladores de Chrome
+Para ver qué recursos obtiene el navegador de su caché, abre la pestaña Red en las herramientas para desarrolladores de Chrome:
+
+Presiona Control+Shift+J (o Command+Option+J en Mac) para abrir DevTools.
+Haga clic en la pestaña Red.
+La columna Size de Chrome DevTools puede ayudarte a verificar si un recurso se almacenó en caché:
+
+La columna Tamaño
+
+Chrome entrega los recursos más solicitados desde la memoria caché, que es muy rápida, pero se borra cuando se cierra el navegador.
+
+Para verificar que el encabezado Cache-Control de un recurso esté configurado como se espera, verifica sus datos de encabezado HTTP:
+
+Haz clic en la URL de la solicitud, debajo de la columna Nombre de la tabla Solicitudes.
+Haz clic en la pestaña Headers.
+Cómo inspeccionar el encabezado Cache-Control a través de la pestaña Encabezados
+Inspecciona el encabezado Cache-Control a través de la pestaña Encabezados.
+Orientación específica de la pila
+Drupal
+Establece el tiempo máximo de almacenamiento en caché del navegador y el proxy en la página Administración » Configuración » Desarrollo. Obtén información sobre el almacenamiento en caché de Drupal y cómo mejorar el rendimiento.
+
+Joomla
+Consulta Caché.
+
+WordPress
+Consulta Almacenamiento en caché del navegador.
+
+Recursos
+Código fuente para la auditoría de Aloja elementos estáticos con una política de caché eficiente
+Especificación de Cache-Control
+Cache-Control (MDN)
+¿Te resultó útil?
+
+Salvo que se indique lo contrario, el contenido de esta página está sujeto a la licencia Atribución 4.0 de Creative Commons, y los ejemplos de código están sujetos a la licencia Apache 2.0. Para obtener más información, consulta las políticas del sitio de Google Developers. Java es una marca registrada de Oracle o sus afiliados.
+
+Última actualización: 2019-05-02 (UTC)
+
+Contribuir
+Informar un error
+Ver incidentes abiertos
+Contenido relacionado
+Actualizaciones de Chromium
+Casos de éxito
+Archivar
+Podcasts y programas
+Seguir
+@ChromiumDev en X
+YouTube
+Chrome para desarrolladores en LinkedIn
+RSS
+Condiciones
+Privacidad
+
+Español – América Latina

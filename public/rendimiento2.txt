@@ -1,0 +1,83 @@
+Ir al contenido principal
+Chrome for Developers
+Documentos
+
+Casos de éxito
+Blog
+Novedades de Chrome
+Buscar
+/
+
+
+Español – América Latina
+Acceder
+Lighthouse
+Página principal
+Docs
+Lighthouse
+¿Te resultó útil?
+
+Codifica las imágenes de forma eficaz
+
+
+
+Advertencia: A partir de Lighthouse 13, esta auditoría se trasladó a la estadística Mejora la entrega de imágenes. Para obtener más información, consulta Novedades de Lighthouse 13.
+En la sección Opportunities de tu informe de Lighthouse, se enumeran todas las imágenes sin optimizar, con el ahorro potencial en kibibytes (KiB). Optimiza estas imágenes para que la página se cargue más rápido y consuma menos datos:
+
+Captura de pantalla de la auditoría Efficiently encode images de Lighthouse
+Cómo Lighthouse marca las imágenes como optimizables
+Lighthouse recopila todas las imágenes JPEG o BMP de la página, establece el nivel de compresión de cada imagen en 85 y, luego, compara la versión original con la versión comprimida. Si el ahorro potencial es de 4 KiB o más, Lighthouse marca la imagen como optimizable.
+
+Cómo optimizar imágenes
+Existen muchas medidas que puedes tomar para optimizar tus imágenes, incluidas las siguientes:
+
+Uso de CDN de imágenes
+Compresión de imágenes
+Reemplazo de GIFs animados por videos
+Imágenes de carga diferida
+Cómo entregar imágenes responsivas
+Publica imágenes con las dimensiones correctas
+Cómo usar imágenes WebP
+Optimiza imágenes con herramientas de GUI
+Otro enfoque es ejecutar tus imágenes a través de un optimizador que instalas en tu computadora y ejecutas como una GUI. Por ejemplo, con ImageOptim, arrastras y sueltas imágenes en su IU, y luego las comprime automáticamente sin comprometer la calidad de forma notable. Si tienes un sitio pequeño y puedes optimizar todas las imágenes de forma manual, esta opción probablemente sea suficiente.
+
+Squoosh es otra opción. El equipo de Web DevRel de Google mantiene Squoosh.
+
+Orientación específica para la pila
+Drupal
+Se recomienda usar un módulo que optimice y reduzca de forma automática el tamaño de las imágenes que se cargan en el sitio y conserve la calidad. Además, asegúrate de usar los estilos de imágenes responsivas que proporciona Drupal para todas las imágenes renderizadas en el sitio.
+
+Joomla
+Puedes usar un complemento de optimización de imágenes que comprima las imágenes y conserve la calidad.
+
+Magento
+Considera usar una extensión de Magento de terceros que optimice las imágenes.
+
+WordPress
+Puedes usar un complemento de optimización de imágenes de WordPress que comprima tus imágenes y conserve la calidad.
+
+Recursos
+Código fuente de la auditoría Codifica las imágenes de forma eficaz
+¿Te resultó útil?
+
+Salvo que se indique lo contrario, el contenido de esta página está sujeto a la licencia Atribución 4.0 de Creative Commons, y los ejemplos de código están sujetos a la licencia Apache 2.0. Para obtener más información, consulta las políticas del sitio de Google Developers. Java es una marca registrada de Oracle o sus afiliados.
+
+Última actualización: 2019-05-02 (UTC)
+
+Contribuir
+Informar un error
+Ver incidentes abiertos
+Contenido relacionado
+Actualizaciones de Chromium
+Casos de éxito
+Archivar
+Podcasts y programas
+Seguir
+@ChromiumDev en X
+YouTube
+Chrome para desarrolladores en LinkedIn
+RSS
+Condiciones
+Privacidad
+
+Español – América Latina

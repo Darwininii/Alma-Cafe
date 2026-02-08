@@ -83,6 +83,8 @@ export const GridImages = ({ images }: Props) => {
             <img
               src={getOptimizedImageUrl(image, 150)}
               alt={`Thumbnail ${index + 1}`}
+              width="80"
+              height="80"
               className="w-full h-full rounded-xl object-contain"
               loading="lazy"
             />
@@ -122,7 +124,7 @@ export const GridImages = ({ images }: Props) => {
             {...containerHandlers}
           >
             <img
-              src={activeImage}
+              src={getOptimizedImageUrl(activeImage, 1200)}
               alt="Zoomed Product"
               className="max-w-full max-h-full object-contain transition-transform duration-200 ease-out"
               {...handlers}
