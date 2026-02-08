@@ -138,7 +138,7 @@ export const ProductsPage = () => {
 
             {/* Características */}
             <div className="bg-black/5 dark:bg-white/5 rounded-2xl p-4 border border-black/5 dark:border-white/5">
-              <h3 className="text-sm font-bold text-black/60 dark:text-white/60 mb-3 uppercase tracking-wider">Características</h3>
+              <h2 className="text-sm font-bold text-black/60 dark:text-white/60 mb-3 uppercase tracking-wider">Características</h2>
               <ul className="space-y-3">
                 {product.features.map((feature: string) => (
                   <motion.li
