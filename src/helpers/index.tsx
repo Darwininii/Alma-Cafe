@@ -106,8 +106,8 @@ export const getOptimizedImageUrl = (url: string, width: number = 500): string =
   if (!url) return "";
   if (!url.includes("supabase.co")) return url; // Only optimize Supabase images
   // Transform /object/public/ to /render/image/public/ for reliable transformations
-  const optimizedUrl = url.replace("/object/public/", "/render/image/public/");
+  // const optimizedUrl = url.replace("/object/public/", "/render/image/public/");
   
-  const separator = optimizedUrl.includes("?") ? "&" : "?";
-  return `${optimizedUrl}${separator}width=${width}&format=webp&resize=contain&quality=80`;
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}width=${width}&format=webp&resize=contain&quality=80`;
 };
