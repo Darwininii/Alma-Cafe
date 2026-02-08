@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import { FeatureGrid, ProductGrid, Brands } from "../Components/home";
 import { prepareProducts } from "../helpers";
 import { useScrollReveal } from "../Components/shared/Scroll";
@@ -9,25 +9,17 @@ import { ProductGridSkeleton } from "@/Components/skeletons/ProductGridSkeleton"
 export const HomePage: React.FC = () => {
   const { recentProducts, popularProducts, isLoading } = useHomeProducts();
 
-  const [isVisible, setIsVisible] = useState(false);
   const preparedRecentProducts = prepareProducts(recentProducts ?? []);
   const preparedPopular = prepareProducts(popularProducts ?? []);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
   useScrollReveal([isLoading]);
   return (
     <div className="min-h-screen transition-colors duration-300">
       {/* Hero Section con animación de fade in */}
       <section
-        className={`
+          className={`
           transition-all duration-1000 ease-out
-          ${isVisible
-            ? "opacity-100 transform translate-y-0"
-            : "opacity-0 transform -translate-y-10"
-          }
+          opacity-100 transform translate-y-0
         `}
       >
         <CardFeature

@@ -10,6 +10,7 @@ interface CustomPlusMinusProps extends React.HTMLAttributes<HTMLDivElement> {
     disableDecrease?: boolean;
     disableIncrease?: boolean;
     className?: string;
+    buttonClassName?: string;
     iconSize?: number | string;
 }
 
@@ -20,6 +21,7 @@ export const CustomPlusMinus = ({
     disableDecrease = false,
     disableIncrease = false,
     className,
+    buttonClassName,
     iconSize = 18,
     ...props
 }: CustomPlusMinusProps) => {
@@ -35,7 +37,10 @@ export const CustomPlusMinus = ({
                 onClick={onDecrease}
                 disabled={disableDecrease}
                 size="icon"
-                className="w-8 h-8 rounded-full bg-transparent hover:bg-black/10 dark:hover:bg-white/10 dark:text-white text-black hover:text-red-500 dark:hover:text-red-400 border-none shadow-none"
+                className={cn(
+                    "w-8 h-8 rounded-full bg-transparent hover:bg-black/10 dark:hover:bg-white/10 dark:text-white text-black hover:text-red-500 dark:hover:text-red-400 border-none shadow-none",
+                    buttonClassName
+                )}
                 centerIcon={BadgeMinus}
                 iconSize={iconSize}
                 effect="none"
@@ -50,7 +55,10 @@ export const CustomPlusMinus = ({
                 onClick={onIncrease}
                 disabled={disableIncrease}
                 size="icon"
-                className="w-8 h-8 rounded-full bg-transparent hover:bg-black/10 dark:hover:bg-white/10 dark:text-white text-black hover:text-green-500 dark:hover:text-green-400 border-none shadow-none"
+                className={cn(
+                    "w-8 h-8 rounded-full bg-transparent hover:bg-black/10 dark:hover:bg-white/10 dark:text-white text-black hover:text-green-500 dark:hover:text-green-400 border-none shadow-none",
+                    buttonClassName
+                )}
                 centerIcon={BadgePlus}
                 iconSize={iconSize}
                 effect="none"

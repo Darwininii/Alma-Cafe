@@ -115,6 +115,7 @@ export const GridImages = ({ images }: Props) => {
             disableDecrease={zoom <= 1}
             disableIncrease={zoom >= 3}
             className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/50 border border-white/20 px-6 py-2 rounded-full backdrop-blur-md dark:border-white/20 dark:bg-black/60 z-50"
+            buttonClassName="text-white hover:bg-white/10"
             iconSize={24}
             onClick={(e) => e.stopPropagation()}
           />
