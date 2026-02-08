@@ -1,0 +1,144 @@
+Aunque la herramienta de navegación no me permite ver los resultados específicos de tu reporte de PageSpeed (ya que es contenido dinámico generado en tu sesión), puedo darte recomendaciones técnicas precisas sabiendo que tu *stack* es **React + Vite + Supabase** y que estás desplegando en **Vercel**.
+
+En aplicaciones de comercio electrónico tipo SPA (Single Page Application), los problemas de rendimiento suelen concentrarse en tres áreas. Aquí tienes lo que debes hacer para solucionar cada una:
+
+### 1. Optimización de Imágenes (LCP y Peso de carga)
+
+Este es usualmente el mayor impacto en tiendas online.
+
+* **Transformación en la nube (Supabase):** No cargues la imagen original que subiste al `bucket`. Usa la API de transformación de imágenes de Supabase directamente en la URL.
+* *Mal:* `<img src=".../storage/v1/object/public/products/zapatilla.jpg" />`
+* *Bien:* `<img src=".../storage/v1/object/public/products/zapatilla.jpg?width=500&format=webp&quality=80" />`
+* *Acción:* Crea un componente `Image` reutilizable que acepte `width` y `height` y añada estos parámetros automáticamente a la URL de Supabase.
+
+
+* **Formatos modernos:** Al añadir `format=webp` en la URL de Supabase, sirves imágenes más ligeras que JPG/PNG.
+* **Evitar CLS (Saltos de diseño):** Asegúrate de que todas tus etiquetas `<img>` tengan propiedades `width` y `height` o una relación de aspecto definida en CSS (`aspect-ratio`). Esto evita que el diseño se mueva cuando la imagen carga.
+
+### 2. Reducción de JavaScript (TBT y Tiempo de carga)
+
+Vite empaqueta todo el código en un solo archivo si no se configura lo contrario, lo que ralentiza la carga inicial.
+
+* **Code Splitting (División de código):** Usa `React.lazy` y `Suspense` para importar las páginas de tu router. Así, el usuario solo descarga el código de la página "Inicio" al entrar, y no el código del "Carrito" o "Detalle de producto" hasta que navega allá.
+```javascript
+// En tu router
+const ProductDetail = React.lazy(() => import('./pages/ProductDetail'));
+
+```
+
+
+* **Vite Bundle Visualizer:** Instala `rollup-plugin-visualizer` para ver qué librerías están ocupando más espacio. A veces una librería pequeña de fechas o íconos añade 500kb innecesarios.
+
+### 3. Carga de Recursos (FCP)
+
+* **Fuentes:** Si usas Google Fonts, asegúrate de que estén en el `index.html` con `display=swap` para que el texto sea visible inmediatamente, aunque la fuente no haya cargado.
+* **Preconnect:** Añade esto en el `<head>` de tu `index.html` para establecer la conexión con Supabase antes de que React pida los datos:
+```html
+<link rel="preconnect" href="https://tu-proyecto.supabase.co" />
+
+```
+
+
+
+### Resumen para tu reporte específico:
+
+Si en PageSpeed ves estas alertas, aplica la solución correspondiente:
+
+* **"Serve images in next-gen formats":** Aplica el parámetro `format=webp` en las URLs de Supabase.
+* **"Reduce unused JavaScript":** Aplica `React.lazy` en tus rutas.
+* **"Eliminate render-blocking resources":** Revisa tus importaciones de CSS y evita lógica pesada antes del primer `render` en tu `main.jsx`.
+
+Implementando solo la transformación de imágenes de Supabase y el `React.lazy`, deberías ver una mejora drástica en tu puntuación móvil.
+
+
+
+
+Estadísticas
+Solicitudes que bloquean el renderizado Ahorro estimado de 930 ms
+Las solicitudes están bloqueando el renderizado inicial de la página, lo que puede retrasar el LCP. Si se posponen o se insertan, estas solicitudes de red pueden salir de la ruta crítica.LCPFCPSin puntuar
+URL
+Tamaño de la transferencia
+Duración
+vercel.app Propio
+26,7 KiB	560 ms
+/assets/index-Df1MU3Fy.css(darwinini-ecommerce.vercel.app)
+26,7 KiB
+560 ms
+Google Fonts cdn 
+1,3 KiB	750 ms
+/css2?family=…(fonts.googleapis.com)
+1,3 KiB
+750 ms
+Redistribución forzada
+Se produce un reflow forzado cuando JavaScript consulta propiedades geométricas (como offsetWidth) después de que los estilos hayan sido invalidados por un cambio en el estado del DOM. Esto puede provocar un rendimiento deficiente. Consulta más información sobre los reflows forzados y las posibles mitigaciones.Sin puntuar
+Llamada a función principal
+Tiempo total de redistribución
+/assets/index-Dxo2U4zx.js:3:25307(darwinini-ecommerce.vercel.app)
+32 ms
+Fuente
+Tiempo total de redistribución
+[sin asignación]
+1 ms
+/assets/index-Dxo2U4zx.js:264:2559(darwinini-ecommerce.vercel.app)
+32 ms
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Árbol de dependencia de red
+Evita encadenar solicitudes críticas reduciendo la longitud de las cadenas, disminuyendo el tamaño de los recursos o posponiendo la descarga de recursos innecesarios para mejorar la carga de la página.LCPSin puntuar
+Latencia de ruta crítica máxima: 903 ms
+Navegación inicial
+https://darwinini-ecommerce.vercel.app - 152 ms, 1,20 KiB
+/css2?family=…(fonts.googleapis.com) - 161 ms, 1,34 KiB
+…v31/JTUSjIg1_….woff2(fonts.gstatic.com) - 344 ms, 35,47 KiB
+/assets/index-Dxo2U4zx.js(darwinini-ecommerce.vercel.app) - 305 ms, 384,64 KiB
+/assets/HomePage-D9i1zOCv.js(darwinini-ecommerce.vercel.app) - 550 ms, 10,25 KiB
+/assets/CardProduct-_ntkEfZy.js(darwinini-ecommerce.vercel.app) - 561 ms, 2,64 KiB
+/assets/Tag-Bjs0hRpI.js(darwinini-ecommerce.vercel.app) - 560 ms, 0,90 KiB
+…v1/site_settings?select=value&key=eq.theme(phapkavlbwvliwdmfzhi.supabase.co) - 805 ms, 1,23 KiB
+…v1/site_settings?select=value&key=eq.theme(phapkavlbwvliwdmfzhi.supabase.co) - 845 ms, 1,23 KiB
+…v1/productos?select=…(phapkavlbwvliwdmfzhi.supabase.co) - 898 ms, 2,01 KiB
+…v1/productos?select=*&is_active=eq.true&limit=20(phapkavlbwvliwdmfzhi.supabase.co) - 903 ms, 3,45 KiB
+/assets/index-Df1MU3Fy.css(darwinini-ecommerce.vercel.app) - 242 ms, 26,67 KiB
+Orígenes preconectados
+Las sugerencias para establecer conexión previamente ayudan al navegador a establecer una conexión antes de que se cargue la página, lo que ahorra tiempo al hacer la primera solicitud a ese origen. A continuación se indican los orígenes con los que la página ha establecido conexión previamente.
+No hay orígenes con los que se haya establecido conexión previamente
+Candidatos para establecer conexión previamente
+Añade sugerencias para establecer conexión previamente con tus orígenes más importantes, pero intenta usar 4 como máximo.
+Origen
+Ahorro estimado de LCP
+https://www.transparenttextures.com
+330 ms
+https://phapkavlbwvliwdmfzhi.supabase.co
+300 ms
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Usar tiempos de vida de caché eficientes Ahorro estimado de 1316 KiB
+Una duración en caché más larga puede aumentar el número de visitas repetidas a tu página. Más informaciónLCPFCPSin puntuar
+Solicitud
+Tiempo de vida en caché
+Tamaño de la transferencia
+supabase.co
+1645 KiB
+…c0cd395c-df21-43dc-b3c3-0d98807a950e/c0cd395c-df21-43dc-….png?…(phapkavlbwvliwdmfzhi.supabase.co)
+1h
+832 KiB
+…ce1378e0-ed12-49dd-b476-0a41bc7b8fc1/ce1378e0-ed12-49dd-….jpg?…(phapkavlbwvliwdmfzhi.supabase.co)
+1h
+372 KiB
+…82e7d0c4-c4e1-4260-b1e5-4ee85084279f/82e7d0c4-c4e1-4260-….jpg?…(phapkavlbwvliwdmfzhi.supabase.co)
+1h
+357 KiB
+…add7e20d-a7b3-4e85-b688-8b410adedc5b/add7e20d-a7b3-4e85….webp?…(phapkavlbwvliwdmfzhi.supabase.co)
+1h
+28 KiB
+…b538da12-450e-4e8f-bebb-a2c6837d7690/b538da12-450e-4e8f-….jpg?…(phapkavlbwvliwdmfzhi.supabase.co)
+1h
+28 KiB
+…e4c4087e-9ae7-44cb-897e-05b374e9b54e/e4c4087e-9ae7-44cb….webp?…(phapkavlbwvliwdmfzhi.supabase.co)
+1h
+27 KiB
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Si se reduce el tiempo de descarga de las imágenes, se puede mejorar el tiempo de carga percibido de la página y el LCP. Más información sobre la optimización del tamaño de las imágenesLCPFCPSin puntuar

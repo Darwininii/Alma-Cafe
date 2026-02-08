@@ -107,5 +107,5 @@ export const getOptimizedImageUrl = (url: string, width: number = 500): string =
   if (!url.includes("supabase.co")) return url; // Only optimize Supabase images
   // If already has params, append
   const separator = url.includes("?") ? "&" : "?";
-  return `${url}${separator}width=${width}&format=webp&resize=contain`;
+  return `${url}${separator}width=${width}&format=webp&resize=contain&quality=80`;
 };
