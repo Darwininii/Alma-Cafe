@@ -104,13 +104,8 @@ export const sanitizeFileName = (fileName: string): string => {
  */
 export const getOptimizedImageUrl = (url: string, width: number = 500): string => {
   if (!url) return "";
-  if (!url.includes("supabase.co")) return url;
-
-  // Transform /object/public/ to /render/image/public/ for reliable transformations
-  let optimizedUrl = url.replace("/object/public/", "/render/image/public/");
-
-  // Identify separator
-  const separator = optimizedUrl.includes("?") ? "&" : "?";
-  
-  return `${optimizedUrl}${separator}width=${width}&format=webp&quality=80&resize=contain`;
+  if (!url.includes("supabase.co")) return url; // Only optimize Supabase images
+  // If already has params, append
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}width=${width}&format=webp&resize=contain&quality=80`;
 };
