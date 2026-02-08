@@ -81,7 +81,7 @@ export const GridImages = ({ images }: Props) => {
             centerIcon={ZoomIn}
           >
             <img
-              src={getOptimizedImageUrl(image, 150)}
+              src={getOptimizedImageUrl(image, 100)}
               alt={`Thumbnail ${index + 1}`}
               width="80"
               height="80"
