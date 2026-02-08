@@ -1,0 +1,375 @@
+Ir al contenido principal
+web.dev
+Recursos
+Modelo de referencia
+Cómo usar Baseline
+Blog
+Casos de éxito
+Buscar
+/
+
+
+Español – América Latina
+Acceder
+Página principal
+Articles
+¿Te resultó útil?
+
+Optimiza el procesamiento de imagen con contenido más grande
+
+
+
+Una guía paso a paso para desglosar el LCP y, luego, identificar las áreas clave que se deben mejorar.
+
+
+Philip Walton
+Philip Walton
+Barry Pollard
+Barry Pollard
+
+Fecha de publicación: 30 de abril de 2020; última actualización: 31 de marzo de 2025
+
+El Largest Contentful Paint (LCP) es una de las tres métricas de Core Web Vitals y representa la rapidez con la que se carga el contenido principal de una página web. Específicamente, el LCP mide el tiempo que transcurre desde que el usuario inicia la carga de la página hasta que se renderiza la imagen o el bloque de texto más grande dentro del viewport.
+
+Para proporcionar una buena experiencia del usuario, los sitios deben esforzarse por tener un LCP de 2.5 segundos o menos para, al menos, el 75% de las visitas a la página.
+
+Los valores buenos del LCP son de 2.5 segundos o menos, los valores deficientes son superiores a 4.0 segundos y cualquier valor intermedio necesita mejorar.
+Un buen valor de LCP es de 2.5 segundos o menos.
+Varios factores pueden afectar la rapidez con la que el navegador puede cargar y renderizar una página web, y las demoras en cualquiera de ellos pueden tener un impacto significativo en el LCP.
+
+Es raro que corregir rápido una sola parte de una página genere una mejora significativa del LCP. Para mejorar el LCP, debes analizar todo el proceso de carga y asegurarte de que cada paso esté optimizado.
+
+Información sobre la métrica del LCP
+Antes de optimizar el LCP, los desarrolladores deben intentar comprender si tienen un problema de LCP y el alcance de dicho problema.
+
+El LCP se puede medir con varias herramientas, y no todas lo hacen de la misma manera. Para comprender el LCP de los usuarios reales, debemos observar lo que experimentan los usuarios reales, en lugar de lo que muestran las herramientas basadas en laboratorios, como Lighthouse o las pruebas locales. Estas herramientas basadas en el laboratorio pueden proporcionar una gran cantidad de información para explicar y ayudarte a mejorar el LCP, pero ten en cuenta que las pruebas de laboratorio por sí solas pueden no ser completamente representativas de lo que experimentan tus usuarios reales.
+
+Los datos del LCP basados en usuarios reales se pueden obtener de las herramientas de supervisión de usuarios reales (RUM) instaladas en un sitio o con el Chrome User Experience Report (CrUX), que recopila datos anónimos de usuarios reales de Chrome para millones de sitios web.
+
+Cómo usar los datos del LCP de CrUX de las Herramientas para desarrolladores de Chrome
+El panel Rendimiento de las Herramientas para desarrolladores de Chrome muestra tu experiencia local de LCP junto al LCP de CrUX de la página o el origen en la vista de métricas en vivo y en las Estadísticas de un registro de rendimiento, incluido un desglose de los tiempos de las subpartes del LCP (que explicaremos en breve).
+
+LCP local y de campo en el panel Rendimiento de las Herramientas para desarrolladores de Chrome
+LCP local y de campo en las vistas de seguimiento y las métricas en tiempo real del panel Rendimiento de las Herramientas para desarrolladores de Chrome
+Si superpones los datos de campo en el panel Rendimiento, puedes evaluar si una página tiene problemas de LCP para usuarios reales y adaptar la configuración de tu entorno local para reproducir y depurar mejor esos problemas.
+
+Cómo usar los datos del LCP de CrUX de PageSpeed Insights
+PageSpeed Insights proporciona acceso a los datos de CrUX en la sección superior etiquetada como Descubre la experiencia de tus usuarios reales. En la sección inferior etiquetada como Diagnostica problemas de rendimiento, se encuentran datos más detallados basados en el laboratorio. Si los datos de CrUX están disponibles para tu sitio web, siempre debes concentrarte primero en los datos de usuarios reales.
+
+Datos de CrUX que se muestran en PageSpeed Insights
+Datos de CrUX que se muestran en PageSpeed Insights.
+Nota: Cuando CrUX no proporciona datos (por ejemplo, una página con tráfico insuficiente para obtener datos a nivel de la página), CrUX se debe complementar con datos de RUM recopilados con las APIs de JavaScript que se ejecutan en la página web. También puede proporcionar muchos más datos de los que CrUX puede exponer como un conjunto de datos públicos. Más adelante en esta guía, explicaremos cómo recopilar estos datos con JavaScript.
+PageSpeed Insights muestra hasta cuatro datos de CrUX diferentes:
+
+Datos de dispositivos móviles para esta URL
+Datos de computadoras de escritorio para esta URL
+Datos móviles para todo el origen
+Datos de computadoras para todo el origen
+Puedes activar o desactivar estas opciones en los controles que se encuentran en la parte superior y en la esquina superior derecha de esta sección. Si una URL no tiene suficientes datos para mostrarse a nivel de la URL, pero sí tiene datos para el origen, PageSpeed Insights siempre muestra los datos del origen.
+
+PageSpeed Insights recurre a los datos a nivel del origen cuando no hay datos a nivel de la URL
+Cuando PageSpeed Insights no tiene datos a nivel de la URL, muestra datos a nivel del origen.
+El LCP de todo el origen puede ser muy diferente al LCP de una página individual, según cómo se cargue el LCP en esa página en comparación con otras páginas de ese origen. También puede verse afectada por la forma en que los visitantes navegan a estas páginas. Los usuarios nuevos suelen visitar las páginas principales, por lo que es posible que se carguen "en frío", sin contenido almacenado en caché, y, por lo tanto, suelen ser las páginas más lentas de un sitio web.
+
+Analizar las cuatro categorías diferentes de datos de CrUX puede ayudarte a comprender si un problema de LCP es específico de esta página o si se trata de un problema más general en todo el sitio. Del mismo modo, puede mostrar qué tipos de dispositivos tienen problemas de LCP.
+
+Uso de las métricas complementarias de CrUX de PageSpeed Insights
+Quienes deseen optimizar el LCP también deben usar los tiempos de First Contentful Paint (FCP) y Time to First Byte (TTFB), que son buenas métricas de diagnóstico que pueden proporcionar estadísticas valiosas sobre el LCP.
+
+El TTFB es el tiempo que transcurre desde que el visitante comienza a navegar a una página (por ejemplo, haciendo clic en un vínculo) hasta que se reciben los primeros bytes del documento HTML. Un TTFB alto puede dificultar o incluso imposibilitar el logro de un LCP de 2.5 segundos.
+
+Un TTFB alto puede deberse a varios redireccionamientos del servidor, visitantes ubicados lejos del servidor del sitio más cercano, visitantes con malas condiciones de red o la imposibilidad de usar contenido almacenado en caché debido a parámetros de consulta.
+
+Una vez que una página comienza a renderizarse, puede haber una pintura inicial (por ejemplo, el color de fondo), seguida de la aparición de cierto contenido (por ejemplo, el encabezado del sitio). El FCP mide la aparición del contenido inicial. La diferencia entre el FCP y otras métricas puede ser muy reveladora.
+
+Una gran diferencia entre el TTFB y el FCP podría indicar que el navegador necesita descargar muchos recursos que bloquean la renderización. También puede ser un indicio de que debe completar mucho trabajo para renderizar contenido significativo, un signo clásico de un sitio que depende en gran medida de la renderización del cliente.
+
+Una gran diferencia entre el FCP y el LCP indica que el recurso del LCP no está disponible de inmediato para que el navegador lo priorice (por ejemplo, texto o imágenes que se administran con JavaScript en lugar de estar disponibles en el HTML inicial) o que el navegador está completando otro trabajo antes de poder mostrar el contenido del LCP.
+
+Uso de los datos de Lighthouse de PageSpeed Insights
+La sección Lighthouse de PageSpeed Insights ofrece algunas orientaciones para mejorar el LCP, pero primero debes verificar si el LCP proporcionado coincide en general con los datos de usuarios reales que proporciona CrUX. Si Lighthouse y CrUX no coinciden, es probable que CrUX proporcione una imagen más precisa de la experiencia del usuario. Antes de tomar medidas, asegúrate de que los datos de CrUX correspondan a tu página y no al origen completo.
+
+Si Lighthouse y CrUX muestran valores de LCP que necesitan mejoras, la sección de Lighthouse puede proporcionar orientación valiosa sobre las formas de mejorar el LCP. Usa el filtro de LCP para mostrar solo las auditorías pertinentes para el LCP de la siguiente manera:
+
+Oportunidades y diagnósticos de LCP de Lighthouse
+Diagnóstico y sugerencias de Lighthouse para mejorar el LCP.
+Además de las Oportunidades para mejorar, hay información de Diagnóstico que puede proporcionar más detalles para ayudar a diagnosticar el problema. El diagnóstico Elemento de Largest Contentful Paint muestra un desglose útil de los distintos tiempos que componen el LCP:
+
+Subpartes del LCP en Lighthouse
+Desglose de Lighthouse de los elementos de LCP.
+Los tipos de recursos y las subpartes del LCP también están disponibles en CrUX.
+
+A continuación, profundizaremos en estas subpartes.
+
+Desglose del LCP
+Optimizar el LCP puede ser una tarea más compleja cuando PageSpeed Insights no te indica cómo mejorar esta métrica. Con las tareas complejas, generalmente es mejor dividirlas en tareas más pequeñas y manejables, y abordar cada una por separado.
+
+En esta sección, se presenta una metodología para desglosar el LCP en sus partes más críticas y, luego, se brindan recomendaciones y prácticas recomendadas específicas para optimizar cada parte.
+
+Nota: Para obtener una descripción general visual del contexto que se presenta en esta guía, consulta A Deep Dive into Optimizing LCP de Google I/O 2022:
+
+
+La mayoría de las cargas de páginas suelen incluir varias solicitudes de red, pero, para identificar oportunidades de mejora del LCP, debes comenzar por analizar solo dos:
+
+El documento HTML inicial
+El recurso de LCP (si corresponde)
+Si bien otras solicitudes en la página pueden afectar el LCP, estas dos solicitudes, específicamente los momentos en que comienza y finaliza el recurso del LCP, revelan si tu página está optimizada para el LCP.
+
+Para identificar el recurso del LCP, puedes usar herramientas para desarrolladores (como PageSpeed Insights, las Herramientas para desarrolladores de Chrome o WebPageTest) para determinar el elemento del LCP. Desde allí, puedes hacer coincidir la URL (nuevamente, si corresponde) que cargó el elemento en una cascada de red de todos los recursos que cargó la página.
+
+Por ejemplo, la siguiente visualización muestra estos recursos destacados en un diagrama de cascada de red de una carga de página típica, en la que el elemento LCP requiere una solicitud de imagen para renderizarse.
+
+Una cascada de red con los recursos de HTML y LCP destacados
+Un diagrama de cascada que muestra los tiempos de carga del código HTML de una página web y los recursos que necesita el LCP.
+En el caso de una página bien optimizada, deseas que la solicitud de recursos del LCP comience a cargarse lo antes posible y que el elemento del LCP se renderice lo más rápido posible después de que finalice la carga del recurso del LCP. Para visualizar mejor si una página en particular cumple con este principio, puedes dividir el tiempo total del LCP en las siguientes partes:
+
+Tiempo hasta el primer byte (TTFB)
+Es el tiempo que transcurre desde que el usuario comienza a cargar la página hasta que el navegador recibe el primer byte de la respuesta del documento HTML.
+Retraso en la carga de recursos
+Es el tiempo que transcurre entre el TTFB y el momento en que el navegador comienza a cargar el recurso de LCP. Si el elemento LCP no requiere una carga de recursos para renderizarse (por ejemplo, si el elemento es un nodo de texto renderizado con una fuente del sistema), este tiempo es 0.
+Duración de la carga de recursos
+Es la duración del tiempo que se tarda en cargar el recurso de LCP. Si el elemento LCP no requiere una carga de recursos para renderizarse, este tiempo es 0.
+Retraso en la renderización del elemento
+Es el tiempo que transcurre entre el momento en que termina de cargarse el recurso del LCP y el momento en que se renderiza por completo el elemento del LCP.
+El LCP de cada página consta de estas cuatro subcategorías. No hay brechas ni superposiciones entre ellos, y suman el tiempo total del LCP.
+
+Un desglose del LCP que muestra las cuatro subcategorías
+El mismo diagrama de cascada, con las cuatro subcategorías del LCP superpuestas en la línea de tiempo.
+El valor del LCP de cada página se puede desglosar en estas cuatro partes. No hay superposición ni brecha entre ellos. En conjunto, suman el tiempo total del LCP.
+
+Cuando optimizas el LCP, es útil intentar optimizar estas subpartes de forma individual. Sin embargo, también es importante tener en cuenta que debes optimizarlos todos. En algunos casos, una optimización aplicada a una parte no mejorará el LCP, sino que solo trasladará el tiempo ahorrado a otra parte.
+
+Por ejemplo, en la cascada de red anterior, si hubieras reducido el tamaño del archivo de nuestra imagen comprimiéndola más o cambiando a un formato más óptimo (como AVIF o WebP), se habría reducido la duración de la carga de recursos, pero no se habría mejorado el LCP, ya que el tiempo solo se habría desplazado a la subparte de demora en la renderización del elemento:
+
+El mismo desglose del LCP que se mostró antes, en el que se acorta la subcategoría de duración de carga de recursos, pero el tiempo general del LCP sigue siendo el mismo.
+Acortar la duración de la carga de recursos aumenta el retraso en la renderización de elementos sin reducir el LCP.
+Esto sucede porque, en esta página, el elemento LCP está oculto hasta que termina de cargarse el código JavaScript y, luego, se revela todo de una vez.
+
+Este ejemplo ayuda a ilustrar el punto de que debes optimizar todas estas subpartes para lograr los mejores resultados del LCP.
+
+Tiempos óptimos de las partes
+Para optimizar cada parte del LCP, es importante comprender cuál es la división ideal de estas partes en una página bien optimizada.
+
+De las cuatro subpartes, dos tienen la palabra "delay" en sus nombres. Esto es una pista de que debes intentar que estos tiempos se acerquen lo más posible a cero. Las otras dos partes involucran solicitudes de red, que, por su propia naturaleza, llevan tiempo.
+
+Subparte del LCP	% de LCP
+Tiempo hasta el primer byte	~40%
+Retraso en la carga de recursos	<10%
+Duración de la carga de recursos	~40%
+Retraso en la renderización del elemento	<10%
+TOTAL	100%
+Ten en cuenta que estos desgloses de tiempo son solo lineamientos, no reglas estrictas. Si los tiempos del LCP en tus páginas se mantienen constantemente dentro de los 2.5 segundos, no importa cuáles sean las proporciones relativas. Sin embargo, si dedicas mucho tiempo innecesario a cualquiera de las partes de "retraso", será muy difícil alcanzar constantemente el objetivo de 2.5 segundos.
+
+Una buena manera de pensar en el desglose del tiempo del LCP es la siguiente:
+
+La gran mayoría del tiempo de LCP se debe dedicar a cargar el documento HTML y la fuente de LCP.
+Cualquier momento anterior al LCP en el que uno de estos dos recursos no se cargue es una oportunidad para mejorar.
+Advertencia: Dado el objetivo de 2.5 segundos para el LCP, puede ser tentador intentar convertir estos porcentajes en números absolutos, pero no se recomienda. Estas subpartes solo son significativas en relación con las demás, por lo que es mejor medirlas siempre de esa manera.
+Cómo optimizar cada parte
+Ahora que comprendes cómo se deben desglosar los tiempos de cada parte del LCP en una página bien optimizada, puedes comenzar a optimizar tus propias páginas.
+
+En las próximas cuatro secciones, se presentarán recomendaciones y prácticas recomendadas para optimizar cada parte. Se presentan en orden, comenzando por las optimizaciones que probablemente tengan el mayor impacto.
+
+1. Elimina el retraso en la carga de recursos
+El objetivo de este paso es garantizar que el recurso de LCP comience a cargarse lo antes posible. Si bien, en teoría, el momento más temprano en que un recurso podría comenzar a cargarse es inmediatamente después del TTFB, en la práctica siempre hay un cierto retraso antes de que los navegadores comiencen a cargar recursos.
+
+Una buena regla general es que tu recurso de LCP debe comenzar a cargarse al mismo tiempo que el primer recurso que carga esa página. En otras palabras, si el recurso del LCP comienza a cargarse más tarde que el primer recurso, hay oportunidades de mejora.
+
+Un diagrama de cascada de red que muestra el recurso de LCP que comienza después del primer recurso, lo que indica la oportunidad de mejora
+En esta página, el recurso del LCP comienza a cargarse mucho después de la hoja de estilo que se carga primero. Aquí se puede mejorar.
+En términos generales, hay dos factores que afectan la rapidez con la que se puede cargar un recurso del LCP:
+
+Es la fecha y hora en que se descubrió el recurso.
+Prioridad que se le asigna al recurso.
+Optimiza el recurso cuando se descubre
+Para garantizar que el recurso del LCP comience a cargarse lo antes posible, es fundamental que el analizador de precarga del navegador pueda detectar el recurso en la respuesta inicial del documento HTML. Por ejemplo, en los siguientes casos, el navegador puede descubrir el recurso del LCP analizando la respuesta del documento HTML:
+
+El elemento LCP es un elemento <img>, y sus atributos src o srcset están presentes en el lenguaje de marcado HTML inicial.
+El elemento de LCP requiere una imagen de fondo de CSS, pero esa imagen se precarga con <link rel="preload"> en el lenguaje de marcado HTML (o con un encabezado Link).
+El elemento LCP es un nodo de texto que requiere una fuente web para renderizarse, y la fuente se carga con <link rel="preload"> en el lenguaje de marcado HTML (o con un encabezado Link).
+A continuación, se incluyen algunos ejemplos en los que no se puede descubrir el recurso del LCP a partir del análisis de la respuesta del documento HTML:
+
+El elemento LCP es un <img> que se agrega de forma dinámica a la página con JavaScript.
+El elemento LCP se carga de forma diferida con una biblioteca de JavaScript que oculta sus atributos src o srcset (a menudo como data-src o data-srcset).
+El elemento LCP requiere una imagen de fondo en CSS.
+En cada uno de estos casos, el navegador debe ejecutar la secuencia de comandos o aplicar la hoja de estilo (lo que suele implicar esperar a que finalicen las solicitudes de red) antes de poder descubrir el recurso del LCP y comenzar a cargarlo. Esto nunca es óptimo.
+
+Para eliminar la demora innecesaria en la carga de recursos, el recurso del LCP debe poder detectarse desde el código fuente HTML. En los casos en los que solo se hace referencia al recurso desde un archivo CSS o JavaScript externo, el recurso del LCP se debe cargar previamente con una prioridad de recuperación alta, por ejemplo:
+
+<!-- Load the stylesheet that will reference the LCP image. -->
+<link rel="stylesheet" href="/path/to/styles.css">
+
+<!-- Preload the LCP image with a high fetchpriority so it starts loading with the stylesheet. -->
+<link rel="preload" fetchpriority="high" as="image" href="/path/to/hero-image.webp" type="image/webp">
+Advertencia: En la mayoría de las páginas, es suficiente con garantizar que el recurso de LCP comience a cargarse al mismo tiempo que el primer recurso, pero ten en cuenta que es posible crear una página en la que no se descubra ninguno de los recursos de forma anticipada y todos comiencen a cargarse significativamente más tarde que el TTFB. Por lo tanto, si bien comparar con el primer recurso es una buena manera de identificar oportunidades de mejora, es posible que no sea suficiente en algunos casos, por lo que sigue siendo importante medir este tiempo en relación con el TTFB y asegurarse de que siga siendo pequeño.
+Optimiza la prioridad que se le otorga al recurso
+Incluso si el recurso del LCP se puede detectar desde el lenguaje de marcado HTML, es posible que aún no comience a cargarse tan pronto como el primer recurso. Esto puede ocurrir si la heurística de prioridad del escáner de precarga del navegador no reconoce que el recurso es importante o si determina que otros recursos son más importantes.
+
+Por ejemplo, puedes retrasar la imagen de LCP con HTML si configuras loading="lazy" en tu elemento <img>. Usar la carga diferida significa que el recurso no se cargará hasta que el diseño confirme que la imagen está en la ventana gráfica, por lo que es posible que la carga comience más tarde de lo que lo haría de otro modo.
+
+Advertencia: Nunca cargues de forma diferida tu imagen de LCP, ya que esto siempre generará un retraso innecesario en la carga de recursos y tendrá un impacto negativo en el LCP.
+Incluso sin la carga diferida, los navegadores no cargan inicialmente las imágenes con la prioridad más alta, ya que no son recursos que bloquean la renderización. Puedes sugerirle al navegador qué recursos son más importantes con el atributo fetchpriority para los recursos que podrían beneficiarse de una mayor prioridad:
+
+<img fetchpriority="high" src="/path/to/hero-image.webp">
+Es una buena idea establecer fetchpriority="high" en un elemento <img> si crees que es probable que sea el elemento LCP de tu página. Sin embargo, establecer una prioridad alta en más de una o dos imágenes hace que la configuración de prioridad no sea útil para reducir el LCP.
+
+También puedes reducir la prioridad de las imágenes que podrían aparecer al principio de la respuesta del documento, pero que no son visibles debido al diseño, como las imágenes de las diapositivas del carrusel que no se ven al inicio:
+
+<img fetchpriority="low" src="/path/to/carousel-slide-3.webp">
+Quitar la prioridad de ciertos recursos puede proporcionar más ancho de banda a los recursos que más lo necesitan, pero debes tener cuidado. Siempre verifica la prioridad de los recursos en DevTools y prueba los cambios con las herramientas de laboratorio y de campo.
+
+Después de optimizar la prioridad del recurso del LCP y el tiempo de detección, la cascada de red debería verse de la siguiente manera (con el recurso del LCP comenzando al mismo tiempo que el primer recurso):
+
+Un diagrama de cascada de red que muestra que el recurso de LCP ahora comienza al mismo tiempo que el primer recurso
+El recurso del LCP ahora comienza a cargarse al mismo tiempo que la hoja de diseño.
+Punto clave: Otro motivo por el que es posible que tu recurso de LCP no comience a cargarse lo antes posible (incluso cuando se puede detectar desde el código fuente HTML) es si está alojado en un origen diferente, ya que estas solicitudes requieren que el navegador se conecte a ese origen antes de que el recurso pueda comenzar a cargarse. Cuando sea posible, es una buena idea alojar los recursos críticos en el mismo origen que el recurso del documento HTML, ya que, de esta manera, esos recursos pueden ahorrar tiempo reutilizando la conexión existente (más sobre este punto más adelante).
+2. Elimina el retraso en la renderización del elemento
+El objetivo de este paso es garantizar que el elemento LCP se pueda renderizar de inmediato después de que se termine de cargar su recurso, sin importar cuándo suceda.
+
+El motivo principal por el que el elemento LCP no podría renderizarse inmediatamente después de que se termine de cargar su recurso es si el renderizado está bloqueado por algún otro motivo:
+
+Se bloquea la renderización de toda la página debido a hojas de estilo o secuencias de comandos síncronas en el <head> que aún se están cargando.
+El recurso del LCP terminó de cargarse, pero el elemento del LCP aún no se agregó al DOM (está esperando que se cargue algo de código JavaScript).
+El elemento está oculto por otro código, como una biblioteca de pruebas A/B que aún está determinando en qué experimento debería participar el usuario.
+El subproceso principal está bloqueado debido a tareas largas, y el trabajo de renderización debe esperar hasta que se completen esas tareas largas.
+En las siguientes secciones, se explica cómo abordar las causas más comunes de la demora innecesaria en la renderización de elementos.
+
+Reduce o inserta en línea las hojas de estilo que bloquean el procesamiento
+Las hojas de estilo cargadas desde el lenguaje de marcado HTML bloquearán la renderización de todo el contenido que les siga, lo cual es bueno, ya que, por lo general, no querrás renderizar HTML sin diseño. Sin embargo, si la hoja de estilo es tan grande que tarda mucho más en cargarse que el recurso del LCP, impedirá que se renderice el elemento del LCP, incluso después de que se haya terminado de cargar su recurso, como se muestra en este ejemplo:
+
+Un diagrama de cascada de red que muestra un archivo CSS grande que bloquea la renderización del elemento LCP porque tarda más en cargarse que el recurso LCP
+La imagen y la hoja de estilo comienzan a cargarse al mismo tiempo, pero la imagen no se puede renderizar hasta que la hoja de estilo esté lista.
+Para solucionar este problema, tienes las siguientes opciones:
+
+Insertar la hoja de estilo en el código HTML para evitar la solicitud de red adicional
+reducir el tamaño de la hoja de estilo
+En general, solo se recomienda insertar tu hoja de estilo si es pequeña, ya que el contenido insertado en el HTML no puede beneficiarse del almacenamiento en caché en las cargas de página posteriores. Si una hoja de estilo es tan grande que tarda más en cargarse que el recurso del LCP, es poco probable que sea una buena candidata para la inserción directa.
+
+En la mayoría de los casos, la mejor manera de garantizar que la hoja de estilo no bloquee la renderización del elemento LCP es reducir su tamaño para que sea más pequeña que el recurso LCP. Esto debería garantizar que no sea un cuello de botella para la mayoría de las visitas.
+
+Estas son algunas recomendaciones para reducir el tamaño de la hoja de diseño:
+
+Quita el CSS no utilizado: Usa las Herramientas para desarrolladores de Chrome para encontrar las reglas de CSS que no se usan y que se pueden quitar (o aplazar).
+Posponer el CSS no crítico: Divide tu hoja de estilo en estilos que se requieren para la carga inicial de la página y estilos que se pueden cargar de forma diferida.
+Comprime y reduce el uso de CSS: Para los estilos que son críticos, asegúrate de reducir su tamaño de transferencia lo más posible.
+Aplazar o insertar el código JavaScript que bloquea la visualización
+Casi nunca es necesario agregar secuencias de comandos síncronas (secuencias de comandos sin los atributos async o defer) al <head> de tus páginas, y hacerlo casi siempre tendrá un impacto negativo en el rendimiento.
+
+En los casos en que el código JavaScript debe ejecutarse lo antes posible en la carga de la página, lo mejor es insertarlo de forma intercalada para que la renderización no se retrase a la espera de otra solicitud de red. Sin embargo, al igual que con las hojas de estilo, solo debes insertar secuencias de comandos en línea si son muy pequeñas.
+
+Qué no debes hacer
+<head>
+  <script src="/path/to/main.js"></script>
+</head>
+Qué debes hacer
+<head>
+  <script>
+    // Inline script contents directly in the HTML.
+    // IMPORTANT: only do this for very small scripts.
+  </script>
+</head>
+Usa la renderización del servidor
+La renderización del servidor (SSR) es el proceso de ejecutar la lógica de tu aplicación del cliente en el servidor y responder a las solicitudes de documentos HTML con el lenguaje de marcado HTML completo.
+
+Desde la perspectiva de la optimización del LCP, la SSR tiene dos ventajas principales:
+
+Tus recursos de imágenes se podrán detectar desde el código fuente HTML (como se explicó en el paso 1 anterior).
+El contenido de tu página no requerirá solicitudes adicionales de JavaScript para finalizar antes de que se pueda renderizar.
+El principal inconveniente de la SSR es que requiere tiempo de procesamiento adicional del servidor, lo que puede ralentizar el TTFB. Sin embargo, esta compensación suele valer la pena, ya que los tiempos de procesamiento del servidor están bajo tu control, mientras que las capacidades de red y de los dispositivos de tus usuarios no lo están.
+
+Una opción similar a la SSR se llama generación de sitios estáticos (SSG) o renderización previa. Este es el proceso de generar tus páginas HTML en un paso de compilación en lugar de hacerlo a pedido. Si el procesamiento previo es posible con tu arquitectura, suele ser una mejor opción para el rendimiento.
+
+Divide las tareas largas
+Incluso si seguiste las recomendaciones anteriores y tu código JavaScript no bloquea la renderización ni es responsable de renderizar tus elementos, puede retrasar el LCP.
+
+La razón más común por la que sucede esto es cuando las páginas cargan archivos JavaScript grandes, que deben analizarse y ejecutarse en el subproceso principal del navegador. Esto significa que, incluso si el recurso de imagen se descarga por completo, es posible que deba esperar a que finalice la ejecución de una secuencia de comandos no relacionada antes de poder renderizarse.
+
+Actualmente, todos los navegadores renderizan imágenes en el subproceso principal, lo que significa que cualquier elemento que bloquee el subproceso principal también puede generar un retraso en la renderización de elementos innecesario.
+
+3. Cómo reducir la duración de la carga de recursos
+El objetivo de este paso es reducir el tiempo que se dedica a transferir los bytes del recurso a través de la red al dispositivo del usuario. En general, existen cuatro formas de hacerlo:
+
+Reduce el tamaño del recurso.
+Reduce la distancia que debe recorrer el recurso.
+Reduce la contención del ancho de banda de la red.
+Eliminar por completo la hora de la red
+Advertencia: Nuestra investigación muestra que la duración de carga del LCP no suele ser un cuello de botella significativo para la mayoría de los sitios. Siempre que sea posible, consulta los datos de usuarios reales de tu sitio para decidir en qué subparte del LCP debes enfocar tus esfuerzos.
+Reduce el tamaño del recurso
+El recurso LCP de una página (si tiene uno) será una imagen o una fuente web. En las siguientes guías, se explica en detalle cómo reducir el tamaño de ambos elementos:
+
+Publica imágenes con el tamaño óptimo
+Usa formatos de imagen modernos
+Comprimir imágenes
+Reduce el tamaño de la fuente web
+Reduce la distancia que debe recorrer el recurso
+Además de reducir el tamaño de un recurso, también puedes reducir los tiempos de carga acercando tus servidores geográficamente lo más posible a tus usuarios. La mejor manera de hacerlo es usar una red de distribución de contenidos (CDN).
+
+En particular, las CDN de imágenes son muy útiles porque no solo reducen la distancia que debe recorrer el recurso, sino que también suelen reducir su tamaño, ya que implementan automáticamente todas las recomendaciones de reducción de tamaño que se mencionaron anteriormente.
+
+Punto clave: Si bien las CDN de imágenes son una excelente manera de reducir las duraciones de carga de recursos, usar un dominio de terceros para alojar tus imágenes conlleva un costo de conexión adicional. Si bien la conexión previa al origen puede mitigar parte de este costo, la mejor opción es publicar imágenes desde el mismo origen que tu documento HTML. Muchos CDN te permiten redireccionar solicitudes desde tu origen al suyo, lo que es una excelente opción para investigar si está disponible.
+Reduce la contención del ancho de banda de la red
+Incluso si redujiste el tamaño de tu recurso y la distancia que debe recorrer, es posible que un recurso tarde mucho en cargarse si cargas muchos otros recursos al mismo tiempo. Este problema se conoce como contención de red.
+
+Si le asignaste a tu recurso del LCP una prioridad alta fetchpriority y comenzaste a cargarlo lo antes posible, el navegador hará todo lo posible para evitar que los recursos de menor prioridad compitan con él. Sin embargo, si cargas muchos recursos con un valor de fetchpriority alto o si cargas muchos recursos en general, esto podría afectar la velocidad con la que se carga el recurso del LCP.
+
+Elimina por completo el tiempo de red
+La mejor manera de reducir la duración de la carga de recursos es eliminar la red por completo del proceso. Si publicas tus recursos con una política de cache-control eficiente, los visitantes que soliciten esos recursos por segunda vez los recibirán desde la caché, lo que reducirá la duración de la carga de recursos prácticamente a cero.
+
+Si tu recurso de LCP es una fuente web, además de reducir el tamaño de la fuente web, también debes considerar si necesitas bloquear la renderización en la carga del recurso de fuente web. Si estableces un valor de font-display que no sea auto o block, el texto siempre estará visible durante la carga y el LCP no se bloqueará en una solicitud de red adicional.
+
+Por último, si tu recurso de LCP es pequeño, puede tener sentido insertar los recursos como una URL de datos, lo que también eliminará la solicitud de red adicional. Sin embargo, el uso de URLs de datos tiene sus inconvenientes, ya que los recursos no se pueden almacenar en caché y, en algunos casos, pueden generar demoras más largas en la renderización debido al costo de decodificación adicional.
+
+4. Reduce el tiempo hasta el primer byte
+El objetivo de este paso es entregar el HTML inicial lo más rápido posible. Este paso se menciona al final porque, a menudo, es el que los desarrolladores menos controlan. Sin embargo, también es uno de los pasos más importantes, ya que afecta directamente a todos los pasos posteriores. Nada puede suceder en el frontend hasta que el backend entregue ese primer byte de contenido, por lo que cualquier cosa que puedas hacer para acelerar el TTFB también mejorará todas las demás métricas de carga.
+
+Una causa común de un TTFB lento para un sitio que, de otro modo, es rápido es que los visitantes llegan a través de varios redireccionamientos, como desde anuncios o vínculos acortados. Siempre minimiza la cantidad de redireccionamientos por los que debe esperar un visitante.
+
+Otra causa común es cuando no se puede usar el contenido almacenado en caché desde un servidor perimetral de CDN y todas las solicitudes deben dirigirse hasta el servidor de origen. Esto puede suceder si los visitantes usan parámetros de URL únicos para las estadísticas, incluso si no generan páginas diferentes.
+
+Para obtener orientación específica sobre la optimización del TTFB, consulta la guía de optimización del TTFB.
+
+Supervisa el desglose del LCP en JavaScript
+La información de sincronización de todas las subpartes del LCP que se analizaron anteriormente está disponible en JavaScript a través de una combinación de las siguientes APIs de rendimiento:
+
+API de Largest Contentful Paint
+API de Navigation Timing
+API de Resource Timing
+Muchos productos de RUM ya calculan las subpartes con estas APIs. La biblioteca web-vitals también incluye estos tiempos de subpartes del LCP en la compilación de atribución, y se puede hacer referencia a su código para saber cómo calcularlos en JavaScript.
+
+Las Herramientas para desarrolladores de Chrome y Lighthouse también miden estas subpartes, como se muestra en las capturas de pantalla anteriores, lo que te ahorra la necesidad de calcularlas manualmente en JavaScript cuando usas esas herramientas.
+
+Resumen
+El LCP es complejo y su tiempo puede verse afectado por varios factores. Sin embargo, si consideras que la optimización del LCP se trata principalmente de optimizar la carga del recurso del LCP, las cosas pueden simplificarse significativamente.
+
+En un nivel alto, la optimización del LCP se puede resumir en cuatro pasos:
+
+Asegúrate de que el recurso de LCP comience a cargarse lo antes posible.
+Asegúrate de que el elemento LCP se pueda renderizar en cuanto termine de cargarse su recurso.
+Reduce el tiempo de carga del recurso del LCP tanto como puedas sin sacrificar la calidad.
+Entrega el documento HTML inicial lo más rápido posible.
+Si puedes seguir estos pasos en tus páginas, deberías tener la certeza de que ofreces una experiencia de carga óptima a tus usuarios, y deberías ver que eso se refleja en tus puntuaciones del LCP en el mundo real.
+
+¿Te resultó útil?
+
+Salvo que se indique lo contrario, el contenido de esta página está sujeto a la licencia Atribución 4.0 de Creative Commons, y los ejemplos de código están sujetos a la licencia Apache 2.0. Para obtener más información, consulta las políticas del sitio de Google Developers. Java es una marca registrada de Oracle o sus afiliados.
+
+Última actualización: 2025-03-31 (UTC)
+
+Queremos ayudarte a crear sitios web atractivos, accesibles, rápidos y seguros que funcionen en diferentes navegadores y para todos tus usuarios. En este sitio, encontrarás contenido escrito por miembros del equipo de Chrome y expertos externos para ayudarte en ese recorrido.
+Contribuir
+Informar un error
+Ver incidentes abiertos
+Contenido relacionado
+Chrome para desarrolladores
+Actualizaciones de Chromium
+Casos de éxito
+Podcasts y programas
+Seguir
+@ChromiumDev en X
+YouTube
+Chrome para desarrolladores en LinkedIn
+RSS
+Condiciones
+Privacidad
+
+Español – América Latina

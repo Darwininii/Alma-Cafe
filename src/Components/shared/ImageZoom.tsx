@@ -4,9 +4,10 @@ interface Props {
     img: string;
     alt: string;
     className?: string;
+    priority?: boolean;
 }
 
-export const ImageZoom = ({ img, alt, className }: Props) => {
+export const ImageZoom = ({ img, alt, className, priority = false }: Props) => {
     const [showLens, setShowLens] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -42,6 +43,8 @@ export const ImageZoom = ({ img, alt, className }: Props) => {
                 src={img}
                 alt={alt}
                 className="w-full h-full object-contain"
+                loading={priority ? "eager" : "lazy"}
+                fetchPriority={priority ? "high" : "auto"}
             />
 
             {showLens && (

@@ -63,6 +63,7 @@ export const GridImages = ({ images }: Props) => {
           img={getOptimizedImageUrl(activeImage, 800)}
           alt="Imagen del Producto"
           className="w-full h-full"
+          priority={true}
         />
       </div>
 
