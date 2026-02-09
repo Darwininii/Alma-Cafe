@@ -32,10 +32,11 @@ export const DockNavbar = () => {
   //   "flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-black/20 dark:hover:bg-white/20 transition-all";
   
   // New class for Text-Below items
+  // New class for Text-Below items
   const navItemClass = 
-    "flex flex-col items-center justify-center px-2 sm:px-3 py-1.5 rounded-xl hover:bg-black/20 dark:hover:bg-white/20 transition-all gap-0.5 group";
+    "flex flex-col items-center justify-center px-1 sm:px-3 py-1 sm:py-1.5 rounded-xl hover:bg-black/20 dark:hover:bg-white/20 transition-all gap-0.5 group min-w-[40px] sm:min-w-0";
     
-  const baseIconClass = "transition-transform duration-300";
+  const baseIconClass = "transition-transform duration-300 w-4 h-4 sm:w-5 sm:h-5"; // Responsive icon sizing via class
   // const tooltipClass =
   //   "absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-bold bg-black/90 dark:bg-white/90 text-white dark:text-black px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap pointer-events-none z-50 shadow-lg";
 
@@ -59,7 +60,7 @@ export const DockNavbar = () => {
         initial="hidden"
         animate={showNavbar ? "visible" : "hidden"}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="fixed top-3 left-1/2 -translate-x-1/2 bg-white/20 dark:bg-black/20 backdrop-blur-md backdrop-saturate-150 border border-black/30 dark:border-white/20 rounded-2xl shadow-md shadow-black/10 dark:shadow-white/10 flex items-center justify-center gap-0.5 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2 z-50 w-fit max-w-[95vw] pointer-events-auto"
+        className="fixed top-2 sm:top-3 left-1/2 -translate-x-1/2 bg-white/20 dark:bg-black/20 backdrop-blur-md backdrop-saturate-150 border border-black/30 dark:border-white/20 rounded-2xl shadow-md shadow-black/10 dark:shadow-white/10 flex items-center justify-between sm:justify-center gap-0 sm:gap-2 px-1 py-1 sm:px-4 sm:py-2 z-50 w-[98vw] sm:w-fit max-w-[98vw] pointer-events-auto"
       >
         {/* 🔹 Enlaces principales (Texto debajo) */}
         {navLinks.map((link, index) => {
@@ -78,13 +79,12 @@ export const DockNavbar = () => {
                 effect="none"
               >
                 <Icon
-                  size={20}
                   className={`${baseIconClass} ${hovered === index
                     ? "scale-110 text-black dark:text-yellow-400"
                     : "text-slate-800 dark:text-white/70"
                     }`}
                 />
-                <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">{link.label}</span>
+                <span className="text-[8px] sm:text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">{link.label}</span>
               </CustomButton>
             </div>
           );
@@ -112,7 +112,6 @@ export const DockNavbar = () => {
                   transition={{ duration: 0.7 }}
                 >
                   <Icons.Sun
-                    size={20}
                     className={`${baseIconClass} ${hovered === 12
                       ? "scale-110 text-black dark:text-yellow-400/80"
                       : "text-slate-800 dark:text-white/70"
@@ -128,7 +127,6 @@ export const DockNavbar = () => {
                   transition={{ duration: 0.7 }}
                 >
                   <Icons.Moon
-                    size={18}
                     className={`${baseIconClass} ${hovered === 12
                       ? "scale-110 text-yellow-600 dark:text-yellow-400/80"
                       : "text-slate-800 dark:text-white/70"
@@ -137,7 +135,7 @@ export const DockNavbar = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-            <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Tema</span>
+            <span className="text-[8px] sm:text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Tema</span>
           </CustomButton>
         </div>
 
@@ -157,13 +155,12 @@ export const DockNavbar = () => {
             centerIcon={Icons.Search}
           >
              <Icons.Search
-              size={18}
               className={`${baseIconClass} ${hovered === 10
                 ? "scale-110 text-black dark:text-yellow-400/80"
                 : "text-slate-800 dark:text-white/70"
                 }`}
             />
-            <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Buscar</span>
+            <span className="text-[8px] sm:text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Buscar</span>
           </CustomButton>
         </div>
 
@@ -181,7 +178,6 @@ export const DockNavbar = () => {
           >
             {totalItemsInCart > 0 ? (
                <Icons.CartFilled
-                 size={18}
                  className={`${baseIconClass} ${hovered === 11
                    ? "scale-110 text-black dark:text-yellow-400/80"
                    : "text-slate-800 dark:text-white/70"
@@ -189,18 +185,17 @@ export const DockNavbar = () => {
                />
             ) : (
                <Icons.Cart
-                 size={18}
                  className={`${baseIconClass} ${hovered === 11
                    ? "scale-110 text-black dark:text-yellow-400/80"
                    : "text-slate-800 dark:text-white/70"
                    }`}
                />
             )}
-            <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Carrito</span>
+            <span className="text-[8px] sm:text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Carrito</span>
             {/* 🔹 Contador animado */}
             <CustomBadge
               count={totalItemsInCart}
-              className="absolute -top-1 right-2 w-4 h-4 bg-rose-600 text-white border-2 border-white dark:border-black text-[9px] font-bold dark:font-bold shadow-sm flex items-center justify-center p-0"
+              className="absolute -top-1 sm:-top-1 right-1 sm:right-2 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-rose-600 text-white border-2 border-white dark:border-black text-[8px] sm:text-[9px] font-bold dark:font-bold shadow-sm flex items-center justify-center p-0"
             />
           </CustomButton>
         </div>
@@ -218,20 +213,19 @@ export const DockNavbar = () => {
               size="icon"
               effect="none"
             >
-              <div className="w-6 h-6 rounded-full border-2 border-slate-800 dark:border-white flex items-center justify-center bg-transparent">
-                 <span className="text-[10px] font-bold text-slate-800 dark:text-white">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-slate-800 dark:border-white flex items-center justify-center bg-transparent">
+                 <span className="text-[8px] sm:text-[10px] font-bold text-slate-800 dark:text-white">
                   {customer && customer.full_name ? customer.full_name[0].toUpperCase() : "U"}
                  </span>
               </div>
-              <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Perfil</span>
+              <span className="text-[8px] sm:text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Perfil</span>
             </CustomButton>
           ) : (
             <CustomButton to="/login" className={`${navItemClass} border-none bg-transparent h-auto w-auto`} size="icon" effect="none">
               <Icons.User
-                size={18}
                 className={`${baseIconClass} text-slate-800 dark:text-white/70 group-hover:scale-110 group-hover:text-black dark:group-hover:text-yellow-400`}
               />
-              <span className="text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Login</span>
+              <span className="text-[8px] sm:text-[10px] font-bold leading-none tracking-tight text-slate-800 dark:text-white/90">Login</span>
             </CustomButton>
           )}
         </div>
