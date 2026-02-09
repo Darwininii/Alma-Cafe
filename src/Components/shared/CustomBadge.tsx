@@ -2,54 +2,67 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface CustomBadgeProps {
-    count: number;
+    count?: number;
+    label?: string;
     className?: string;
     animate?: boolean;
+    color?: "red" | "green" | "amber" | "blue" | "neutral";
 }
+
+const colorStyles = {
+    red: "bg-red-500/60 border-2 border-red-800/60 text-red-900 dark:text-red-300 backdrop-blur-md",
+    green: "bg-green-500/60 border-2 border-green-800/60 text-green-950 dark:text-emerald-200 backdrop-blur-md",
+    amber: "dark:bg-amber-500/10 border-2 dark:border-amber-500/20 bg-yellow-600/70 border-amber-600 text-amber-900 dark:text-amber-400 backdrop-blur-md",
+    blue: "bg-blue-500/10 border-2 border-blue-500/20 text-blue-700 dark:text-blue-400 backdrop-blur-md",
+    neutral: "bg-gray-500/10 border-2 border-gray-500/20 text-gray-700 dark:text-gray-400 backdrop-blur-md",
+    // Default for numeric badge
+    default: "bg-black/80 dark:bg-yellow-600 text-white dark:text-black", 
+};
 
 export const CustomBadge: React.FC<CustomBadgeProps> = ({
     count,
+    label,
     className,
     animate = true,
+    color = "neutral",
 }) => {
-    // Use simple AnimatePresence for mount/unmount combined with key on the element ONLY for entrance?
-    // Actually, we want a stable element for updates.
-    // We can use a unique key for the component lifecycle but NOT responsive to count for the container.
+    // Case 1: Text Label (Replacement for Tag)
+    if (label) {
+        return (
+            <div className={cn(
+                "w-fit px-2.5 py-0.5 rounded-md border uppercase text-[10px] tracking-wider font-bold shadow-sm select-none",
+                colorStyles[color] || colorStyles.neutral,
+                className
+            )}>
+                {label}
+            </div>
+        );
+    }
 
-    // NOTE: We wrap the return in AnimatePresence to handle the count > 0 exit animation.
-    // Inside, we render the badge if count > 0.
-    // To pulse on count change without remounting, we use a key on the inner text or rely on a useEffect hook (omitted for simplicity if key on text works well enough or if we just want stable container).
-
-    // Revised approach:
-    // 1. AnimatePresence handles the 0 <-> 1 transition.
-    // 2. We use 'layout' to smooth size changes.
-    // 3. We use a key on the CONTENT to animate the number change, or just let React update it.
-
+    // Case 2: Numeric Count (Existing functionality)
     return (
         <AnimatePresence>
-            {count > 0 && (
+            {(count !== undefined && count > 0) && (
                 <motion.span
-                    key="badge-container" // Stable key prevents remounting on count change
+                    key="badge-container"
                     initial={animate ? { scale: 0, opacity: 0 } : undefined}
                     animate={animate ? { scale: 1, opacity: 1 } : undefined}
                     exit={animate ? { scale: 0, opacity: 0 } : undefined}
                     whileHover={{ scale: 1.1 }}
-                    layout // Smooths layout if width changes (e.g. 9 -> 10)
+                    layout
                     transition={{
                         type: "spring",
                         stiffness: 500,
                         damping: 15,
                     }}
                     className={cn(
-                        "flex items-center justify-center rounded-full shadow-md",
-                        "bg-black/80 dark:bg-yellow-600 text-white dark:text-black font-black text-[11px]",
+                        "flex items-center justify-center rounded-full shadow-md font-black text-[11px]",
+                         colorStyles.default,
                         className
                     )}
                 >
-                    {/* Optional: Add a key here if we want the number to pop-transition, 
-              but for now, simple text update is smoother for layout. */}
                     <motion.span
-                        key={count} // This animates the number itself popping
+                        key={count}
                         initial={{ scale: 0.5, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.2 }}

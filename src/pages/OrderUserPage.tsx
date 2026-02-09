@@ -169,8 +169,18 @@ export const OrderUserPage = () => {
                               <img
                                 src={product.productImage?.[0] || "/placeholder.png"}
                                 alt={product.productName}
+                                width="80"
+                                height="80"
                                 className="h-20 w-20 object-cover rounded-lg border border-black/10 dark:border-white/10 shadow-sm"
                               />
+// ... split ...
+                      <img
+                        src={userAvatar}
+                        alt="Profile"
+                        width="32"
+                        height="32"
+                        className="w-8 h-8 rounded-full object-cover border border-black/20 dark:border-white/20"
+                      />
                             </div>
 
                             {/* Product Info */}

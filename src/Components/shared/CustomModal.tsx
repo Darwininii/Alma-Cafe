@@ -14,6 +14,8 @@ interface CustomModalProps {
   cancelText?: string;
   children?: React.ReactNode;
   isLoading?: boolean;
+  footerJustify?: "start" | "end" | "center" | "between";
+  cancelButtonClassName?: string;
 }
 
 const variants = {
@@ -47,6 +49,8 @@ export const CustomModal = ({
   cancelText = "Cancelar",
   children,
   isLoading = false,
+  footerJustify = "end",
+  cancelButtonClassName,
 }: CustomModalProps) => {
   return (
     <AnimatePresence>
@@ -97,12 +101,12 @@ export const CustomModal = ({
             {children && <div className="px-6 pb-6">{children}</div>}
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 bg-zinc-50 dark:bg-zinc-800/50 border-t border-zinc-100 dark:border-zinc-800">
+            <div className={`flex items-center justify-${footerJustify} gap-3 px-6 py-4 bg-zinc-50 dark:bg-zinc-800/50 border-t border-zinc-100 dark:border-zinc-800`}>
               <CustomButton
                 onClick={onClose}
                 disabled={isLoading}
                 variant="outline"
-                className="text-sm"
+                className={`text-sm ${cancelButtonClassName}`}
               >
                 {cancelText}
               </CustomButton>
@@ -112,7 +116,7 @@ export const CustomModal = ({
                   isLoading={isLoading}
                   className={`text-sm ${
                     variant === "danger"
-                      ? "bg-red-600 hover:bg-red-700 text-white border-none"
+                      ? "border-2 border-red-500 text-red-600 dark:text-red-400 bg-transparent hover:bg-transparent font-bold"
                       : "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900"
                   }`}
                 >

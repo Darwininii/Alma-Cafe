@@ -66,11 +66,11 @@ export const CustomFiltered = ({
                         className={`${
                             // 1. If filters are ACTIVE (status != all OR dateRange set OR search term), show GREEN highlight
                             (statusFilter.includes("all") === false || dateRange !== null || searchTerm !== "")
-                            ? "bg-green-600 text-white hover:bg-green-700 border-green-600 dark:bg-green-600 dark:hover:bg-green-700" 
+                            ? "bg-green-600 text-white hover:bg-green-700 border-2 border-green-900 dark:bg-green-600 dark:hover:bg-green-700" 
                             // 2. Else, fallback to standard behavior
                             : showFilters 
-                                ? "bg-black hover:bg-black/40 hover:text-white dark:bg-green-800 dark:hover:bg-gray-800 text-white border-white" 
-                                : "border-neutral-300 dark:border-white/20 dark:text-white/80 hover:bg-black hover:text-white dark:hover:bg-white/80 dark:hover:text-black"
+                                ? "bg-black hover:bg-black/80 hover:text-white dark:bg-slate-700 dark:hover:bg-gray-800 text-white border-2 border-white/20" 
+                                : "border-2 border-black/60 dark:border-white/20 dark:text-white/80 hover:bg-black hover:text-white dark:hover:bg-white/80 dark:hover:text-black"
                         }`}
                         leftIcon={Filter} 
                         effect="shine"

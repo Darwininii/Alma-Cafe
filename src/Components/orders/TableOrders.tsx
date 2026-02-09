@@ -47,7 +47,7 @@ export const TableOrders = ({ orders }: Props) => {
     <div className="flex flex-col gap-6 w-full">
       <div className="relative w-full overflow-x-auto rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-black/20 backdrop-blur-sm shadow-sm">
         <table className="text-sm w-full caption-bottom text-black dark:text-white/80">
-          <thead className="bg-black/5 dark:bg-white/5 border-b border-black/10 dark:border-white/10">
+          <thead className="bg-black/10 dark:bg-white/10 border-b border-black/10 dark:border-white/10">
             <tr className="text-sm font-bold text-black/70 dark:text-white/70">
               {tableHeaders.map((header, index) => (
                 <th 

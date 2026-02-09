@@ -116,10 +116,12 @@ export const Search = () => {
                     effect="bounce"
                     effectColor="hover:text-black"
                   >
-                    <div className="h-16 w-16 bg-white/0 dark:bg-white/30 rounded-lg p-2 flex-shrink-0">
+                    <div className="h-16 w-16 bg-white/0 dark:bg-white/30 rounded-lg p-2 shrink-0">
                       <img
                         src={product.images[0]}
                         alt={product.name}
+                        width="64"
+                        height="64"
                         className="h-full w-full object-contain mix-blend-multiply"
                       />
                     </div>
@@ -171,10 +173,12 @@ export const Search = () => {
                       onClick={() => handleProductClick(product)}
                       effect="bounce"
                     >
-                      <div className="h-16 w-16 bg-white/40 dark:bg-white/30 rounded-lg p-2 flex-shrink-0">
+                      <div className="h-16 w-16 bg-white/40 dark:bg-white/30 rounded-lg p-2 shrink-0">
                         <img
                           src={product.image}
                           alt={product.name}
+                          width="64"
+                          height="64"
                           className="h-full w-full object-contain mix-blend-multiply"
                         />
                       </div>

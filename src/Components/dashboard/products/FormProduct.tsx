@@ -116,7 +116,7 @@ export const FormProduct = ({ titleForm }: Props) => {
           <CustomButton
             effect="shine"
             effectColor="rgba(239, 68, 68, 0.2)"
-            className="bg-transparent border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+            className="bg-transparent border border-black/20 dark:border-white/20 text-red-600 hover:bg-red-50 hover:border-red-300"
             onClick={() => navigate(-1)}
             type="button"
           >

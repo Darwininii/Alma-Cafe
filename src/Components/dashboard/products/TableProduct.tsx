@@ -152,8 +152,8 @@ export const TableProduct = () => {
 
   return (
     <>
-      <div className="flex flex-col flex-1 border border-white/20 rounded-3xl p-6 sm:p-8 bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-2xl relative overflow-hidden min-h-[70vh]">
-        <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-primary/50 to-transparent opacity-50" />
+      <div className="flex flex-col flex-1 border border-black/20 rounded-3xl p-6 sm:p-8 bg-white/20 dark:bg-black/40 backdrop-blur-xl shadow-2xl relative overflow-hidden min-h-[70vh]">
+        <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-black dark:via-white/80 to-transparent opacity-50"/>
 
         <CustomFiltered
             searchTerm={searchTerm}
@@ -206,22 +206,22 @@ export const TableProduct = () => {
                 <h1 className="font-black text-3xl tracking-tight text-neutral-900 dark:text-white">
                   Productos
                 </h1>
-                <p className="text-base mt-2 font-medium text-neutral-500 dark:text-neutral-400">
+                <p className="text-base mt-2 font-medium text-black/60 dark:text-neutral-400">
                   Gestiona el inventario de tu Ecommerce
                 </p>
             </div>
         </CustomFiltered>
 
         <div className="flex items-center justify-between mb-4 px-2">
-           <div className="text-sm text-neutral-500 font-medium">
+           <div className="text-sm text-black/60 dark:text-white/60 font-medium">
                Mostrando {displayedProducts?.length || 0} de {totalItems} productos
            </div>
         </div>
 
-        <div className="relative w-full overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
+        <div className="relative w-full overflow-x-auto rounded-2xl border border-black/20 bg-black/5 dark:bg-white/5 dark:border-white/10">
           <table className="text-sm w-full caption-bottom">
-            <thead className="bg-neutral-900/5 dark:bg-white/5 border-b border-white/10">
-              <tr className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+            <thead className="bg-neutral-900/5 dark:bg-white/5 border-b border-black/20">
+              <tr className="text-sm font-bold text-black dark:text-neutral-300">
                 {tableHeaders.map((header, index) => (
                   <th 
                     key={index} 
@@ -240,14 +240,16 @@ export const TableProduct = () => {
                 return (
                   <tr
                     key={product.id}
-                    className="group hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
+                    className="group hover:bg-black/10 dark:hover:bg-white/10 transition-colors duration-200"
                   >
                     <td className="p-4 pl-8 w-20">
-                      <div className="relative w-14 h-14 rounded-lg overflow-hidden border border-neutral-200 dark:border-white/10 bg-white shadow-sm">
+                      <div className="relative w-14 h-14 rounded-lg overflow-hidden border border-black/20 dark:border-white/10 bg-white shadow-sm">
                         <img
                           src={product.images?.[0] ? getOptimizedImageUrl(product.images[0], 100) : "/placeholder.svg"}
                           alt={product.name}
                           loading="lazy"
+                          width="56"
+                          height="56"
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -258,13 +260,13 @@ export const TableProduct = () => {
                             <span className="font-bold text-neutral-900 dark:text-white text-base">
                                 {product.name}
                             </span>
-                            <span className="text-xs text-neutral-500 font-mono mt-0.5">
+                            <span className="text-xs text-black/60 dark:text-white/60 font-mono mt-0.5">
                                 /{product.slug}
                             </span>
                         </div>
                     </td>
 
-                    <td className="p-4 px-6 align-middle font-semibold text-neutral-700 dark:text-neutral-200 text-center">
+                    <td className="p-4 px-6 align-middle font-semibold text-black dark:text-white text-center">
                       {formatPrice(product.price)}
                     </td>
 
@@ -339,6 +341,8 @@ export const TableProduct = () => {
             confirmText="Sí, eliminar"
             cancelText="Cancelar"
             isLoading={isPending}
+            footerJustify="between"
+            cancelButtonClassName="bg-red-600 text-white border-2 border-red-500 font-bold"
         />
     </>
   );

@@ -70,7 +70,7 @@ export const CustomSelect = ({
     <div className="relative w-full" ref={containerRef}>
       <div
         className={cn(
-          "w-full h-auto py-1.5 px-3 bg-neutral-50 dark:bg-zinc-900 border border-neutral-200 dark:border-white/10 dark:text-white rounded-full flex items-center justify-between cursor-pointer transition-all outline-none",
+          "w-full h-auto py-1.5 px-3 bg-white dark:bg-zinc-900 border border-black/80 dark:border-white/80 text-black dark:text-white rounded-full flex items-center justify-between cursor-pointer transition-all outline-none",
           isOpen && "ring-2 ring-primary/50 border-primary/50",
           error && "border-red-500 ring-1 ring-red-500",
           className
@@ -95,7 +95,7 @@ export const CustomSelect = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute z-50 w-full mt-2 bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-white/10 rounded-xl shadow-xl overflow-hidden max-h-60 overflow-y-auto"
+            className="absolute z-50 w-full mt-2 bg-white dark:bg-zinc-900 border-2 border-black/70 dark:border-white/70 rounded-xl shadow-xl overflow-hidden max-h-60 overflow-y-auto"
             ref={listRef}
           >
             {options.map((option) => (
@@ -103,7 +103,7 @@ export const CustomSelect = ({
                 key={option.value}
                 data-value={option.value}
                 className={cn(
-                  "px-4 py-3 text-sm cursor-pointer dark:text-white transition-colors hover:bg-neutral-100 dark:hover:bg-white/5",
+                  "px-4 py-3 text-sm cursor-pointer text-black dark:text-white transition-colors hover:bg-black/10 dark:hover:bg-white/10",
                   value === option.value && "bg-primary/10 dark:text-primary text-primary font-medium dark:bg-primary/20"
                 )}
                 onClick={() => handleSelect(option.value)}

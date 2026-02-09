@@ -1,0 +1,108 @@
+Ir al contenido principal
+Chrome for Developers
+Documentos
+
+Casos de éxito
+Blog
+Más
+Buscar
+/
+
+
+Español – América Latina
+Acceder
+Lighthouse
+Lighthouse
+Comenzar
+Auditorías de rendimiento
+Auditorías de accesibilidad
+Auditorías de prácticas recomendadas
+Auditorías de SEO
+Filtrar
+
+Página principal
+Docs
+Lighthouse
+Auditorías de rendimiento
+¿Te resultó útil?
+
+Primer procesamiento de imagen con contenido
+
+
+
+El primer procesamiento de imagen con contenido (FCP) es una de las seis métricas que se registran en la sección Rendimiento del informe de Lighthouse. Cada métrica captura algún aspecto de la velocidad de carga de la página.
+
+Lighthouse muestra el FCP en segundos:
+
+La puntuación de Primer procesamiento de imagen con contenido de Lighthouse destacada en la sección Métricas
+La puntuación de First Contentful Paint de Lighthouse
+Qué mide el FCP
+El FCP mide el tiempo que tarda el navegador en renderizar el primer elemento de contenido del DOM después de que un usuario navega a tu página. Las imágenes, los elementos <canvas> que no son blancos y los SVGs de tu página se consideran contenido del DOM. No se incluye nada dentro de un iframe.
+
+Cómo Lighthouse determina tu puntuación de FCP
+Tu puntuación de FCP es una comparación del tiempo de FCP de tu página y los tiempos de FCP de sitios web reales, según los datos del Archivo HTTP. Por ejemplo, los sitios que tienen un rendimiento en el percentil noventa y nueve renderizan el FCP en aproximadamente 1.2 segundos. Si el FCP de tu sitio web es de 1.2 segundos, tu puntuación de FCP es de 99. Consulta Cómo se determinan las puntuaciones de las métricas para obtener información sobre cómo se establecen los umbrales de puntuación de Lighthouse.
+
+En esta tabla, se muestra cómo interpretar tu puntuación de FCP para dispositivos móviles:
+
+Tiempo de FCP
+(en segundos)	Codificación por colores
+Entre 0 y 1.8	Verde (rápido)
+1.8–3	Naranja (moderado)
+Más de 3	Rojo (lento)
+Umbrales de FCP para dispositivos móviles de Lighthouse
+La iniciativa Web Vitals recomienda los mismos umbrales sin importar el dispositivo para sus umbrales, que básicamente usan los umbrales para dispositivos móviles. Sin embargo, como Lighthouse es una herramienta de lab, puede ser útil ser más estricto cuando se realizan pruebas en dispositivos de escritorio más rápidos, ya que usa diferentes umbrales.
+
+En la siguiente tabla, se muestra cómo interpretar tu puntuación de FCP en computadoras:
+
+Tiempo de FCP
+(en segundos)	Codificación por colores
+Entre 0 y 0.9	Verde (rápido)
+0.9–1.6	Naranja (moderado)
+Más de 1.6	Rojo (lento)
+Umbrales de FCP de Lighthouse para computadoras
+Nota: Consulta la publicación sobre puntuaciones de rendimiento de Lighthouse para obtener información sobre cómo se calcula la puntuación general de rendimiento de tu página.
+Cómo mejorar tu puntuación de FCP
+Un problema que es particularmente importante para FCP es el tiempo de carga de la fuente. Consulta la entrada Asegúrate de que el texto permanezca visible mientras se carga la fuente para sitios web para conocer formas de acelerar la carga de fuentes.
+
+Mide el DFC en los dispositivos de usuarios reales
+Para obtener información sobre cómo medir cuándo se produce realmente el FCP en los dispositivos de tus usuarios, consulta Cómo medir el FCP en JavaScript.
+
+Consulta el artículo Cómo evaluar el rendimiento de carga en situaciones reales con la navegación y el tiempo de los recursos de Google para obtener más información sobre la recopilación de métricas de usuarios reales.
+
+Cómo mejorar tu puntuación general de rendimiento
+A menos que tengas un motivo específico para enfocarte en una métrica en particular, por lo general, es mejor que te enfoques en mejorar tu puntuación general de rendimiento.
+
+Usa la sección Diagnóstico del informe de Lighthouse para determinar qué mejoras tendrán más valor para tu página. Cuanto más significativa sea la oportunidad, mayor será el efecto que tendrá en tu puntuación de rendimiento. Por ejemplo, en la siguiente captura de pantalla de Lighthouse, se muestra que eliminar los recursos que bloquean la renderización generará la mayor mejora:
+
+Lighthouse: Sección Diagnostics que muestra varias auditorías y su impacto
+Lighthouse: Sección Diagnostics
+Consulta las auditorias de rendimiento para obtener información sobre cómo abordar las oportunidades identificadas en tu informe de Lighthouse.
+
+Recursos
+Código fuente para la auditoría de First Contentful Paint
+Guía de métricas de FCP
+Guía de puntuación de Lighthouse
+Especificación de los tiempos de pintura
+¿Te resultó útil?
+
+Salvo que se indique lo contrario, el contenido de esta página está sujeto a la licencia Atribución 4.0 de Creative Commons, y los ejemplos de código están sujetos a la licencia Apache 2.0. Para obtener más información, consulta las políticas del sitio de Google Developers. Java es una marca registrada de Oracle o sus afiliados.
+
+Última actualización: 2019-05-02 (UTC)
+
+Contribuir
+Informar un error
+Ver incidentes abiertos
+Contenido relacionado
+Actualizaciones de Chromium
+Casos de éxito
+Archivar
+Podcasts y programas
+Seguir
+@ChromiumDev en X
+YouTube
+Chrome para desarrolladores en LinkedIn
+RSS
+Condiciones
+Privacidad
+
+Español – América Latina

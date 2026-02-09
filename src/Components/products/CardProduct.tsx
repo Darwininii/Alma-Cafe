@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { formatPrice, getOptimizedImageUrl } from "@/helpers";
 import { CustomButton } from "@/Components/shared/CustomButton";
 import { CustomCard } from "@/Components/shared/CustomCard";
-import { Tag } from "../shared/Tag";
+import { CustomBadge } from "@/Components/shared/CustomBadge";
 import { useCartStore } from "@/store";
 import toast from "react-hot-toast";
 import { FaPlus, FaShoppingCart } from "react-icons/fa";
@@ -57,9 +57,9 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag, priority =
           {/* Etiquetas (SEO excluded visual only) */}
           <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
             {isOutOfStock ? (
-               <Tag contentTag="Agotado" />
+               <CustomBadge label="Agotado" color="red" />
             ) : (
-               tag && <Tag contentTag={tag} />
+               tag && <CustomBadge label={tag} color={tag === "Nuevo" ? "green" : "amber"} />
             )}
           </div>
 

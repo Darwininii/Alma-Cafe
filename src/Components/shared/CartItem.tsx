@@ -38,6 +38,8 @@ export const CartItem = ({ item }: Props) => {
           alt={item.name}
           className="w-20 h-20 object-contain"
           loading="lazy"
+          width="80"
+          height="80"
         />
       </div>
 

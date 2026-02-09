@@ -10,8 +10,10 @@ import { StatusBadge } from "@/Components/shared/StatusBadge";
 import { CustomSelect } from "@/Components/shared/CustomSelect";
 import { TbReceiptOff } from "react-icons/tb";
 import { CustomFiltered } from "@/Components/shared/CustomFiltered";
+import { IoMdMail } from "react-icons/io";
+import { FaPhone, FaEye } from "react-icons/fa6";
 
-const tableHeaders = ["Referencia", "Cliente", "Envío", "Fecha", "Estado", "Total", "Acciones"];
+const tableHeaders = ["Referencia", "Cliente", "Datos", "Envío", "Fecha", "Estado", "Total", "Acciones"];
 
 const statusOptions = [
   { value: "Pending", label: "Pendiente", variant: "warning" },
@@ -165,9 +167,9 @@ export const TableOrdersAdmin = () => {
   );
 
   return (
-    <div className="flex flex-col flex-1 border border-white/20 rounded-3xl p-6 sm:p-8 bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-2xl relative overflow-hidden min-h-[70vh]">
+    <div className="flex flex-col flex-1 border border-black/20 rounded-3xl p-6 sm:p-8 bg-white/20 dark:bg-black/40 backdrop-blur-xl shadow-2xl relative overflow-hidden min-h-[70vh]">
       {/* Glow Effect */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-cyan-500/50 to-transparent opacity-50" />
+      <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-black dark:via-white/80 to-transparent opacity-50"/>
 
         {/* Search & Filter Component with Title as Children */}
         <CustomFiltered 
@@ -194,71 +196,82 @@ export const TableOrdersAdmin = () => {
               <h1 className="font-black text-3xl tracking-tight text-neutral-900 dark:text-white">
                 Órdenes
               </h1>
-              <p className="text-base mt-2 font-medium text-neutral-500 dark:text-neutral-400">
+              <p className="text-base mt-2 font-medium text-black/60 dark:text-neutral-400">
                 Gestiona el estado y seguimiento de los pedidos
               </p>
             </div>
         </CustomFiltered>
 
-      <div className="relative w-full overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
-        <table className="text-sm w-full caption-bottom">
-          <thead className="bg-neutral-900/5 dark:bg-white/5 border-b border-white/10">
-            <tr className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+      <div className="relative w-full overflow-x-auto rounded-2xl border border-black/20 bg-black/5 dark:bg-white/5 dark:border-white/10 pb-4">
+        <table className="text-sm w-full min-w-[1000px] caption-bottom">
+          <thead className="bg-neutral-900/5 dark:bg-white/5 border-b border-black/20">
+            <tr className="text-sm font-bold text-black dark:text-neutral-300">
               {tableHeaders.map((header, index) => (
-                <th key={index} className="h-12 px-6 text-center first:pl-8 last:pr-8 whitespace-nowrap">
+                <th key={index} className={`h-12 px-3 first:pl-4 last:pr-4 whitespace-nowrap text-center`}>
                   {header}
                 </th>
               ))}
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-black/20">
             {displayedOrders?.map((order) => {
                  const currentStatusConfig = statusOptions.find(opt => opt.value === order.status);
                  
                 return (
               <tr
                 key={order.id}
-                className="group hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
+                className="group hover:bg-black/10 dark:hover:bg-white/10 transition-colors duration-200"
               >
                 {/* Referencia (ID) */}
-                <td className="p-4 pl-8 font-mono text-xs text-neutral-500 text-center">
+                <td className="p-3 pl-4 font-semibold text-xs text-black dark:text-white/80 text-center whitespace-nowrap">
                     {order.id.toString().slice(0, 8)}...
                 </td>
 
                 {/* Cliente */}
-                <td className="p-4 px-6 font-medium tracking-tighter flex flex-col gap-1 items-center text-center">
-                  <span className="font-bold text-neutral-800 dark:text-neutral-200 text-base">
+                <td className="p-3 px-2 font-medium tracking-tighter text-center whitespace-nowrap align-middle">
+                  <span className="font-bold text-black dark:text-white text-base">
                     {order.customers?.full_name}
                   </span>
-                  <span className="text-neutral-500 text-xs break-all max-w-[150px]">{order.customers?.email}</span>
-                   {order.customers?.phone && (
-                      <span className="text-neutral-400 text-xs font-mono">{order.customers?.phone}</span>
-                   )}
+                </td>
+
+                <td className="p-3 px-2 font-medium tracking-tighter text-center whitespace-nowrap">
+                   <div className="flex flex-col items-center justify-center gap-1">
+                      <div className="flex items-center gap-1.5 justify-center">
+                        <IoMdMail className="w-3.5 h-3.5 text-black dark:text-white" />
+                        <span className="text-black dark:text-white/80 text-xs break-all max-w-[150px]">{order.customers?.email}</span>
+                      </div>
+                      {order.customers?.phone && (
+                          <div className="flex items-center gap-1.5 justify-center">
+                            <FaPhone className="w-3.5 h-3.5 text-black dark:text-white" />
+                            <span className="text-black dark:text-white/80 text-xs font-semibold">{order.customers?.phone}</span>
+                          </div>
+                      )}
+                   </div>
                 </td>
 
                 {/* Envío */}
-                <td className="p-4 px-6 text-xs text-neutral-600 dark:text-neutral-400 text-center min-w-[180px]">
+                <td className="p-3 px-2 text-xs text-black dark:text-white text-center min-w-[160px] whitespace-nowrap">
                      {order.address && (
                          <div className="flex flex-col gap-0.5 items-center">
-                             <span className="font-semibold text-neutral-800 dark:text-white truncate max-w-[170px]" title={order.address.address_line}>{order.address.address_line}</span>
+                             <span className="font-semibold text-black dark:text-white truncate max-w-[160px]" title={order.address.address_line}>{order.address.address_line}</span>
                              <span>{order.address.city} - {order.address.state}</span>
                              {order.address.postal_code && <span>CP: {order.address.postal_code}</span>}
-                             <span className="uppercase text-[10px] font-bold text-neutral-400">{order.address.country}</span>
+                             <span className="uppercase text-[10px] font-bold text-black dark:text-white">{order.address.country}</span>
                          </div>
                      )}
                 </td>
 
                 {/* Fecha */}
-                <td className="p-4 px-6 font-medium text-neutral-600 dark:text-neutral-400 whitespace-nowrap text-center">
+                <td className="p-3 px-2 font-medium text-black dark:text-white whitespace-nowrap text-center">
                   {formatDate(order.created_at)}
                 </td>
 
                 {/* Estado con Select */}
-                <td className="p-4 px-6 text-center">
+                <td className="p-3 px-2 text-center whitespace-nowrap">
                   <div className="relative inline-block">
                     {canEdit && order.status !== 'Pending' && order.status !== 'Cancelled' ? (
-                        <div className="w-36">
+                        <div className="w-32">
                             <CustomSelect
                                 options={statusOptions.filter(opt => {
                                     // If Paid, allow moving to Shipped. 
@@ -281,20 +294,23 @@ export const TableOrdersAdmin = () => {
                 </td>
 
                 {/* Total */}
-                <td className="p-4 px-6 font-bold text-neutral-900 dark:text-white whitespace-nowrap text-center">
+                <td className="p-3 px-2 font-bold text-neutral-900 dark:text-white whitespace-nowrap text-center">
                   {formatPrice(order.total_amount)}
                 </td>
                 
                 {/* Acciones */}
-                <td className="p-4 pr-8 text-center">
-                     <CustomButton
-                        size="sm"
-                         variant="ghost"
-                        className="text-primary hover:text-primary/80"
-                        onClick={() => navigate(`/dashboard/ordenes/${order.id}`)}
-                     >
-                         Ver detalles
-                     </CustomButton>
+                <td className="p-3 pr-4 text-center whitespace-nowrap">
+                      <CustomButton
+                         size="sm"
+                         variant="outline"
+                         effect="shine"
+                         iconClass="w-3.5 h-3.5"
+                         leftIcon={FaEye}
+                         className="rounded-full bg-black/10 dark:bg-white/10 border-black/20 dark:border-white/20 border-2 hover:border-black dark:hover:border-white hover:text-white dark:hover:text-black hover:bg-black dark:hover:bg-white/90 text-black/80 dark:text-white/80 transition-all font-semibold text-xs px-4 py-1.5"
+                         onClick={() => navigate(`/dashboard/ordenes/${order.id}`)}
+                      >
+                          Ver detalles
+                      </CustomButton>
                 </td>
               </tr>
             )})}

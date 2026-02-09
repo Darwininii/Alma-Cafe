@@ -2,7 +2,7 @@ import { GridImages } from "@/Components/one-product/GridImages";
 import { ProductDescription } from "@/Components/one-product/ProductDescription";
 import { Loader } from "@/Components/shared/Loader";
 import { Separator } from "@/Components/shared/Separator";
-import { Tag } from "@/Components/shared/Tag";
+import { CustomBadge } from "@/Components/shared/CustomBadge";
 import { CustomButton } from "@/Components/shared/CustomButton";
 import { CustomCard } from "@/Components/shared/CustomCard";
 import { formatPrice } from "@/helpers";
@@ -127,8 +127,8 @@ export const ProductsPage = () => {
 
                 {/* Tags */}
                 <div className="relative flex gap-2">
-                  {isOutOfStock && <Tag contentTag="Agotado" />}
-                  {!isOutOfStock && product.tag && <Tag contentTag={product.tag as "Nuevo" | "Promoción"} />}
+                  {isOutOfStock && <CustomBadge label="Agotado" color="red" />}
+                  {!isOutOfStock && product.tag && <CustomBadge label={product.tag} color={product.tag === "Nuevo" ? "green" : "amber"} />}
                 </div>
               </div>
 
@@ -173,7 +173,7 @@ export const ProductsPage = () => {
                     onDecrease={decrement}
                     onIncrease={increment}
                     disableDecrease={count === 1}
-                    className="bg-black/80 dark:bg-white/10 border-none shadow-sm h-10"
+                    className="bg-black/10 dark:bg-white/10 border-none shadow-sm h-10"
                     iconSize={20}
                   />
                 </div>
