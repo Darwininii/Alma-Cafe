@@ -14,7 +14,7 @@ import { MessagesSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaShoppingCart } from "react-icons/fa";
-import { MdPayments } from "react-icons/md";
+import { MdPayments, MdLocalOffer } from "react-icons/md";
 import { RiMotorbikeFill } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomBack } from "@/Components/shared/CustomBack";
@@ -121,12 +121,29 @@ export const ProductsPage = () => {
               <h1 className="text-3xl md:text-4xl font-black tracking-tight text-black dark:text-white/80 drop-shadow-md">{product.name}</h1>
 
               <div className="flex flex-col md:flex-row md:items-center gap-4">
-                <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
-                  {formatPrice(product.price)}
-                </span>
+                {product.tag === "Promoción" && product.discount && product.discount > 0 ? (
+                    <div className="flex flex-col">
+                        <span className="text-xl md:text-2xl font-bold text-black/40 dark:text-white/40 line-through decoration-red-600/60 decoration-2">
+                           {formatPrice(product.price)}
+                        </span>
+                        <div className="flex items-center gap-3">
+                            <span className="text-4xl md:text-6xl font-black text-red-600 dark:text-red-500 drop-shadow-sm">
+                                {formatPrice(product.price - (product.price * (product.discount / 100)))}
+                            </span>
+                            <div className="flex flex-col items-center justify-center bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1 rounded-lg border border-red-200 dark:border-red-900/50">
+                                <MdLocalOffer size={24} />
+                                <span className="text-xs font-black">-{product.discount}%</span>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+                      {formatPrice(product.price)}
+                    </span>
+                )}
 
                 {/* Tags */}
-                <div className="relative flex gap-2">
+                <div className="relative flex gap-2 h-fit self-start md:self-auto mt-2 md:mt-0">
                   {isOutOfStock && <CustomBadge label="Agotado" color="red" />}
                   {!isOutOfStock && product.tag && <CustomBadge label={product.tag} color={product.tag === "Nuevo" ? "green" : "amber"} />}
                 </div>

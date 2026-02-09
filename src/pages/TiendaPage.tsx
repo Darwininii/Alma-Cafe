@@ -78,6 +78,7 @@ export const TiendaPage = () => {
                   price={product.price}
                   stock={product.stock}
                   tag={product.tag as "Nuevo" | "Promoción" | null}
+                  discount={product.discount}
                   priority={index < 4}
                 />
               ))}

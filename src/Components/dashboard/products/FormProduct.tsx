@@ -54,7 +54,8 @@ export const FormProduct = ({ titleForm }: Props) => {
       setValue("images", product.images);
       setValue("price", product.price);
       setValue("stock", product.stock || "Disponible");
-      setValue("tag", product.tag || undefined);
+      setValue("tag", (product as any).tag || undefined);
+      setValue("discount", (product as any).discount || 0);
     }
   }, [product, isLoading, setValue]);
 
@@ -70,6 +71,7 @@ export const FormProduct = ({ titleForm }: Props) => {
       price: data.price,
       stock: data.stock,
       tag: (data.tag === "" ? null : data.tag) as "Nuevo" | "Promoción" | null,
+      discount: data.discount || 0,
       images: data.images,
       description: data.description,
       features,
@@ -83,6 +85,9 @@ export const FormProduct = ({ titleForm }: Props) => {
   });
 
   const watchName = watch("name");
+  const watchTag = watch("tag");
+  const watchPrice = watch("price");
+  const watchDiscount = watch("discount");
 
   useEffect(() => {
     if (!watchName) return;
@@ -91,11 +96,18 @@ export const FormProduct = ({ titleForm }: Props) => {
     setValue("slug", generatedSlug, { shouldValidate: true });
   }, [watchName, setValue]);
 
+  // Calculate discounted price for preview
+  const discountedPrice = watchPrice && watchDiscount 
+    ? watchPrice - (watchPrice * (watchDiscount / 100))
+    : watchPrice;
+
   if (isPending || isUpdatePending || isLoading) return <Loader />;
 
   return (
     <div className="flex flex-col gap-8 relative max-w-7xl mx-auto">
+      {/* ... header ... */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/40 dark:bg-black/40 backdrop-blur-xl p-6 rounded-3xl border border-white/20 shadow-lg">
+        {/* ... */}
         <div className="flex items-center gap-4">
           <CustomBack 
             iconOnly 
@@ -219,6 +231,21 @@ export const FormProduct = ({ titleForm }: Props) => {
                     className="font-mono text-lg"
                     />
 
+                    {/* Discount Preview */}
+                    {watchTag === "Promoción" && watchDiscount && watchDiscount > 0 && (
+                        <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800 flex flex-col gap-1">
+                            <span className="text-xs font-bold text-green-700 dark:text-green-400 uppercase tracking-wide">Precio con Descuento</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-lg font-mono font-black text-green-800 dark:text-green-300">
+                                    ${discountedPrice?.toLocaleString('es-CO')}
+                                </span>
+                                <span className="text-xs text-green-600 dark:text-green-500 font-medium">
+                                    (-{watchDiscount}%)
+                                </span>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-medium text-neutral-600 dark:text-neutral-300 ml-1">Disponibilidad</label>
                          <Controller
@@ -232,7 +259,13 @@ export const FormProduct = ({ titleForm }: Props) => {
                                         { value: "Agotado", label: "Agotado" },
                                     ]}
                                     value={field.value}
-                                    onChange={field.onChange}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                        if (value === "Agotado") {
+                                            setValue("tag", ""); // Limpiar tag
+                                            setValue("discount", 0); // Limpiar descuento
+                                        }
+                                    }}
                                     error={errors.stock?.message}
                                 />
                             )}
@@ -253,12 +286,53 @@ export const FormProduct = ({ titleForm }: Props) => {
                                     { value: "Promoción", label: "Promoción" },
                                 ]}
                                 value={field.value || ""}
-                                onChange={field.onChange}
+                                onChange={(value) => {
+                                    field.onChange(value);
+                                    if (value === "Nuevo") {
+                                        setValue("stock", "Disponible");
+                                        setValue("discount", 0);
+                                    } else if (value === "Promoción") {
+                                        setValue("stock", "Disponible");
+                                        // Set default discount if none exists
+                                        if (!watchDiscount) { // Only set default if 0/undefined
+                                           setValue("discount", 5);
+                                        }
+                                    } else {
+                                        setValue("discount", 0);
+                                    }
+                                }}
                                 error={errors.tag?.message}
                             />
                         )}
                      />
                     </div>
+
+                    {/* Discount Selector - Only visible when tag is "Promoción" */}
+                    {watchTag === "Promoción" && (
+                         <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <label className="text-sm font-medium text-neutral-600 dark:text-neutral-300 ml-1">Descuento Aplicado</label>
+                             <Controller
+                                control={control}
+                                name="discount"
+                                render={({ field }) => (
+                                    <CustomSelect
+                                        placeholder="Seleccionar..."
+                                        options={[
+                                            { value: "5", label: "5%" },
+                                            { value: "10", label: "10%" },
+                                            { value: "15", label: "15%" },
+                                            { value: "20", label: "20%" },
+                                        ]}
+                                        value={field.value?.toString() || "0"}
+                                        onChange={(value) => {
+                                            field.onChange(Number(value));
+                                        }}
+                                        error={errors.discount?.message}
+                                    />
+                                )}
+                             />
+                        </div>
+                    )}
                 </div>
             </SectionFormProduct>
         </div>

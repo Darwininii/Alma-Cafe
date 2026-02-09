@@ -1,5 +1,6 @@
 import { getProductBySlug } from "@/actions";
 import { useQuery } from "@tanstack/react-query";
+import type { Product } from "@/interfaces";
 
 export const useProduct = (slug: string) => {
   const {
@@ -8,7 +9,10 @@ export const useProduct = (slug: string) => {
     isError,
   } = useQuery({
     queryKey: ["product", slug],
-    queryFn: () => getProductBySlug(slug),
+    queryFn: async () => {
+        const data = await getProductBySlug(slug);
+        return data as unknown as Product;
+    },
     retry: false,
   });
 

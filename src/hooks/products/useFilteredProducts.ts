@@ -1,5 +1,6 @@
 import { getFilteredProducts } from "@/actions";
 import { useQuery } from "@tanstack/react-query";
+import type { Product } from "@/interfaces";
 
 export const useFilteredProducts = ({
   page,
@@ -12,7 +13,13 @@ export const useFilteredProducts = ({
 }) => {
   const { data, isLoading } = useQuery({
     queryKey: ["filteredProducts", page, brands, search],
-    queryFn: () => getFilteredProducts({ page, brands, search }),
+    queryFn: async () => {
+        const response = await getFilteredProducts({ page, brands, search });
+        return {
+            ...response,
+            data: response.data as unknown as Product[],
+        };
+    },
     retry: false,
   });
 

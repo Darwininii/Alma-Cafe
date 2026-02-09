@@ -16,13 +16,18 @@ interface Props {
   slug: string;
   stock: string | null;
   tag?: "Nuevo" | "Promoción" | null;
+  discount?: number; // Add discount prop
   priority?: boolean;
 }
 
-export const CardProduct = ({ id, img, name, price, slug, stock, tag, priority = false }: Props) => {
+export const CardProduct = ({ id, img, name, price, slug, stock, tag, discount, priority = false }: Props) => {
   const addItem = useCartStore((state) => state.addItem);
 
   const isOutOfStock = stock === "Agotado";
+  const hasDiscount = !isOutOfStock && tag === "Promoción" && discount && discount > 0;
+  
+  // Calculate final price for cart and display
+  const finalPrice = hasDiscount ? price - (price * (discount! / 100)) : price;
 
   const handleAddClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -34,7 +39,7 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag, priority =
       productId: id,
       name,
       image: img,
-      price,
+      price: finalPrice, // Use discounted price
       quantity: 1,
     });
 
@@ -61,7 +66,15 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag, priority =
             ) : (
                tag && <CustomBadge label={tag} color={tag === "Nuevo" ? "green" : "amber"} />
             )}
+
           </div>
+
+          {/* Discount Badge - Top Right */}
+          {hasDiscount && (
+            <div className="absolute top-3 right-3 z-20 flex flex-col items-center justify-center bg-red-600 text-white w-10 h-10 rounded-full shadow-lg animate-pulse">
+                <span className="text-[10px] font-black leading-none">-{discount}%</span>
+            </div>
+          )}
 
           {/* Imagen Container - Aspecto cuadrado visual */}
           <div className="relative aspect-square w-full p-6 flex items-center justify-center bg-white/20 dark:bg-black/20 overflow-hidden">
@@ -108,8 +121,8 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag, priority =
           </div>
 
           {/* Info Section */}
-          <div className="p-4 flex flex-col justify-between grow bg-white dark:bg-transparent">
-             <div className="mb-1">
+          <div className="p-4 flex flex-col gap-1 grow bg-white dark:bg-transparent">
+             <div className="mb-0.5">
                 <h2 
                   itemProp="name" 
                   className="text-sm font-bold text-zinc-800 dark:text-zinc-100 leading-snug line-clamp-2 min-h-[2.5em] group-hover:text-primary transition-colors"
@@ -118,12 +131,30 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag, priority =
                 </h2>
              </div>
              
-             <div itemProp="offers" itemScope itemType="https://schema.org/Offer" className="flex items-center justify-between mt-2">
+             <div itemProp="offers" itemScope itemType="https://schema.org/Offer" className="flex flex-col items-start gap-0">
                 <meta itemProp="availability" content={isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock"} />
-                <span className="text-xs text-zinc-600 dark:text-zinc-400 font-bold uppercase tracking-wider">Precio</span>
-                <span itemProp="price" className="text-lg font-black text-zinc-900 dark:text-white">
-                   {formatPrice(price)}
-                </span>
+                <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-wider">Precio</span>
+                
+                {hasDiscount ? (
+                    <div className="flex flex-col items-start leading-none">
+                        <span className="text-xs text-zinc-400 line-through font-medium">
+                            {formatPrice(price)}
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                            <span itemProp="price" className="text-lg font-black text-red-600 dark:text-red-500 leading-tight">
+                                {formatPrice(finalPrice)}
+                            </span>
+                             <span className="text-[10px] font-bold bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-1 rounded">
+                                Oferta
+                             </span>
+                        </div>
+                    </div>
+                ) : (
+                    <span itemProp="price" className="text-lg font-black text-zinc-900 dark:text-white leading-tight">
+                       {formatPrice(price)}
+                    </span>
+                )}
+                
                 <meta itemProp="priceCurrency" content="COP" />
              </div>
           </div>

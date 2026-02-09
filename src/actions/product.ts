@@ -30,7 +30,7 @@ export const getProducts = async (page: number) => {
 export const getAllProducts = async () => {
   const { data: products, error } = await supabase
     .from("productos")
-    .select("id, name, slug, brand, stock, price, images, tag")
+    .select("id, name, slug, brand, stock, price, images, tag, discount")
     .eq("is_active", true)
     .order("name", { ascending: true });
 
@@ -39,7 +39,7 @@ export const getAllProducts = async () => {
     throw new Error(error.message);
   }
 
-  return products as Product[];
+  return products as any[];
 };
 
 export const getFilteredProducts = async ({
@@ -53,14 +53,13 @@ export const getFilteredProducts = async ({
 }) => {
   const itemsPerPage = 12;
   const from = (page - 1) * itemsPerPage;
-  const to = from + itemsPerPage - 1;
+  const to = from + itemsPerPage;
 
   let query = supabase
     .from("productos")
     .select("* ", { count: "exact" })
-    .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .range(from, to);
+    .eq("is_active", true);
+    // .order("created_at", { ascending: false }) // We will sort manually
 
   if (brands.length > 0) {
     query = query.in("brand", brands);
@@ -77,7 +76,36 @@ export const getFilteredProducts = async ({
     throw new Error(error.message);
   }
 
-  return { data, count };
+  // Custom Sorting Logic
+  // 1. New/Promo
+  // 2. Normal (available)
+  // 3. Out of stock (Agotado)
+  // Cast data to any first to avoid "property 'discount' does not exist" error on inferred types
+  const safeData = (data || []) as any[];
+  
+  const sortedData = safeData.sort((a, b) => {
+    // Helper to get priority score (lower is better/top)
+    const getScore = (product: any) => {
+        if (product.tag === "Nuevo" || product.tag === "Promoción") return 1;
+        if (product.stock === "Agotado") return 3;
+        return 2; // Normal
+    };
+
+    const scoreA = getScore(a);
+    const scoreB = getScore(b);
+
+    if (scoreA !== scoreB) {
+        return scoreA - scoreB;
+    }
+
+    // Tie-breaker: Created At (Newest first)
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+
+  // Manual Pagination
+  const paginatedData = sortedData.slice(from, to);
+
+  return { data: paginatedData, count };
 };
 
 export const getRecentProducts = async () => {
@@ -168,6 +196,7 @@ export const createProduct = async (productInput: ProductInput) => {
         price: productInput.price,
         stock: productInput.stock,
         tag: productInput.tag || null,
+        discount: productInput.discount || 0, // Add discount
         images: [],
       })
       .select()
@@ -275,6 +304,7 @@ export const updateProduct = async (
       price: productForm.price,
       stock: productForm.stock,
       tag: productForm.tag || null,
+      discount: productForm.discount || 0, // Add discount
     })
     .eq("id", productId)
     .select()
@@ -359,5 +389,5 @@ export const updateProduct = async (
 
   if (updateImagesError) throw new Error(updateImagesError.message);
 
-  return updatedProduct;
+  return updatedProduct as any;
 };

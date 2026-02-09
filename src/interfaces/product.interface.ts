@@ -17,6 +17,7 @@ export interface Product {
   price: number;
   stock: string | null; // "Disponible" | "Agotado"
   tag?: ProductTag; // Nuevo campo para tags
+  discount?: number; // Nuevo campo para descuento (0-100)
   is_active?: boolean; // Campo para soft delete
 }
 
@@ -37,4 +38,5 @@ export interface ProductInput {
   price: number;
   stock: string;
   tag?: ProductTag; // Nuevo campo para tags
+  discount?: number; // Nuevo campo para descuento
 }

@@ -73,6 +73,7 @@ export const productSchema = z.object({
   price: z.number().min(1, "El precio debe ser mayor a 0"),
   stock: z.string().min(1, "El stock es obligatorio"),
   tag: z.string().optional(),
+  discount: z.number().min(0).max(99),
   images: z.array(z.any()).min(1, "Debe haber al menos una imagen"),
   products: z
     .array(
