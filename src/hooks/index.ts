@@ -26,7 +26,11 @@ export * from "./orders/useOrderAdmin";
 export * from "./brands/useBrands";
 
 //Image
+//Image
 export * from "./useImageZoom";
+
+// Cart
+export * from "./useProductCart";
 
 // Toast
 export * from "./useToastLimit";

@@ -14,9 +14,7 @@ export const useChangeStatusOrder = () => {
     },
     onError: (error) => {
       console.log(error);
-      toast.error("No se pudo actualizar el estado de la orden", {
-        position: "bottom-right",
-      });
+      toast.error("No se pudo actualizar el estado de la orden");
     },
   });
 

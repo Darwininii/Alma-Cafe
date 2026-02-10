@@ -67,7 +67,7 @@ export const ContainerFilter = ({
         <CustomInput
           type="text"
           placeholder="¿Qué buscas?"
-          label="Buscar Producto..."
+          // label="Buscar Producto..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           icon={<FaSearch size={16} className="text-black/50 dark:text-white/50" />}
@@ -151,7 +151,7 @@ export const ContainerFilter = ({
             <CustomInput
               type="text"
               placeholder="¿Qué buscas?"
-              label="Buscar Producto..."
+              // label="Buscar Producto..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               icon={<FaSearch size={16} className="text-black/50 dark:text-white/50" />}

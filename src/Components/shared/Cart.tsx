@@ -15,7 +15,7 @@ export const Cart = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-5 py-7 flex justify-between items-center border-b border-white/20 dark:border-white/10">
+      <div className="px-5 py-7 flex justify-between items-center border-b border-white/20 dark:border-white/10 shrink-0">
         <span className="flex gap-3 items-center font-black text-black dark:text-white/70">
           {totalItemsInCart > 0 ? (
             <Icons.CartFilled size={24} />
@@ -33,8 +33,8 @@ export const Cart = () => {
       {/* Lista de productos Añadidos al Carrito */}
       {totalItemsInCart > 0 ? (
         <>
-          <div className="p-7 overflow-auto flex-1">
-            <ul className="space-y-9">
+          <div className="p-5 overflow-y-auto flex-1 min-h-0">
+            <ul className="space-y-2">
               {cartItems.map((item) => (
                 <CartItem item={item} key={item.productId} />
               ))}
@@ -42,7 +42,7 @@ export const Cart = () => {
           </div>
 
           {/* Total */}
-          <div className="px-7 py-4 border-t border-white/20 dark:border-white/10">
+          <div className="px-7 py-4 border-t border-white/20 dark:border-white/10 shrink-0">
             <div className="flex justify-between items-center">
               <span className="text-lg font-black text-black dark:text-white/70">Total:</span>
               <span className="text-2xl font-black text-black dark:text-white/70">{formatPrice(totalAmount)}</span>
@@ -50,7 +50,7 @@ export const Cart = () => {
           </div>
 
           {/* Botones Acción */}
-          <div className="py-5 px-5">
+          <div className="py-5 px-5 shrink-0">
             <CustomButton
               to="/checkout"
               className="w-full bg-black dark:bg-white/80 font-black text-white dark:text-black py-3.5 hover:bg-linear-to-r from-black/80 dark:from-white/50 to-rose-600 rounded-full shadow-md hover:shadow-black/40 transition-all duration-300"

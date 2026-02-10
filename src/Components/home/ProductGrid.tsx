@@ -24,6 +24,7 @@ export const ProductGrid = ({ title, products }: Props) => {
             slug={product.slug}
             stock={product.stock}
             tag={product.tag}
+            discount={product.discount}
             priority={index < 4}
           />
         ))}

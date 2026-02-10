@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { formatPrice, getOptimizedImageUrl } from "@/helpers";
+import { getOptimizedImageUrl } from "@/helpers";
 import { CustomButton } from "@/Components/shared/CustomButton";
 import { CustomCard } from "@/Components/shared/CustomCard";
 import { CustomBadge } from "@/Components/shared/CustomBadge";
-import { useCartStore } from "@/store";
-import toast from "react-hot-toast";
+import { PriceDisplay } from "@/Components/shared/PriceDisplay";
+import { useProductCart } from "@/hooks";
 import { FaPlus, FaShoppingCart } from "react-icons/fa";
 
 interface Props {
@@ -21,31 +21,29 @@ interface Props {
 }
 
 export const CardProduct = ({ id, img, name, price, slug, stock, tag, discount, priority = false }: Props) => {
-  const addItem = useCartStore((state) => state.addItem);
-
   const isOutOfStock = stock === "Agotado";
-  const hasDiscount = !isOutOfStock && tag === "Promoción" && discount && discount > 0;
-  
-  // Calculate final price for cart and display
-  const finalPrice = hasDiscount ? price - (price * (discount! / 100)) : price;
+
+  const { addToCart, finalPrice, hasDiscount } = useProductCart({
+    product: {
+      id,
+      name,
+      images: [img],
+      price,
+      slug,
+      stock,
+      tag,
+      discount,
+    } as any,
+    count: 1,
+  });
 
   const handleAddClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevent navigation when clicking add
+    e.stopPropagation();
 
     if (isOutOfStock) return;
 
-    addItem({
-      productId: id,
-      name,
-      image: img,
-      price: finalPrice, // Use discounted price
-      quantity: 1,
-    });
-
-    toast.success("Producto añadido", {
-      icon: <FaShoppingCart />,
-    });
+    addToCart();
   };
 
   return (
@@ -135,25 +133,14 @@ export const CardProduct = ({ id, img, name, price, slug, stock, tag, discount, 
                 <meta itemProp="availability" content={isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock"} />
                 <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-wider">Precio</span>
                 
-                {hasDiscount ? (
-                    <div className="flex flex-col items-start leading-none">
-                        <span className="text-xs text-zinc-400 line-through font-medium">
-                            {formatPrice(price)}
-                        </span>
-                        <div className="flex items-center gap-1.5">
-                            <span itemProp="price" className="text-lg font-black text-red-600 dark:text-red-500 leading-tight">
-                                {formatPrice(finalPrice)}
-                            </span>
-                             <span className="text-[10px] font-bold bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-1 rounded">
-                                Oferta
-                             </span>
-                        </div>
-                    </div>
-                ) : (
-                    <span itemProp="price" className="text-lg font-black text-zinc-900 dark:text-white leading-tight">
-                       {formatPrice(price)}
-                    </span>
-                )}
+                <PriceDisplay
+                  originalPrice={price}
+                  finalPrice={finalPrice}
+                  discount={discount || 0}
+                  hasDiscount={hasDiscount}
+                  variant="sm"
+                  className={hasDiscount ? "items-start" : ""}
+                />
                 
                 <meta itemProp="priceCurrency" content="COP" />
              </div>

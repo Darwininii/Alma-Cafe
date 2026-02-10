@@ -59,7 +59,7 @@ serve(async (req) => {
         const productIds = items.map((i: any) => i.productId);
         const { data: products, error: productsError } = await supabaseAdmin
             .from('productos')
-            .select('id, name, price, images, slug')
+            .select('id, name, price, images, slug, discount, tag')
             .in('id', productIds);
 
         if (productsError || !products) {
@@ -75,18 +75,26 @@ serve(async (req) => {
             if (!product) throw new Error(`Product ${item.productId} unavailable`);
 
             const quantity = item.quantity;
-            const linePrice = Number(product.price) * quantity;
+            
+            // Calculate Discounted Price — only if tag is "Promoción"
+            const hasDiscount = product.tag === "Promoción" && (product.discount || 0) > 0;
+            const basePrice = Number(product.price);
+            const finalUnitPrice = hasDiscount 
+                ? basePrice - (basePrice * (product.discount / 100)) 
+                : basePrice;
+
+            const linePrice = finalUnitPrice * quantity;
             totalAmount += linePrice;
 
             orderItemsToInsert.push({
                 products_id: product.id,
                 cantidad: quantity,
-                price: product.price,
+                price: finalUnitPrice,
                 product_snapshot: {
                     name: product.name,
                     slug: product.slug,
                     image: product.images?.[0] || null,
-                    price_at_purchase: product.price
+                    price_at_purchase: finalUnitPrice
                 }
             });
         }

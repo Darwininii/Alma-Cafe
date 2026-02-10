@@ -54,9 +54,9 @@ export const GridImages = ({ images }: Props) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col gap-3 relative max-w-xl mx-auto md:mx-0">
+    <div className="flex flex-col gap-3 relative max-w-xl mx-auto md:mx-0">
       <div
-        className="bg-white/10 backdrop-blur-sm h-[500px] md:h-[500px] w-full p-4 rounded-3xl relative shadow-sm flex items-center justify-center cursor-zoom-in"
+        className="bg-white/10 backdrop-blur-sm aspect-square md:aspect-auto md:h-[500px] w-full p-4 rounded-3xl relative shadow-sm flex items-center justify-center cursor-zoom-in"
         onClick={openModal}
       >
         <ImageZoom

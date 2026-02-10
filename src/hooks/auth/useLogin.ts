@@ -14,9 +14,7 @@ export const useLogin = () => {
       navigate("/");
     },
     onError: (err) => {
-      toast.error(err.message, {
-        position: "bottom-right",
-      });
+      toast.error(err.message);
     },
   });
 

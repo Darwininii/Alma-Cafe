@@ -17,16 +17,12 @@ export const useUpdateProduct = (productId: string) => {
       queryClient.invalidateQueries({
         queryKey: ["product"],
       });
-      toast.success("Producto actualizado", {
-        position: "bottom-right",
-      });
+      toast.success("Producto actualizado");
       navigate("/dashboard/productos");
     },
     onError: (error) => {
       console.log(error);
-      toast.error("Ocurrió un error al actualizar el producto", {
-        position: "bottom-right",
-      });
+      toast.error("Ocurrió un error al actualizar el producto");
     },
   });
 

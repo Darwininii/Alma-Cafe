@@ -5,16 +5,15 @@ import { Separator } from "@/Components/shared/Separator";
 import { CustomBadge } from "@/Components/shared/CustomBadge";
 import { CustomButton } from "@/Components/shared/CustomButton";
 import { CustomCard } from "@/Components/shared/CustomCard";
-import { formatPrice } from "@/helpers";
-import { useProduct } from "@/hooks";
-import { useCartStore, useCounterStore } from "@/store";
+import { PriceDisplay } from "@/Components/shared/PriceDisplay";
+import { useProduct, useProductCart } from "@/hooks";
+import { useCounterStore } from "@/store";
 import { motion } from "framer-motion";
 import { CustomPlusMinus } from "@/Components/shared/CustomPlusMinus";
 import { MessagesSquare } from "lucide-react";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { FaShoppingCart } from "react-icons/fa";
-import { MdPayments, MdLocalOffer } from "react-icons/md";
+import { MdPayments } from "react-icons/md";
 import { RiMotorbikeFill } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomBack } from "@/Components/shared/CustomBack";
@@ -29,43 +28,16 @@ export const ProductsPage = () => {
   const increment = useCounterStore((state) => state.increment);
   const decrement = useCounterStore((state) => state.decrement);
 
-  const addItem = useCartStore((state) => state.addItem);
   const navigate = useNavigate();
 
   // Stock: verificar si está agotado
   const isOutOfStock = product?.stock === "Agotado";
 
-  // Añadir al carrito
-  const addToCart = () => {
-    if (!product) return;
-
-    addItem({
-      productId: product.id,
-      name: product.name,
-      image: product.images[0],
-      price: product.price,
-      quantity: count,
-    });
-
-    toast.success("Producto añadido al carrito", {
-      position: "bottom-right",
-    });
-  };
-
-  // Comprar ahora
-  const buyNow = () => {
-    if (!product) return;
-
-    addItem({
-      productId: product.id,
-      name: product.name,
-      image: product.images[0],
-      price: product.price,
-      quantity: count,
-    });
-
-    navigate("/checkout");
-  };
+  // Hook de carrito
+  const { addToCart, buyNow, finalPrice, hasDiscount } = useProductCart({
+    product: product || {} as any,
+    count,
+  });
 
   // Reset slug cuando cambia
   useEffect(() => {
@@ -121,26 +93,13 @@ export const ProductsPage = () => {
               <h1 className="text-3xl md:text-4xl font-black tracking-tight text-black dark:text-white/80 drop-shadow-md">{product.name}</h1>
 
               <div className="flex flex-col md:flex-row md:items-center gap-4">
-                {product.tag === "Promoción" && product.discount && product.discount > 0 ? (
-                    <div className="flex flex-col">
-                        <span className="text-xl md:text-2xl font-bold text-black/40 dark:text-white/40 line-through decoration-red-600/60 decoration-2">
-                           {formatPrice(product.price)}
-                        </span>
-                        <div className="flex items-center gap-3">
-                            <span className="text-4xl md:text-6xl font-black text-red-600 dark:text-red-500 drop-shadow-sm">
-                                {formatPrice(product.price - (product.price * (product.discount / 100)))}
-                            </span>
-                            <div className="flex flex-col items-center justify-center bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1 rounded-lg border border-red-200 dark:border-red-900/50">
-                                <MdLocalOffer size={24} />
-                                <span className="text-xs font-black">-{product.discount}%</span>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
-                      {formatPrice(product.price)}
-                    </span>
-                )}
+                <PriceDisplay
+                  originalPrice={product.price}
+                  finalPrice={finalPrice}
+                  discount={product.discount || 0}
+                  hasDiscount={hasDiscount}
+                  variant="lg"
+                />
 
                 {/* Tags */}
                 <div className="relative flex gap-2 h-fit self-start md:self-auto mt-2 md:mt-0">
@@ -183,7 +142,7 @@ export const ProductsPage = () => {
             ) : (
               <div className="space-y-6 pt-4">
                 {/* Contador modernizado */}
-                <div className="flex items-center justify-between bg-black/5 dark:bg-white/5 p-2 pr-4 pl-6 rounded-full border border-black/10 dark:border-white/10 backdrop-blur-sm">
+                <div className="flex items-center justify-between bg-black/5 dark:bg-white/5 p-1.5 pr-2 pl-4 sm:pl-6 rounded-full border border-black/10 dark:border-white/10 backdrop-blur-sm overflow-hidden">
                   <span className="font-bold text-black/70 dark:text-white/80 text-sm uppercase tracking-wider">Cantidad</span>
                   <CustomPlusMinus
                     value={count}

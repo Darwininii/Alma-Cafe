@@ -58,13 +58,13 @@ export const Sheet = () => {
           rounded-t-3xl md:rounded-2xl
           shadow-2xl shadow-black/10 border border-white/20 dark:border-white/10
           animate-slide-in
-          overflow-y-auto
+          flex flex-col overflow-hidden
         "
       >
         {/* Inner glow for glass effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none rounded-t-3xl md:rounded-2xl" />
+        <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none rounded-t-3xl md:rounded-2xl" />
         {/* Header del Sheet */}
-        <div className="sticky top-0 bg-white/30 dark:bg-black/30 backdrop-blur-lg border-b border-white/20 dark:border-white/15 flex justify-between items-center px-4 py-3 rounded-t-3xl z-10">
+        <div className="relative bg-white/30 dark:bg-black/30 backdrop-blur-lg border-b border-white/20 dark:border-white/15 flex justify-between items-center px-4 py-3 rounded-t-3xl z-10 shrink-0">
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-black capitalize text-black dark:text-white">
               {sheetContent === "cart"
@@ -84,7 +84,7 @@ export const Sheet = () => {
         </div>
 
         {/* Contenido dinámico */}
-        <div className="p-4">{renderContent()}</div>
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain">{renderContent()}</div>
       </div>
     </div>
   );
