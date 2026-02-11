@@ -1,5 +1,5 @@
-import { formatPrice } from "@/helpers";
-import { type Product, type ProductTag } from "@/interfaces";
+import { type Product } from "@/interfaces";
+import { type ProductTag } from "@/interfaces/product.interface";
 import { useGlobalStore } from "@/store/global.store";
 import { CustomDeleteButton } from "./CustomDeleteButton";
 import { useEffect, useMemo, useRef, useState } from "react";

@@ -1,5 +1,5 @@
 import { getOptimizedImageUrl } from "@/helpers";
-import { type ProductTag } from "@/interfaces";
+import { type ProductTag } from "@/interfaces/product.interface";
 import { PriceDisplay } from "./PriceDisplay";
 import { CustomBadge } from "./CustomBadge";
 import { CustomDeleteButton } from "./CustomDeleteButton";
